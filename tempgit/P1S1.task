@@ -1,0 +1,46 @@
+Import encode_decode
+Import domtools
+Dim URL_Query_sid
+Dim xml_info
+Dim xml_info_encoded
+Dim Content_Lenth
+Dim Post_Header
+Dim Recourse_Sid
+Dim Response_Body
+
+Dim URL_Renew_Recourse
+Dim URL_Renew_Recourse_Partial_1
+Dim URL_Renew_Recourse_Partial_2
+Dim Recourse_Name
+Dim Recourse_Type
+Dim Recourse_Longitude
+Dim Recourse_Latitude
+
+// Recourse_Name = "太原综改区石沟村村西1号一级GF0001"
+// Recourse_Type = "guangfenxianxiang"
+// Recourse_Longitude = 112.47559233
+// Recourse_Latitude = 37.63000168
+Recourse_Name = "太原娄烦县童子崖村扩容村东GJ0055"
+Recourse_Type = "guangjiaojiexiang"
+Recourse_Longitude = 111.77428748
+Recourse_Latitude = 38.0618794
+
+URL_Query_sid = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
+xml_info = '<request><query mc="'&Recourse_Type&'" ids="" where="1=1 AND ZH_LABEL LIKE \'%'&Recourse_Name&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+xml_info_encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(xml_info),"/","%2F",true)
+Content_Lenth = CStr(Len(xml_info_encoded))
+Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+Response_Body = HttpSession.Request("POST",URL_Query_sid,{"params":{},"data":xml_info_encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+domtools.InitDom(Response_Body)
+Recourse_Sid = domtools.xpath("//@int_id")
+
+URL_Renew_Recourse_Partial_1 = "http://10.209.199.74:8120/igisserver_osl/rest/SynchroController/synchroData"
+URL_Renew_Recourse_Partial_2 = "?sid="&Recourse_Sid[0]&"&sType="&Recourse_Type&"&longi="&Recourse_Longitude&"&lati="&Recourse_Latitude
+URL_Renew_Recourse = URL_Renew_Recourse_Partial_1&URL_Renew_Recourse_Partial_2
+Response_Body = HttpSession.Request("POST",URL_Renew_Recourse,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+Traceprint(Response_Body)
+domtools.InitDom(Response_Body)
+Returen_State = domtools.xpath("/message")
+Traceprint(Returen_State)
+
+

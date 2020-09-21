@@ -1,0 +1,23 @@
+Import Prepare_Data
+Import P1
+
+Dim XLS_Obj 
+
+Function MainProgress()
+    If G_P1 = 1 
+        Prepare_Data.Prepare_Data()
+        // For RL0 = 1 To 1 //嵌套一层一次循环,判断 G_P1_Repeat_Start 和 G_P1_Repeat_Sum
+        //     If G_P1_Repeat_Start = G_P1_Repeat_Sum
+        //         Break
+        //     End If
+        //     For RL1 = G_P1_Repeat_Start To G_P1_Repeat_Sum
+        //         //P1S1.Push_FSB(G_FSB_Info[RL1])
+        //         XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false) //后台打开
+        //         Excel.WriteCell(XLS_Obj,"Info",[2,5],RL1 + 1,true)
+        //         Excel.CloseExcel(XLS_Obj,true) //立即保存
+        //     Next
+        // Next
+        TracePrint(G_FSB_Info)
+    End If
+End Function
+
