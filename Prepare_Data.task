@@ -1,101 +1,243 @@
-Traceprint("Test")
+Import Secondary_Func
+// Traceprint("Test")
 
-Function Prepare_Data()
-Dim XLS_Obj
-Dim Temp_Data1
-Dim Temp_List_1 = []
-Dim Temp_List_2 = []
-Dim BOX_Count_Correction
-Dim BOX_Info_3D = []
-Dim TestExcelObj
-Dim RL1
-Dim RL2
-Dim RL3
-Dim Longitude_Start
-Dim Latitude_Start
-Dim Horizontal_Density
-Dim Vertical_Density 
+Function P1()
+    Dim XLS_Obj
+    Dim Temp_Data1
+    Dim Temp_List_1 = []
+    Dim Temp_List_2 = []
+    Dim Temp_List_3 = []
+    Dim BOX_Count_Correction
+    Dim BOX_Info_3D = []
+    Dim TestExcelObj
+    Dim RL1
+    Dim RL2
+    Dim RL3
+    Dim Longitude_Start
+    Dim Latitude_Start
+    Dim Horizontal_Density
+    Dim Vertical_Density 
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+    BOX_Count_Correction = 0
+    G_BOX_Count = 0
 
-XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
-
-    If G_P1 = 1
-
-        BOX_Count_Correction = 0
-        G_BOX_Count = 0
-
-        For RL1 = 1 To 100
-            For RL2 = 1 To 100
-                Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
-                If Temp_Data1 = ""
-                    Break
-                End If
-                If Temp_Data1 = "empty"
-                    BOX_Count_Correction = BOX_Count_Correction + 1
-                End If
-            Next
-            Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,1])
+    For RL1 = 1 To 100
+        For RL2 = 1 To 100
+            Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
             If Temp_Data1 = ""
                 Break
             End If
-            G_BOX_RC[RL1] = RL2 - 1
-            G_BOX_Count = G_BOX_Count + G_BOX_RC[RL1]
+            If Temp_Data1 = "empty"
+                BOX_Count_Correction = BOX_Count_Correction + 1
+            End If
         Next
-        G_BOX_Count = G_BOX_Count - BOX_Count_Correction
-
-        //构建BOX_Info_3D[][][4]
-        For RL1 = 1 To Ubound(G_BOX_RC)
-            For RL2 = 0 To G_BOX_RC[RL1]
-                For RL3 = 0 To 4
-                    Temp_List_1[RL3] = ""
-                Next
-                Temp_List_2[RL2] = Clone(Temp_List_1)
-            Next
-            BOX_Info_3D[RL1] = Clone(Temp_List_2)
-        Next
-        BOX_Info_3D[0] = ""
-
-        //BOX_Info_3D 加载名称/经度/维度
-        Longitude_Start = Excel.ReadCell(XLS_Obj,"Info",[1,2])
-        Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
-        Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
-        Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
-        For RL1 = 1 To Ubound(G_BOX_RC)
-            For RL2 = 1 To G_BOX_RC[RL1]
-                BOX_Info_3D[RL1][RL2][1] = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
-                BOX_Info_3D[RL1][RL2][2] = Longitude_Start + (RL2 - 1) * Horizontal_Density
-                BOX_Info_3D[RL1][RL2][3] = Latitude_Start - (RL1 - 1) * Vertical_Density
-                If InStr(BOX_Info_3D[RL1][RL2][1],"GJ",1,false) <> 0
-                    BOX_Info_3D[RL1][RL2][4] = "guangjiaojiexiang"
-                Else
-                    BOX_Info_3D[RL1][RL2][4] = "guangfenxianxiang"
-                End If
-            Next
-        Next
-        //BOX_Info_3D 降维 G_BOX_Info
-        Temp_Data1 = 1
-        For RL1 = 1 To Ubound(G_BOX_RC)
-            For RL2 = 1 To G_BOX_RC[RL1]
-                If BOX_Info_3D[RL1][RL2][1] = "empty"
-                    Continue
-                End If
-                G_BOX_Info[Temp_Data1] = BOX_Info_3D[RL1][RL2]
-                Temp_Data1 = Temp_Data1 + 1
-            Next
-        Next
-
-        //G_BOX_Info 验证数据
-        If G_Test_Output = 1 
-            TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\推箱子验证.xlsx",false)
-            Excel.WriteRange(TestExcelObj,"Sheet1","A1",G_BOX_Info,false)
-            Excel.CloseExcel(TestExcelObj,true)
+        Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,1])
+        If Temp_Data1 = ""
+            Break
         End If
-        
-        //写入P1S1的Repeat_Sum
-        Excel.WriteCell(XLS_Obj,"Info",[2,6],G_BOX_Count,true)
-        //读取P1S1的Repeat_Start和Repeat_Sum
-        G_P1_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[2,5])
-        G_P1_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[2,6])
+        G_BOX_RC[RL1] = RL2 - 1
+        G_BOX_Count = G_BOX_Count + G_BOX_RC[RL1]
+    Next
+    G_BOX_Count = G_BOX_Count - BOX_Count_Correction
+
+    //构建BOX_Info_3D[][][4]
+    For RL1 = 1 To Ubound(G_BOX_RC)
+        For RL2 = 0 To G_BOX_RC[RL1]
+            For RL3 = 0 To 4
+                Temp_List_1[RL3] = ""
+            Next
+            Temp_List_2[RL2] = Clone(Temp_List_1)
+        Next
+        BOX_Info_3D[RL1] = Clone(Temp_List_2)
+    Next
+    BOX_Info_3D[0] = ""
+
+    //BOX_Info_3D 加载名称/经度/维度
+    Longitude_Start = Excel.ReadCell(XLS_Obj,"Info",[1,2])
+    Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
+    Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
+    Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
+    For RL1 = 1 To Ubound(G_BOX_RC)
+        For RL2 = 1 To G_BOX_RC[RL1]
+            BOX_Info_3D[RL1][RL2][1] = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
+            BOX_Info_3D[RL1][RL2][2] = Longitude_Start + (RL2 - 1) * Horizontal_Density
+            BOX_Info_3D[RL1][RL2][3] = Latitude_Start - (RL1 - 1) * Vertical_Density
+            If InStr(BOX_Info_3D[RL1][RL2][1],"GJ",1,false) <> 0
+                BOX_Info_3D[RL1][RL2][4] = "guangjiaojiexiang"
+            Else
+                BOX_Info_3D[RL1][RL2][4] = "guangfenxianxiang"
+            End If
+        Next
+    Next
+    //BOX_Info_3D 降维 G_BOX_Info
+    Temp_Data1 = 1
+    For RL1 = 1 To Ubound(G_BOX_RC)
+        For RL2 = 1 To G_BOX_RC[RL1]
+            If BOX_Info_3D[RL1][RL2][1] = "empty"
+                Continue
+            End If
+            G_BOX_Info[Temp_Data1] = BOX_Info_3D[RL1][RL2]
+            Temp_Data1 = Temp_Data1 + 1
+        Next
+    Next
+
+    If G_Test_Output = 1 
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P1数据验证.xlsx",false)
+        Excel.WriteRange(TestExcelObj,"Sheet1","A1",G_BOX_Info,false)
+        Excel.CloseExcel(TestExcelObj,true)
+    End If
+    
+    //写入P1S1的Repeat_Sum
+    Excel.WriteCell(XLS_Obj,"Info",[2,6],G_BOX_Count,true)
+    //读取P1S1的Repeat_Start和Repeat_Sum
+    G_P1_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[2,5])
+    G_P1_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[2,6])
+    Excel.CloseExcel(XLS_Obj,true)
+End Function
+
+Function P2()
+    Dim XLS_Obj
+    Dim Temp_Data1
+    Dim Temp_Data2
+    Dim Temp_List_1 = []
+    Dim Temp_List_2 = []
+    Dim TestExcelObj
+    Dim RL1
+    Dim RL2
+    Dim Horizontal_Density
+    Dim Vertical_Density
+    Dim Latitude_Start
+    Dim Horizontal_Metre 
+    Dim Vertical_Metre
+    Dim Project_Code_Value
+    Dim CSV_obj
+    Dim DT_obj
+    Dim List7013 = []
+    Dim County_Value_and_DQS = []
+    
+
+    //处理7013表
+    CSV_obj = CSV.Open(G_CSV_File_Path)
+    DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
+    DT_obj = Datatable.SliceDataTable(DT_obj,[],[2,4,10,11]) //所属区县,所属小区,项目编号,任务名称
+    List7013 = []
+    List7013 = Datatable.GetDataTableByArray(DT_obj,false)
+
+    If G_Test_Output = 1
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\7013数据验证.xlsx",false)
+        Excel.WriteRange(TestExcelObj,"Sheet1","A1",List7013,false)
+        Excel.CloseExcel(TestExcelObj,true)
     End If
 
+    County_Value_and_DQS = [[0],["古交市",445835320,"tyyangwei",246552123,"lurui2",246552126,"liuhongbo",342412680,"tt_jt_zhangyuelong",685584994,1685584994],["娄烦县",445835319,"tyyangwei",246552123,"lurui2",246552126,"xuyanan",342412681,"tt_2_gongjianfeng",685583882,1685583882],["阳曲县",445835318,"tyyangwei",246552123,"lurui2",246552126,"liupeixu",483582248,"tt_1_lvmai",685585124,1685585124],["清徐县",445835317,"tyyangwei",246552123,"lurui2",246552126,"wangdapeng",248,"tt_2_guojianbo",685583261,1685583261],["晋源区",445835316,"tyyangwei",246552123,"lurui2",246552126,"tyxuyan",342412683,"tt_2_peihao",685587010,1685587010],["万柏林区",445835315,"tyyangwei",246552123,"lurui2",246552126,"tyxuyan",342412683,"tt_1_anliguo",685583025,1685583025],["尖草坪区",445835314,"tyyangwei",246552123,"lurui2",246552126,"zhengzhihua",342412684,"tt_2_songyingjiang",685589182,1685589182],["杏花岭区",445835313,"tyyangwei",246552123,"lurui2",246552126,"zhengzhihua",342412684,"tt_1_muruibin",685587055,1685587055],["迎泽区",445835312,"tyyangwei",246552123,"lurui2",246552126,"dongjianfeng",483583693,"tt_1_ttwangzhenhua",685584118,1685584118],["小店区",445835311,"tyyangwei",246552123,"lurui2",246552126,"liuya",483572456,"tt_1_weixiaodong1",685582176,1685582176]]
+
+    P1()
+
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+    //构建G_OC_Count
+    For RL1 = 1 To 500
+        Temp_Data1 = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+        If Temp_Data1 = ""
+            Break
+        End If
+        G_OC_Count = RL1
+    Next
+    //构建G_OC_Info[][40]
+    For RL1 = 1 To G_OC_Count
+        For RL2 = 0 To 40
+            Temp_List_1[RL2] = ""
+        Next
+        G_OC_Info[RL1] = Clone(Temp_List_1)
+    Next
+
+    // 长度
+    Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
+    Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
+    Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
+    Horizontal_Metre = 111.11 * 1000 * Math.Cos(Latitude_Start * 3.1415926535 / 180) //1经度米数
+    Vertical_Metre = 111.11 * 1000 //1纬度米数
+
+    //任务编号
+    Project_Code_Value = Secondary_Func.Query_Project_Code_Value(List7013[1][2])
+    
+    //任务名称
+    Temp_List_1 = Split(List7013[1][3],"-") 
+
+    For RL1 = 1 to Ubound(County_Value_and_DQS)
+        If List7013[1][0] = County_Value_and_DQS[RL1][0]
+            Temp_Data2 = RL1
+            Break
+        End If
+    Next
+
+    For RL1 = 1 to G_OC_Count
+        G_OC_Info[RL1][1] = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1]) //A箱子端名字
+        For RL2 = 1 to Ubound(G_BOX_Info)
+            If G_OC_Info[RL1][1] = G_BOX_Info[RL2][1] 
+                G_OC_Info[RL1][2] = G_BOX_Info[RL2][2] //A端经度
+                G_OC_Info[RL1][3] = G_BOX_Info[RL2][3] //A端纬度
+                G_OC_Info[RL1][4] = G_BOX_Info[RL2][4] //A端类型
+                If G_OC_Info[RL1][4] = "guangfenxianxiang" or G_OC_Info[RL1][4] = "guangjiaojiexiang"
+                    G_OC_Info[RL1][4] = 9115 //资源点
+                Else
+                    G_OC_Info[RL1][4] = 9107 //撑点
+                End If
+                Temp_List_2 = Secondary_Func.Query_Sid(G_BOX_Info[RL2]) //A资源点端Sid
+                G_OC_Info[RL1][5] = Temp_List_2[2]
+                G_OC_Info[RL1][28] = Temp_List_2[0] //A箱子端Sid
+            End If
+        Next
+        G_OC_Info[RL1][6] = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,2]) //Z箱子端名字
+        For RL2 = 1 to Ubound(G_BOX_Info)
+            If G_OC_Info[RL1][6] = G_BOX_Info[RL2][1] 
+                G_OC_Info[RL1][7] = G_BOX_Info[RL2][2] //Z端经度
+                G_OC_Info[RL1][8] = G_BOX_Info[RL2][3] //Z端纬度
+                G_OC_Info[RL1][9] = G_BOX_Info[RL2][4] //Z端类型
+                If G_OC_Info[RL1][9] = "guangfenxianxiang" or G_OC_Info[RL1][9] = "guangjiaojiexiang"
+                    G_OC_Info[RL1][9] = 9115 //资源点
+                Else
+                    G_OC_Info[RL1][9] = 9107 //撑点
+                End If
+                Temp_List_2 = Secondary_Func.Query_Sid(G_BOX_Info[RL2]) //Z资源点端Sid
+                G_OC_Info[RL1][10] = Temp_List_2[2]
+                G_OC_Info[RL1][29] = Temp_List_2[0] //Z箱子端Sid
+            End If
+        Next
+        G_OC_Info[RL1][11] = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,3]) //芯数
+        G_OC_Info[RL1][12] = Math.Round(Math.Sqr(((G_OC_Info[RL1][2] - G_OC_Info[RL1][7]) * Horizontal_Metre) ^ 2 + ((G_OC_Info[RL1][3] - G_OC_Info[RL1][8]) * Vertical_Metre) ^ 2),0) //长度
+        G_OC_Info[RL1][13] = Project_Code_Value //任务编号
+        G_OC_Info[RL1][14] = Temp_List_1[0] //任务名称
+        G_OC_Info[RL1][15] = 445835190 //地市
+        G_OC_Info[RL1][16] = County_Value_and_DQS[Temp_Data2][1] //区县
+        G_OC_Info[RL1][17] = County_Value_and_DQS[Temp_Data2][3] //责任人工程
+        G_OC_Info[RL1][18] = County_Value_and_DQS[Temp_Data2][5] //责任人
+        G_OC_Info[RL1][19] = County_Value_and_DQS[Temp_Data2][7] //责任人区县
+        G_OC_Info[RL1][20] = County_Value_and_DQS[Temp_Data2][9] //责任人代维
+        G_OC_Info[RL1][21] = G_OC_Info[RL1][1]&"资源点"&"-"&G_OC_Info[RL1][6]&"资源点" //引上段名称
+        G_OC_Info[RL1][22] = 8 //生命周期状态
+        G_OC_Info[RL1][23] = 1 //产权性质
+        G_OC_Info[RL1][24] = 0 //产权单位
+        G_OC_Info[RL1][25] = "市城区域" //地域类型
+        G_OC_Info[RL1][26] = 8 //业务级别
+        G_OC_Info[RL1][27] = G_Support_System_Name_Value //引上系统Sid
+
+    Next
     Excel.CloseExcel(XLS_Obj,true)
+
+    If G_Test_Output = 1
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P2数据验证.xlsx",false)
+        Excel.WriteRange(TestExcelObj,"Sheet1","A1",G_OC_Info,false)
+        Excel.CloseExcel(TestExcelObj,true)
+    End If
+
+End Function
+
+Function P3()
+    If Ubound(G_OC_Info) <= 0
+        P2()
+    End If
+    For RL1 = 1 to G_OC_Count
+        G_OC_Info[RL1][30] = G_OC_System_Name
+        G_OC_Info[RL1][31] = G_OC_System_Name_Value
+    Next
 End Function

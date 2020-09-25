@@ -13,16 +13,7 @@ Function Push_Box(Para_BOX_Info)
     Dim URL_Renew_Recourse_Partial_1
     Dim URL_Renew_Recourse_Partial_2
 
-    Dim Returen_State
-
-    // Recourse_Name = "太原综改区石沟村村西1号一级GF0001"
-    // Recourse_Type = "guangfenxianxiang"
-    // Recourse_Longitude = 112.47559233
-    // Recourse_Latitude = 37.63000168
-    //Recourse_Name = "太原娄烦县童子崖村扩容村东GJ0055"
-    //Recourse_Type = "guangjiaojiexiang"
-    //Recourse_Longitude = 111.77428748
-    //Recourse_Latitude = 38.0618794
+    Dim Renew_State
 
     URL_Query_sid = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
     xml_info = '<request><query mc="'&Para_BOX_Info[4]&'" ids="" where="1=1 AND ZH_LABEL LIKE \'%'&Para_BOX_Info[1]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
@@ -38,6 +29,6 @@ Function Push_Box(Para_BOX_Info)
     URL_Renew_Recourse = URL_Renew_Recourse_Partial_1&URL_Renew_Recourse_Partial_2
     Response_Body = HttpSession.Request("POST",URL_Renew_Recourse,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
     domtools.InitDom(Response_Body)
-    Returen_State = domtools.xpath("//message/text()")
-        Return Returen_State
+    Renew_State = domtools.xpath("//message/text()")
+    Return Renew_State
 End Function

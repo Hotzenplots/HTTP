@@ -1,2 +1,4 @@
 extend
 *.log
+*.cme
+*.flowc

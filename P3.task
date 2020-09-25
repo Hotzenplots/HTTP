@@ -1,53 +1,52 @@
 Import domtools
 Import encode_decode
-Function Prepare_Support_System()
+Function Prepare_OC_System()
     Dim CSV_obj
     Dim DT_obj
     Dim List7013 = []
     Dim TempList1 = []
-    Dim Support_System_Name
+    Dim OC_System_Name
     Dim URL_Query
-    Dim xml_info
-    Dim xml_info_encoded
+    Dim XML_Info
+    Dim XML_Info_Encoded
     Dim Content_Lenth
     Dim Post_Header
     Dim Response_Body
 
     CSV_obj = CSV.Open(G_CSV_File_Path)
     DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
-    DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4]) //所属地市,所属区县,所属小区
+    DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4]) //所属区县,所属小区,项目编号,任务名称
     List7013 = []
     List7013 = Datatable.GetDataTableByArray(DT_obj,false)
 
-    G_Support_System_Name = List7013[1][0]&List7013[1][1]&List7013[1][2]&"区内引上系统"
+    G_OC_System_Name = List7013[1][0]&List7013[1][1]&List7013[1][2]&"区内光缆系统"
     URL_Query = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
-    xml_info = '<request><query mc="xitong" where="1=1 AND LINESEG_TYPE=\'9108\' AND ZH_LABEL LIKE \'%'&G_Support_System_Name&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
-    xml_info_encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(xml_info),"/","%2F",true)
-    Content_Lenth = CStr(Len(xml_info_encoded))
+    XML_Info = '<request><query mc="guanglanxitong" where="1=1 AND ZH_LABEL LIKE \'%'&G_OC_System_Name&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+    Content_Lenth = CStr(Len(XML_Info_Encoded))
     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
-    Response_Body = HttpSession.Request("POST",URL_Query,{"params":{},"data":xml_info_encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    Response_Body = HttpSession.Request("POST",URL_Query,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
     domtools.InitDom(Response_Body)
     TempList1 = domtools.xpath("//@counts")
     If TempList1[0] <> "0" //查找到
         TempList1 = domtools.xpath("//@int_id")
-        G_Support_System_Name_Value = Math.Round(CNumber(TempList1[0]),0)
-        //删除
-        //最近删除引上有BUG,暂时不实现这个功能
+        G_OC_System_Name_Value = Math.Round(CNumber(TempList1[0]),0)
+        //删除,暂时不实现这个功能
     Else //没查找到
-        Add_Support_System()
+        Add_OC_System()
     End If
 End Function
 
-Function Add_Support_System()
+Function Add_OC_System()
     Dim CSV_obj
     Dim DT_obj
     Dim List7013 = []
     Dim TempList1 = []
-    Dim County_Value_and_DQS
+    Dim County_Value_and_DQS = []
     Dim County_Value
     Dim URL_ADD
-    Dim xml_info
-    Dim xml_info_encoded
+    Dim XML_Info
+    Dim XML_Info_Encoded
     Dim Content_Lenth
     Dim Post_Header
     Dim Response_Body
@@ -68,17 +67,17 @@ Function Add_Support_System()
     Next
 
     URL_ADD = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalSave"
-    xml_info = '<response mode="add"><mc type="xitong"><mo group="1"><fv k="SYSTEM_LEVEL" v="8"/><fv k="CITY_ID" v="445835190"/><fv k="STATUS" v="8"/><fv k="COUNTY_ID" v="'&County_Value&'"/><fv k="LINESEG_TYPE" v="9108"/><fv k="ZH_LABEL" v="'&G_Support_System_Name&'"/><fv k="INT_ID" v="new-35042182"/></mo></mc></response>'
-    xml_info_encoded = "xml="&Replace(encode_decode.str_encode(xml_info),"/","%2F",true)
-    Content_Lenth = CStr(Len(xml_info_encoded))
+    XML_Info = '<response mode="add"><mc type="guanglanxitong"><mo group="1"><fv k="SYSTEM_LEVEL" v="8"/><fv k="CITY_ID" v="445835190"/><fv k="STATUS" v="8"/><fv k="COUNTY_ID" v="'&County_Value&'"/><fv k="ZH_LABEL" v="'&G_OC_System_Name&'"/><fv k="INT_ID" v="new-27991311"/><fv k="OPT_TYPE" v="GYTA-12"/></mo></mc></response>'
+    XML_Info_Encoded = "xml="&Replace(encode_decode.str_encode(xml_info),"/","%2F",true)
+    Content_Lenth = CStr(Len(XML_Info_Encoded))
     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
-    Response_Body = HttpSession.Request("POST",URL_ADD,{"params":{},"data":xml_info_encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    Response_Body = HttpSession.Request("POST",URL_ADD,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
     domtools.InitDom(Response_Body)
     TempList1 = domtools.xpath("//@newid")
-    G_Support_System_Name_Value = Math.Round(CNumber(TempList1[0]),0)
+    G_OC_System_Name_Value = Math.Round(CNumber(TempList1[0]),0)
 End Function
 
-Function Add_Support_Segment()
+Function Add_OC_Segment()
     Dim TempList1 = []
     Dim URL_ADD
     Dim XML_Info_Full
@@ -93,11 +92,11 @@ Function Add_Support_Segment()
     Dim Body_String
     Dim TestExcelObj
 
-    URL_ADD = "http://10.209.199.74:8120/igisserver_osl/rest/ResourceController/resourcesAdd"
-    XML_Info_Head = '<xmldata mode="PipeLineAddMode"><mc type="yinshangduan">'
+    URL_ADD = "http://10.209.199.74:8120/igisserver_osl/rest/ResourceController/resourcesAdd?coreNamingRules=0"
+    XML_Info_Head = '<xmldata mode="FibersegAddMode"><mc type="guanglanduan">'
     XML_Info_Tail = '</mc></xmldata>'
     For RL1 = 1 to G_OC_Count
-        Body_List[RL1] = '<mo group="1" ax="'&G_OC_Info[RL1][2]&'" ay="'&G_OC_Info[RL1][3]&'" zx="'&G_OC_Info[RL1][7]&'" zy="'&G_OC_Info[RL1][8]&'"><fv k="CITY_ID" v="'&G_OC_Info[RL1][15]&'"/><fv k="PROJECT_ID" v=""/><fv k="COUNTY_ID" v="'&G_OC_Info[RL1][16]&'"/><fv k="RELATED_SYSTEM" v="'&G_OC_Info[RL1][27]&'"/><fv k="A_OBJECT_ID" v="'&G_OC_Info[RL1][5]&'"/><fv k="ZH_LABEL" v="'&G_OC_Info[RL1][21]&'"/><fv k="MAINTAINOR" v="'&G_OC_Info[RL1][20]&'"/><fv k="M_LENGTH" v="'&G_OC_Info[RL1][12]&'"/><fv k="STATUS" v="'&G_OC_Info[RL1][22]&'"/><fv k="QUALITOR_COUNTY" v="'&G_OC_Info[RL1][19]&'"/><fv k="QUALITOR" v="'&G_OC_Info[RL1][18]&'"/><fv k="QUALITOR_PROJECT" v="'&G_OC_Info[RL1][17]&'"/><fv k="OWNERSHIP" v="'&G_OC_Info[RL1][23]&'"/><fv k="RES_OWNER" v="'&G_OC_Info[RL1][24]&'"/><fv k="A_OBJECT_TYPE" v="'&G_OC_Info[RL1][4]&'"/><fv k="INT_ID" v="new-92649621"/><fv k="TASK_NAME" v="'&G_OC_Info[RL1][14]&'"/><fv k="PROJECT_CODE" v="'&G_OC_Info[RL1][13]&'"/><fv k="RESOURCE_LOCATION" v="'&G_OC_Info[RL1][25]&'"/><fv k="Z_OBJECT_TYPE" v="'&G_OC_Info[RL1][9]&'"/><fv k="Z_OBJECT_ID" v="'&G_OC_Info[RL1][10]&'"/><fv k="SYSTEM_LEVEL" v="'&G_OC_Info[RL1][26]&'"/></mo>'
+        Body_List[RL1] = '<mo group="1" ax="'&G_OC_Info[RL1][2]&'" ay="'&G_OC_Info[RL1][3]&'" zx="'&G_OC_Info[RL1][7]&'" zy="'&G_OC_Info[RL1][8]&'"><fv k="QUALITOR_PROJECT" v="'&G_OC_Info[RL1][17]&'"/><fv k="RES_OWNER" v="'&G_OC_Info[RL1][24]&'"/><fv k="RELATED_SYSTEM" v="'&G_OC_Info[RL1][31]&'"/><fv k="QUALITOR" v="'&G_OC_Info[RL1][18]&'"/><fv k="ZH_LABEL" v="'&G_OC_Info[RL1][21]&'001'&'"/><fv k="STATUS" v="'&G_OC_Info[RL1][22]&'"/><fv k="IS_ALTER" v="0"/><fv k="FIBER_TYPE" v="2"/><fv k="INT_ID" v="new-27991311"/><fv k="A_OBJECT_TYPE" v="'&G_OC_Info[RL1][4]&'"/><fv k="Z_OBJECT_ID" v="'&G_OC_Info[RL1][10]&'"/><fv k="A_OBJECT_ID" v="'&G_OC_Info[RL1][5]&'"/><fv k="Z_OBJECT_TYPE" v="'&G_OC_Info[RL1][9]&'"/><fv k="M_LENGTH" v="'&G_OC_Info[RL1][12]&'"/><fv k="CITY_ID" v="'&G_OC_Info[RL1][15]&'"/><fv k="FIBER_NUM" v="'&Math.Round(G_OC_Info[RL1][11],0)&'"/><fv k="MAINTAINOR" v="'&G_OC_Info[RL1][20]&'"/><fv k="WIRE_SEG_TYPE" v="GYTA-'&Math.Round(G_OC_Info[RL1][11],0)&'"/><fv k="SERVICE_LEVEL" v="14"/><fv k="COUNTY_ID" v="'&G_OC_Info[RL1][16]&'"/><fv k="PROJECTCODE" v="'&G_OC_Info[RL1][13]&'"/><fv k="TASK_NAME" v="'&G_OC_Info[RL1][14]&'"/><fv k="OWNERSHIP" v="'&G_OC_Info[RL1][23]&'"/><fv k="QUALITOR_COUNTY" v="'&G_OC_Info[RL1][19]&'"/></mo>'
     Next
     Body_List[0] = ""
     Body_String = Join(Body_List,"")
@@ -110,11 +109,10 @@ Function Add_Support_Segment()
     TempList1 = domtools.xpath("//@loaded")
     
     If G_Test_Output = 1
-        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P2.5数据验证.xlsx",false)
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P3数据验证.xlsx",false)
         Excel.WriteColumn(TestExcelObj,"Sheet1","A1",Body_List,false)
         Excel.CloseExcel(TestExcelObj,true)
     End If
 
     Return TempList1[0]
 End Function
-
