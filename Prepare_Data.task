@@ -87,9 +87,9 @@ Function P1()
         Excel.CloseExcel(TestExcelObj,true)
     End If
     
-    //写入P1S1的Repeat_Sum
+    //写入P1的Repeat_Sum
     Excel.WriteCell(XLS_Obj,"Info",[2,6],G_BOX_Count,true)
-    //读取P1S1的Repeat_Start和Repeat_Sum
+    //读取P1的Repeat_Start和Repeat_Sum
     G_P1_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[2,5])
     G_P1_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[2,6])
     Excel.CloseExcel(XLS_Obj,true)
@@ -220,6 +220,7 @@ Function P2()
         G_OC_Info[RL1][25] = "市城区域" //地域类型
         G_OC_Info[RL1][26] = 8 //业务级别
         G_OC_Info[RL1][27] = G_Support_System_Name_Value //引上系统Sid
+        G_OC_Info[RL1][32] = G_Support_System_Name //引上系统名字
 
     Next
     Excel.CloseExcel(XLS_Obj,true)
@@ -233,6 +234,8 @@ Function P2()
 End Function
 
 Function P3()
+    Dim TestExcelObj
+
     If Ubound(G_OC_Info) <= 0
         P2()
     End If
@@ -240,4 +243,31 @@ Function P3()
         G_OC_Info[RL1][30] = G_OC_System_Name
         G_OC_Info[RL1][31] = G_OC_System_Name_Value
     Next
+
+    If G_Test_Output = 1 
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P3数据验证.xlsx",false)
+        Excel.WriteRange(TestExcelObj,"Sheet1","A1",G_OC_Info,false)
+        Excel.CloseExcel(TestExcelObj,true)
+    End If
+End Function
+
+Function P4()
+    Dim XLS_Obj
+    Dim TestExcelObj
+    P3()
+    
+    //写入P4的Repeat_Sum
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+    Excel.WriteCell(XLS_Obj,"Info",[3,6],G_OC_Count,true)
+    //读取P4的Repeat_Start和Repeat_Sum
+    G_P4_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[3,5])
+    G_P4_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[3,6])
+    Excel.CloseExcel(XLS_Obj,true)
+    
+    If G_Test_Output = 1
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P4.5数据验证.xlsx",false)
+        Excel.WriteRange(TestExcelObj,"Sheet1","A1",G_OC_Info,false)
+        Excel.CloseExcel(TestExcelObj,true)
+    End If
+
 End Function

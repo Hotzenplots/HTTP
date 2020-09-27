@@ -1,2 +1,0 @@
-Dim list1 = ["a","b"]
-traceprint(Join(list1,""))
