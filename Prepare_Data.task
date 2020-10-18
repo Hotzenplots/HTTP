@@ -271,3 +271,183 @@ Function P4()
     End If
 
 End Function
+
+Function P5()
+    Dim XLS_Obj
+    Dim Temp_Data1
+    Dim Temp_Data2
+    Dim Line_Num
+    Dim Segment_Num
+    Dim Temp_List_1 = []
+    Dim Temp_List_2 = []
+    Dim Temp_List_3 = []
+    Dim BOX_Count_Correction
+    Dim BOX_Info_3D = []
+    Dim TestExcelObj
+    Dim Longitude_Start
+    Dim Latitude_Start
+    Dim Horizontal_Density
+    Dim Vertical_Density
+    Dim RL2
+
+    Const G_BOX_Info_Index_Box_Name = 1
+    Const G_BOX_Info_Index_Box_Longitude = 2
+    Const G_BOX_Info_Index_Box_Latitude = 3
+    Const G_BOX_Info_Index_Box_Type = 4
+    Const G_BOX_Info_Index_Box_Type_ID = 5 //Template 读取
+    Const G_BOX_Info_Index_Box_ID = 6
+    Const G_BOX_Info_Index_Box_County_ID = 7
+    Const G_BOX_Info_Index_Point_Type_ID = 8 //Template 读取
+    Const G_BOX_Info_Index_Point_ID = 9
+    Const G_BOX_Info_Index_Required_ODM_Rows = 10 //
+    Const G_BOX_Info_Index_ODM_ID = 11 //P5_1之后写入
+    Const G_BOX_Info_Index_Required_Tray_Count = 12 //等于Required_ODM_Rows
+    Const G_BOX_Info_Index_Tray_Terminal_IDs = 13 //P5_2之后写入,前期用0填充,用&连接的String
+    Const G_BOX_Info_Index_1FS_Count = 14 //1FS数量
+    Const G_BOX_Info_Index_2FS_Count = 15 //2FS数量
+    Const G_BOX_Info_Index_DL_2FS_Count = 16 //下挂2FS数量
+
+
+    Const G_OC_Info_Index_A_Box_Name = 1 //读表
+    Const G_OC_Info_Index_A_Box_ID = 2 //查询
+    Const G_OC_Info_Index_A_Box_Type = 3 //判断
+    Const G_OC_Info_Index_A_Box_Type_ID = 4 //Template 读取
+    Const G_OC_Info_Index_A_Point_ID = 5 //查询
+    Const G_OC_Info_Index_A_Point_Type_ID = 6 //Template 读取
+    Const G_OC_Info_Index_A_Longitude = 7 //计算
+    Const G_OC_Info_Index_A_Latitude = 8 //计算
+    Const G_OC_Info_Index_Z_Box_Name = 9 //读表
+    Const G_OC_Info_Index_Z_Box_ID = 10 //查询
+    Const G_OC_Info_Index_Z_Box_Type = 11 //判断
+    Const G_OC_Info_Index_Z_Box_Type_ID = 12 //Template 读取
+    Const G_OC_Info_Index_Z_Point_ID = 13 //查询
+    Const G_OC_Info_Index_Z_Point_Type_ID = 14 //Template 读取
+    Const G_OC_Info_Index_Z_Longitude = 15 //计算
+    Const G_OC_Info_Index_Z_Latitude = 16 //计算  
+    Const G_OC_Info_Index_Width = 17 //读取
+    Const G_OC_Info_Index_Lenth = 18 //计算
+    Const G_OC_Info_Index_Support_Sys_Name = 19 //计算
+    Const G_OC_Info_Index_Support_Sys_ID = 20 //查询
+    Const G_OC_Info_Index_Support_Seg_Name = 21 //计算
+    Const G_OC_Info_Index_Support_Seg_ID = 22 //查询
+    Const G_OC_Info_Index_OC_Sys_Name = 23 //计算
+    Const G_OC_Info_Index_OC_Sys_ID = 24 //查询
+    Const G_OC_Info_Index_OC_Name = 25 //计算
+    Const G_OC_Info_Index_OC_ID = 26 //查询
+    Const G_OC_Info_Index_OC_Fiber_IDs = 27 //查询
+    Const G_OC_Info_Index_Project_Num_ID = 28 //查询
+    Const G_OC_Info_Index_Task_Name_ID = 29 //查询
+    Const G_OC_Info_Index_Business_Level = 30 //查询
+    Const G_OC_Info_Index_City_ID = 31 //读取
+    Const G_OC_Info_Index_County_ID = 32 //读取
+    Const G_OC_Info_Index_DQS_Project_ID = 33 //读取
+    Const G_OC_Info_Index_DQS_ID = 34 //读取
+    Const G_OC_Info_Index_DQS_County_ID = 35 //读取
+    Const G_OC_Info_Index_DQS_Maintainer_ID = 36 //读取
+    Const G_OC_Info_Index_Life_Cycle = 37 //常量
+    Const G_OC_Info_Index_Owner_Type = 38 //常量
+    Const G_OC_Info_Index_Owner_Name = 39 //常量
+    Const G_OC_Info_Index_Field_Type = 40 //常量
+
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+
+    //构建G_OC_Count
+    For RL1 = 1 To 500
+        Temp_Data1 = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+        If Temp_Data1 = ""
+            Break
+        End If
+        G_OC_Count = RL1
+    Next
+
+    //构建G_OC_Topology
+    Temp_Data1 = ""
+    Temp_Data2 = ""
+    Line_Num = 1
+    Segment_Num = 1
+    For RL1 = 1 to G_OC_Count
+        Temp_Data1 =  Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+        Temp_Data2 =  Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,2])
+        If RL1 = 1 
+            G_OC_Topology[Line_Num] = [Temp_Data1, Temp_Data2]
+            Segment_Num = Segment_Num + 1
+            Continue
+        End If
+        If Temp_Data1 = G_OC_Topology[Line_Num][Segment_Num - 1]
+            G_OC_Topology[Line_Num][Segment_Num] = Temp_Data2
+            Segment_Num = Segment_Num + 1
+            Continue
+        Else
+            Line_Num = Line_Num + 1
+            Segment_Num = 2
+            G_OC_Topology[Line_Num] = [Temp_Data1, Temp_Data2]
+        End If
+    Next
+
+    //构建G_BOX_Count
+    BOX_Count_Correction = 0
+    G_BOX_Count = 0
+    For RL1 = 1 To 100
+        For RL2 = 1 To 100
+            Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
+            If Temp_Data1 = ""
+                Break
+            End If
+            If Temp_Data1 = "empty"
+                BOX_Count_Correction = BOX_Count_Correction + 1
+            End If
+        Next
+        Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,1])
+        If Temp_Data1 = ""
+            Break
+        End If
+        G_BOX_RC[RL1] = RL2 - 1
+        G_BOX_Count = G_BOX_Count + G_BOX_RC[RL1]
+    Next
+    G_BOX_Count = G_BOX_Count - BOX_Count_Correction
+
+    //构建BOX_Info_3D[][][13]
+    For RL1 = 1 To Ubound(G_BOX_RC)
+        For RL2 = 0 To G_BOX_RC[RL1]
+            For RL3 = 0 To 13
+                Temp_List_1[RL3] = ""
+            Next
+            Temp_List_2[RL2] = Clone(Temp_List_1)
+        Next
+        BOX_Info_3D[RL1] = Clone(Temp_List_2)
+    Next
+    BOX_Info_3D[0] = ""
+
+    //BOX_Info_3D 加载 BOX_Name/Box_Longitude/Box_Latitude/Box_Type
+    Longitude_Start = Excel.ReadCell(XLS_Obj,"Info",[1,2])
+    Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
+    Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
+    Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
+    For RL1 = 1 To Ubound(G_BOX_RC)
+        For RL2 = 1 To G_BOX_RC[RL1]
+            BOX_Info_3D[RL1][RL2][G_BOX_Info_Index_Box_Name] = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
+            BOX_Info_3D[RL1][RL2][G_BOX_Info_Index_Box_Longitude] = Longitude_Start + (RL2 - 1) * Horizontal_Density
+            BOX_Info_3D[RL1][RL2][G_BOX_Info_Index_Box_Latitude] = Latitude_Start - (RL1 - 1) * Vertical_Density
+            If InStr(BOX_Info_3D[RL1][RL2][1],"GJ",1,false) <> 0
+                BOX_Info_3D[RL1][RL2][G_BOX_Info_Index_Box_Type] = "guangjiaojiexiang"
+            Else
+                BOX_Info_3D[RL1][RL2][G_BOX_Info_Index_Box_Type] = "guangfenxianxiang"
+            End If
+        Next
+    Next
+    //BOX_Info_3D 降维 G_BOX_Info
+    Temp_Data1 = 1
+    For RL1 = 1 To Ubound(G_BOX_RC)
+        For RL2 = 1 To G_BOX_RC[RL1]
+            If BOX_Info_3D[RL1][RL2][1] = "empty"
+                Continue
+            End If
+            G_BOX_Info[Temp_Data1] = BOX_Info_3D[RL1][RL2]
+            Temp_Data1 = Temp_Data1 + 1
+        Next
+    Next
+
+    Excel.CloseExcel(XLS_Obj,true)
+
+End Function
+

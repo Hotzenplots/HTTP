@@ -1,6 +1,9 @@
 Import Prepare_Data
 Import P1
 Import P2
+Import P3
+Import P4
+Import P5
 
 Dim XLS_Obj 
 Dim Renew_State
@@ -60,7 +63,9 @@ Function MainProgress()
         Next
     End If
 
-
+    If G_P5 = 1 
+        Prepare_Data.P5()
+    End If
 End Function
 
 MainProgress()

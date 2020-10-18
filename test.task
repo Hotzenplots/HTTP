@@ -1,0 +1,5 @@
+dim dRet = ""
+dim deRet = ""
+
+deRet = Decimal(varData)
+dRet = CNumber(varData)
