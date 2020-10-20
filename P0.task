@@ -1,0 +1,210 @@
+Import encode_decode
+Import domtools
+//TracePrint("TEST")
+Function Prepare_Data()
+    // Box_Info 和 OC_Info 的索引
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_Required_ODM_Rows = 10 //
+        Dim G_Box_Info_Index_ODM_ID = 11 //P5_1之后写入
+        Dim G_Box_Info_Index_Required_Tray_Count = 12 //等于Required_ODM_Rows
+        Dim G_Box_Info_Index_Tray_Terminal_IDs = 13 //P5_2之后写入,前期用0填充,用&连接的String
+        Dim G_Box_Info_Index_1FS_Count = 14 //1FS数量
+        Dim G_Box_Info_Index_2FS_Count = 15 //2FS数量
+        Dim G_Box_Info_Index_DL_2FS_Count = 16 //下挂2FS数量
+
+        Dim G_OC_Info_Index_A_Box_Name = 1 //读表
+        Dim G_OC_Info_Index_A_Box_ID = 2 //查询
+        Dim G_OC_Info_Index_A_Box_Type = 3 //判断
+        Dim G_OC_Info_Index_A_Box_Type_ID = 4 //Template 读取
+        Dim G_OC_Info_Index_A_Point_ID = 5 //查询
+        Dim G_OC_Info_Index_A_Point_Type_ID = 6 //Template 读取
+        Dim G_OC_Info_Index_A_Longitude = 7 //计算
+        Dim G_OC_Info_Index_A_Latitude = 8 //计算
+        Dim G_OC_Info_Index_Z_Box_Name = 9 //读表
+        Dim G_OC_Info_Index_Z_Box_ID = 10 //查询
+        Dim G_OC_Info_Index_Z_Box_Type = 11 //判断
+        Dim G_OC_Info_Index_Z_Box_Type_ID = 12 //Template 读取
+        Dim G_OC_Info_Index_Z_Point_ID = 13 //查询
+        Dim G_OC_Info_Index_Z_Point_Type_ID = 14 //Template 读取
+        Dim G_OC_Info_Index_Z_Longitude = 15 //计算
+        Dim G_OC_Info_Index_Z_Latitude = 16 //计算  
+        Dim G_OC_Info_Index_Width = 17 //读取
+        Dim G_OC_Info_Index_Lenth = 18 //计算
+        Dim G_OC_Info_Index_Support_Sys_Name = 19 //计算
+        Dim G_OC_Info_Index_Support_Sys_ID = 20 //查询
+        Dim G_OC_Info_Index_Support_Seg_Name = 21 //计算
+        Dim G_OC_Info_Index_Support_Seg_ID = 22 //查询
+        Dim G_OC_Info_Index_OC_Sys_Name = 23 //计算
+        Dim G_OC_Info_Index_OC_Sys_ID = 24 //查询
+        Dim G_OC_Info_Index_OC_Name = 25 //计算
+        Dim G_OC_Info_Index_OC_ID = 26 //查询
+        Dim G_OC_Info_Index_OC_Fiber_IDs = 27 //查询
+        Dim G_OC_Info_Index_Project_Num_ID = 28 //查询
+        Dim G_OC_Info_Index_Task_Name_ID = 29 //查询
+        Dim G_OC_Info_Index_Business_Level = 30 //常量
+        Dim G_OC_Info_Index_City_ID = 31 //读取
+        Dim G_OC_Info_Index_County_ID = 32 //读取
+        Dim G_OC_Info_Index_DQS_Project_ID = 33 //读取
+        Dim G_OC_Info_Index_DQS_ID = 34 //读取
+        Dim G_OC_Info_Index_DQS_County_ID = 35 //读取
+        Dim G_OC_Info_Index_DQS_Maintainer_ID = 36 //读取
+        Dim G_OC_Info_Index_Life_Cycle = 37 //常量
+        Dim G_OC_Info_Index_Owner_Type = 38 //常量
+        Dim G_OC_Info_Index_Owner_Name = 39 //常量
+        Dim G_OC_Info_Index_Field_Type = 40 //常量
+    
+    // Box 相关变量
+        Dim XLS_Obj
+        Dim RL1
+        Dim RL2
+        Dim RL3
+        Dim Temp_Data_1
+        Dim Temp_Data_2
+        Dim Temp_List_1 = []
+        Dim Temp_List_2 = []
+        Dim Box_Count_Correction
+        Dim Box_Info_Sheet_Exist
+        Dim Box_Info_Sheet_Filled
+        Dim Box_Info_3D = []
+        Dim Vertical_Density
+        Dim Horizontal_Density
+        Dim Latitude_Start
+        Dim Longitude_Start
+        Dim CSV_obj
+        Dim DT_obj
+        Dim List7013 = []
+        Dim Box_Query_URL
+        Dim XML_Info
+        Dim XML_Info_Encoded
+        Dim Content_Lenth
+        Dim Post_Header
+        Dim Response_Body
+
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+    If (G_P1 = 1) OR (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
+        // List7013 构建
+            CSV_obj = CSV.Open(G_CSV_File_Path)
+            DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
+            DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,10,11]) //所属地市,所属区县,所属小区,项目编号,任务名称
+            List7013 = []
+            List7013 = Datatable.GetDataTableByArray(DT_obj,false)
+        // Box_Info_Sheet 存在和填充的判定
+            Temp_Data_1 = 0
+            Temp_List_1 = Excel.GetSheetsName(XLS_Obj)
+            Temp_Data_2 = Join(Temp_List_1,"&")
+            If InStr(Temp_Data_2,"Box_Info",1,false) <> 0
+                Box_Info_Sheet_Exist = 1
+                Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
+                If Temp_Data_1 = G_Box_Count
+                    Box_Info_Sheet_Filled = 1
+                Else
+                    Box_Info_Sheet_Filled = 0
+                End If
+            Else
+                Box_Info_Sheet_Exist = 0
+                Box_Info_Sheet_Filled = 0
+            End If
+        // G_Box_Info 填充
+            If Box_Info_Sheet_Filled = 1
+                //读表,写入G_Box_Info
+                G_Box_Info = Excel.ReadRange(XLS_Obj,"Box_Info","A1")
+                G_Box_Info = Unshift(G_Box_Info,"")
+            Elseif Box_Info_Sheet_Filled = 0
+                If Box_Info_Sheet_Exist = 0
+                    // 建Sheet
+                    Excel.CreateSheet(XLS_Obj,"Box_Info","after",true)
+                End If
+                //运算,写入G_Box_Info,写入Sheet
+
+                //构建Box_Info_3D[][][4]
+                For RL1 = 1 To Ubound(G_Box_RC)
+                    For RL2 = 0 To G_Box_RC[RL1]
+                        For RL3 = 0 To 4
+                            Temp_List_1[RL3] = ""
+                        Next
+                        Temp_List_2[RL2] = Clone(Temp_List_1)
+                    Next
+                    Box_Info_3D[RL1] = Clone(Temp_List_2)
+                Next
+                Box_Info_3D[0] = ""
+                //Box_Info_3D 写入名称/经度/维度/箱子类型
+                Longitude_Start = Excel.ReadCell(XLS_Obj,"Info",[1,2])
+                Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
+                Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
+                Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
+                For RL1 = 1 To Ubound(G_Box_RC)
+                    For RL2 = 1 To G_Box_RC[RL1]
+                        Box_Info_3D[RL1][RL2][1] = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
+                        Box_Info_3D[RL1][RL2][2] = Longitude_Start + (RL2 - 1) * Horizontal_Density
+                        Box_Info_3D[RL1][RL2][3] = Latitude_Start - (RL1 - 1) * Vertical_Density
+                        If InStr(Box_Info_3D[RL1][RL2][1],"GJ",1,false) <> 0
+                            Box_Info_3D[RL1][RL2][4] = "guangjiaojiexiang"
+                        Else
+                            Box_Info_3D[RL1][RL2][4] = "guangfenxianxiang"
+                        End If
+                    Next
+                Next
+                //Box_Info_3D 降维 G_Box_Info
+                Temp_Data_1 = 1
+                For RL1 = 1 To Ubound(G_Box_RC)
+                    For RL2 = 1 To G_Box_RC[RL1]
+                        If Box_Info_3D[RL1][RL2][1] = "empty"
+                            Continue
+                        End If
+                        G_Box_Info[Temp_Data_1] = Box_Info_3D[RL1][RL2]
+                        Temp_Data_1 = Temp_Data_1 + 1
+                    Next
+                Next // 此刻,已写入01-04四个字段
+                Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","F2:P11")
+                For RL1 = 1 to G_Box_Count
+                    For RL2 = 0 to Len(Temp_List_1)
+                        If List7013[2][1] = Temp_List_1[RL2][0]
+                            G_Box_Info[RL1][G_Box_Info_Index_Box_Type_ID] = 000
+                            G_Box_Info[RL1][G_Box_Info_Index_Box_ID] = 000
+                            G_Box_Info[RL1][G_Box_Info_Index_Box_County_ID] = Temp_List_1[RL2][1]
+                            Break
+                        End If
+                    Next
+                Next
+                Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","B2:D3")
+                For RL1 = 1 to G_Box_Count
+                    For RL2 = 0 to Len(Temp_List_1)
+                        If G_Box_Info[RL1][G_Box_Info_Index_Box_Type] = Temp_List_1[RL2][0]
+                            G_Box_Info[RL1][G_Box_Info_Index_Box_Type_ID] = Temp_List_1[RL2][1]
+                            G_Box_Info[RL1][G_Box_Info_Index_Point_ID] = 000
+                            G_Box_Info[RL1][G_Box_Info_Index_Point_Type_ID] = Temp_List_1[RL2][2]
+                            Break
+                        End If
+                    Next
+                Next
+                For RL1 = 1 to G_Box_Count
+                    Box_Query_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
+                    XML_Info = '<request><query mc="'&G_Box_Info[RL1][G_Box_Info_Index_Box_Type]&'" ids="" where="1=1 AND ZH_LABEL LIKE \'%'&G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&'%\'" returnfields="INT_ID,ZH_LABEL,STRUCTURE_ID"/></request>'
+                    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",Box_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_1 = domtools.xpath("//@v")
+                    G_Box_Info[RL1][G_Box_Info_Index_Box_ID] = Temp_List_1[0]
+                    G_Box_Info[RL1][G_Box_Info_Index_Point_ID] = Temp_List_1[2]
+                Next
+                //写入Sheet
+                Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
+            End If
+    End If
+    If (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
+
+    End If
+    Excel.CloseExcel(XLS_Obj,true)
+End Function
+
+

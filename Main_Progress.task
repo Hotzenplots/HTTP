@@ -1,28 +1,62 @@
 Import Prepare_Data
+Import P0
 Import P1
 Import P2
 Import P3
 Import P4
 Import P5
 
-Dim XLS_Obj 
-Dim Renew_State
+Dim XLS_Obj
+Dim Box_Count_Correction
+Dim Temp_Data_1
+Dim RL2
+Dim Push_State
 Dim Add_State
 Dim Lay_State
+Dim P1_Repeat_Start
+Dim P1_Repeat_Sum
 G_XLS_File_Path = G_Path&G_XLS
 G_CSV_File_Path = G_Path&G_CSV
 
 
 Function MainProgress()
-    If G_P1 = 1 
-        Prepare_Data.P1()
-        For RL0 = 1 To 1 //嵌套一层一次循环,判断 G_P1_Repeat_Start 和 G_P1_Repeat_Sum
-            If G_P1_Repeat_Start = G_P1_Repeat_Sum
+    If G_P1 = 1
+        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        // G_Box_Count 和 G_Box_RC 构建
+            Box_Count_Correction = 0
+            G_Box_Count = 0
+            G_Box_RC = []
+            For RL1 = 1 To 100
+                For RL2 = 1 To 100
+                    Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,RL2])
+                    If Temp_Data_1 = ""
+                        Break
+                    End If
+                    If Temp_Data_1 = "empty"
+                        Box_Count_Correction = Box_Count_Correction + 1
+                    End If
+                Next
+                Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,1])
+                If Temp_Data_1 = ""
+                    Break
+                End If 
+                G_Box_RC[RL1] = RL2 - 1
+                G_Box_Count = G_Box_Count + G_Box_RC[RL1]
+            Next
+            G_Box_Count = G_Box_Count - Box_Count_Correction
+        // 构建断点控制参数
+            Excel.WriteCell(XLS_Obj,"Info",[2,6],G_Box_Count,true) //写入P1的Repeat_Sum
+            P1_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[2,5]) //读取P1的Repeat_Start和Repeat_Sum
+            P1_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[2,6]) //读取P1的Repeat_Start和Repeat_Sum
+        Excel.CloseExcel(XLS_Obj,true)
+        For RL0 = 1 To 1 //嵌套一层一次循环,判断 P1_Repeat_Start 和 P1_Repeat_Sum
+            If P1_Repeat_Start >= P1_Repeat_Sum
                 Break
             End If
-            For RL1 = G_P1_Repeat_Start To G_P1_Repeat_Sum
-                Renew_State = P1.Push_BOX(G_BOX_Info[RL1])
-                Traceprint(G_BOX_Info[RL1][1]&Renew_State[0])
+            P0.Prepare_Data()
+            For RL1 = P1_Repeat_Start To P1_Repeat_Sum
+                Push_State = P1.Push_Box(G_Box_Info[RL1])
+                Traceprint(G_Box_Info[RL1][1]&Push_State[0])
                 XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
                 Excel.WriteCell(XLS_Obj,"Info",[2,5],RL1 + 1,true)
                 Excel.CloseExcel(XLS_Obj,true)
@@ -48,7 +82,7 @@ Function MainProgress()
         P2.Prepare_Support_System()
         P3.Prepare_OC_System()
         Prepare_Data.P4()
-        For RL0 = 1 To 1 //嵌套一层一次循环,判断 G_P1_Repeat_Start 和 G_P1_Repeat_Sum
+        For RL0 = 1 To 1 //嵌套一层一次循环,判断 P1_Repeat_Start 和 P1_Repeat_Sum
             If G_P4_Repeat_Start = G_P4_Repeat_Sum
                 Break
             End If
@@ -69,3 +103,4 @@ Function MainProgress()
 End Function
 
 MainProgress()
+

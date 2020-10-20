@@ -1,100 +1,6 @@
 Import Secondary_Func
 // Traceprint("Test")
 
-Function P1()
-    Dim XLS_Obj
-    Dim Temp_Data1
-    Dim Temp_List_1 = []
-    Dim Temp_List_2 = []
-    Dim Temp_List_3 = []
-    Dim BOX_Count_Correction
-    Dim BOX_Info_3D = []
-    Dim TestExcelObj
-    Dim RL1
-    Dim RL2
-    Dim RL3
-    Dim Longitude_Start
-    Dim Latitude_Start
-    Dim Horizontal_Density
-    Dim Vertical_Density 
-    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
-    BOX_Count_Correction = 0
-    G_BOX_Count = 0
-
-    For RL1 = 1 To 100
-        For RL2 = 1 To 100
-            Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
-            If Temp_Data1 = ""
-                Break
-            End If
-            If Temp_Data1 = "empty"
-                BOX_Count_Correction = BOX_Count_Correction + 1
-            End If
-        Next
-        Temp_Data1 = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,1])
-        If Temp_Data1 = ""
-            Break
-        End If
-        G_BOX_RC[RL1] = RL2 - 1
-        G_BOX_Count = G_BOX_Count + G_BOX_RC[RL1]
-    Next
-    G_BOX_Count = G_BOX_Count - BOX_Count_Correction
-
-    //构建BOX_Info_3D[][][4]
-    For RL1 = 1 To Ubound(G_BOX_RC)
-        For RL2 = 0 To G_BOX_RC[RL1]
-            For RL3 = 0 To 4
-                Temp_List_1[RL3] = ""
-            Next
-            Temp_List_2[RL2] = Clone(Temp_List_1)
-        Next
-        BOX_Info_3D[RL1] = Clone(Temp_List_2)
-    Next
-    BOX_Info_3D[0] = ""
-
-    //BOX_Info_3D 加载名称/经度/维度
-    Longitude_Start = Excel.ReadCell(XLS_Obj,"Info",[1,2])
-    Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
-    Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
-    Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
-    For RL1 = 1 To Ubound(G_BOX_RC)
-        For RL2 = 1 To G_BOX_RC[RL1]
-            BOX_Info_3D[RL1][RL2][1] = Excel.ReadCell(XLS_Obj,"BOX_Topology",[RL1,RL2])
-            BOX_Info_3D[RL1][RL2][2] = Longitude_Start + (RL2 - 1) * Horizontal_Density
-            BOX_Info_3D[RL1][RL2][3] = Latitude_Start - (RL1 - 1) * Vertical_Density
-            If InStr(BOX_Info_3D[RL1][RL2][1],"GJ",1,false) <> 0
-                BOX_Info_3D[RL1][RL2][4] = "guangjiaojiexiang"
-            Else
-                BOX_Info_3D[RL1][RL2][4] = "guangfenxianxiang"
-            End If
-        Next
-    Next
-    //BOX_Info_3D 降维 G_BOX_Info
-    Temp_Data1 = 1
-    For RL1 = 1 To Ubound(G_BOX_RC)
-        For RL2 = 1 To G_BOX_RC[RL1]
-            If BOX_Info_3D[RL1][RL2][1] = "empty"
-                Continue
-            End If
-            G_BOX_Info[Temp_Data1] = BOX_Info_3D[RL1][RL2]
-            Temp_Data1 = Temp_Data1 + 1
-        Next
-    Next
-
-    If G_Test_Output = 1 
-        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P1数据验证.xlsx",false)
-        Excel.WriteRange(TestExcelObj,"Sheet1","A1",G_BOX_Info,false)
-        Excel.CloseExcel(TestExcelObj,true)
-    End If
-    
-    //写入P1的Repeat_Sum
-    Excel.WriteCell(XLS_Obj,"Info",[2,6],G_BOX_Count,true)
-    //读取P1的Repeat_Start和Repeat_Sum
-    G_P1_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[2,5])
-    G_P1_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[2,6])
-    Excel.CloseExcel(XLS_Obj,true)
-End Function
-
 Function P2()
     Dim XLS_Obj
     Dim Temp_Data1
@@ -337,7 +243,7 @@ Function P5()
     Const G_OC_Info_Index_OC_Fiber_IDs = 27 //查询
     Const G_OC_Info_Index_Project_Num_ID = 28 //查询
     Const G_OC_Info_Index_Task_Name_ID = 29 //查询
-    Const G_OC_Info_Index_Business_Level = 30 //查询
+    Const G_OC_Info_Index_Business_Level = 30 //常量
     Const G_OC_Info_Index_City_ID = 31 //读取
     Const G_OC_Info_Index_County_ID = 32 //读取
     Const G_OC_Info_Index_DQS_Project_ID = 33 //读取
@@ -450,4 +356,3 @@ Function P5()
     Excel.CloseExcel(XLS_Obj,true)
 
 End Function
-

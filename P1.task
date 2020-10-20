@@ -1,35 +1,27 @@
-Import encode_decode
 Import domtools
-Function Push_Box(Para_BOX_Info)
-    Dim URL_Query_sid
-    Dim xml_info
-    Dim xml_info_encoded
-    Dim Content_Lenth
-    Dim Post_Header
-    Dim Recourse_Sid
+Function Push_Box(Para_Box_Info)
     Dim Response_Body
+    Dim Push_URL
+    Dim Push_URL_Partial_1
+    Dim Push_URL_Partial_2
+    Dim Push_State
+    // Box_Info 的索引
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
 
-    Dim URL_Renew_Recourse
-    Dim URL_Renew_Recourse_Partial_1
-    Dim URL_Renew_Recourse_Partial_2
-
-    Dim Renew_State
-
-    URL_Query_sid = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
-    xml_info = '<request><query mc="'&Para_BOX_Info[4]&'" ids="" where="1=1 AND ZH_LABEL LIKE \'%'&Para_BOX_Info[1]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
-    xml_info_encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(xml_info),"/","%2F",true)
-    Content_Lenth = CStr(Len(xml_info_encoded))
-    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
-    Response_Body = HttpSession.Request("POST",URL_Query_sid,{"params":{},"data":xml_info_encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    Push_URL_Partial_1 = "http://10.209.199.74:8120/igisserver_osl/rest/SynchroController/synchroData"
+    Push_URL_Partial_2 = "?sid="&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_ID],0)&"&sType="&Para_Box_Info[G_Box_Info_Index_Box_Type]&"&longi="&Para_Box_Info[G_Box_Info_Index_Box_Longitude]&"&lati="&Para_Box_Info[G_Box_Info_Index_Box_Latitude]
+    Push_URL = Push_URL_Partial_1&Push_URL_Partial_2
+    Response_Body = HttpSession.Request("POST",Push_URL,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
     domtools.InitDom(Response_Body)
-    Recourse_Sid = domtools.xpath("//@int_id")
-
-    URL_Renew_Recourse_Partial_1 = "http://10.209.199.74:8120/igisserver_osl/rest/SynchroController/synchroData"
-    URL_Renew_Recourse_Partial_2 = "?sid="&Recourse_Sid[0]&"&sType="&Para_BOX_Info[4]&"&longi="&Para_BOX_Info[2]&"&lati="&Para_BOX_Info[3]
-    URL_Renew_Recourse = URL_Renew_Recourse_Partial_1&URL_Renew_Recourse_Partial_2
-    Response_Body = HttpSession.Request("POST",URL_Renew_Recourse,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-    domtools.InitDom(Response_Body)
-    Renew_State = domtools.xpath("//message/text()")
-    Return Renew_State
+    Push_State = domtools.xpath("//message/text()")
+    Return Push_State
 End Function
 
