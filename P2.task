@@ -38,6 +38,7 @@ Function Add_Support_Segment()
         Dim G_OC_Info_Index_OC_Sys_Name       = 34
         Dim G_OC_Info_Index_OC_Sys_ID         = 35
         Dim G_OC_Info_Index_Support_Seg_Name  = 36
+        Dim G_OC_Info_Index_OC_Name           = 37
 
     Dim Temp_List_1 = []
     Dim URL_ADD

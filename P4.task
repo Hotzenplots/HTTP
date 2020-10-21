@@ -1,48 +1,47 @@
 Import domtools
 Import encode_decode
-
-Function Query_Support_Segment_and_OC_Segment_ID(Para_G_OC_Info)
-    Dim URL_Query
-    Dim XML_Info
-    Dim XML_Info2
-    Dim XML_Info_Encoded
-    Dim XML_Info_Encoded2
-    Dim Content_Lenth
-    Dim Post_Header
-    Dim Response_Body
-    Dim TempList1
-    Dim TempList2
-    Dim TestExcelObj
-
-    URL_Query = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
-    XML_Info = '<request><query mc="yinshangduan" where="1=1 AND ZH_LABEL LIKE \'%'&Para_G_OC_Info[21]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
-    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
-    Content_Lenth = CStr(Len(XML_Info_Encoded))
-    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
-    Response_Body = HttpSession.Request("POST",URL_Query,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-    domtools.InitDom(Response_Body)
-    TempList1 = domtools.xpath("//@int_id")
-
-    XML_Info2 = '<request><query mc="guanglanduan" where="1=1 AND ZH_LABEL LIKE \'%'&Para_G_OC_Info[21]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
-    XML_Info_Encoded2 = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info2),"/","%2F",true)
-    Content_Lenth = CStr(Len(XML_Info_Encoded))
-    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
-    Response_Body = HttpSession.Request("POST",URL_Query,{"params":{},"data":XML_Info_Encoded2,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-    domtools.InitDom(Response_Body)
-    TempList2 = domtools.xpath("//@int_id")
-
-    For RL1 = 1 to G_OC_Count
-        If  Para_G_OC_Info[21] = G_OC_Info[RL1][21]
-            G_OC_Info[RL1][33] = TempList1[0]
-            G_OC_Info[RL1][34] = TempList2[0]
-            Break
-        End If
-    Next
-
-End Function
-
-
 Function Optical_Cable_Lay(Para_G_OC_Info)
+    // OC_Info 的索引
+        Dim G_OC_Info_Index_A_Box_Name        = 01
+        Dim G_OC_Info_Index_A_Box_ID          = 02
+        Dim G_OC_Info_Index_A_Box_Type        = 03
+        Dim G_OC_Info_Index_A_Box_Type_ID     = 04 
+        Dim G_OC_Info_Index_A_Point_ID        = 05
+        Dim G_OC_Info_Index_A_Point_Type_ID   = 06
+        Dim G_OC_Info_Index_A_Longitude       = 07
+        Dim G_OC_Info_Index_A_Latitude        = 08
+        Dim G_OC_Info_Index_Z_Box_Name        = 09
+        Dim G_OC_Info_Index_Z_Box_ID          = 10
+        Dim G_OC_Info_Index_Z_Box_Type        = 11
+        Dim G_OC_Info_Index_Z_Box_Type_ID     = 12
+        Dim G_OC_Info_Index_Z_Point_ID        = 13
+        Dim G_OC_Info_Index_Z_Point_Type_ID   = 14
+        Dim G_OC_Info_Index_Z_Longitude       = 15
+        Dim G_OC_Info_Index_Z_Latitude        = 16
+        Dim G_OC_Info_Index_Width             = 17
+        Dim G_OC_Info_Index_Lenth             = 18
+        Dim G_OC_Info_Index_Project_Code_ID   = 19
+        Dim G_OC_Info_Index_Task_Name_ID      = 20
+        Dim G_OC_Info_Index_Business_Level    = 21
+        Dim G_OC_Info_Index_City_ID           = 22
+        Dim G_OC_Info_Index_County_ID         = 23
+        Dim G_OC_Info_Index_DQS_Project_ID    = 24
+        Dim G_OC_Info_Index_DQS_ID            = 25
+        Dim G_OC_Info_Index_DQS_County_ID     = 26
+        Dim G_OC_Info_Index_DQS_Maintainer_ID = 27
+        Dim G_OC_Info_Index_Life_Cycle        = 28
+        Dim G_OC_Info_Index_Owner_Type        = 29
+        Dim G_OC_Info_Index_Owner_Name        = 30
+        Dim G_OC_Info_Index_Field_Type        = 31
+        Dim G_OC_Info_Index_Support_Sys_Name  = 32
+        Dim G_OC_Info_Index_Support_Sys_ID    = 33
+        Dim G_OC_Info_Index_OC_Sys_Name       = 34
+        Dim G_OC_Info_Index_OC_Sys_ID         = 35
+        Dim G_OC_Info_Index_Support_Seg_Name  = 36
+        Dim G_OC_Info_Index_OC_Name           = 37
+        Dim G_OC_Info_Index_Support_Seg_ID    = 38
+        Dim G_OC_Info_Index_OC_ID             = 39
+
     Dim TempList1 = []
     Dim TempData1
     Dim URL_Add
@@ -54,7 +53,7 @@ Function Optical_Cable_Lay(Para_G_OC_Info)
     Dim TestExcelObj
 
     URL_Add = "http://10.209.199.74:8120/igisserver_osl/rest/optCabLayInspur/saveFiberSegM1"
-    XML_Info = '<xmldata><fiberseg id="'&Para_G_OC_Info[34]&'" aid="'&Para_G_OC_Info[5]&'" zid="'&Para_G_OC_Info[10]&'"/><cablays><cablay id="'&Para_G_OC_Info[33]&'" type="yinshangduan" name="'&Para_G_OC_Info[21]&'" aid="'&Para_G_OC_Info[5]&'" zid="'&Para_G_OC_Info[10]&'"/></cablays></xmldata>'
+    XML_Info = '<xmldata><fiberseg id="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_OC_ID],0))&'" aid="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_A_Point_ID],0))&'" zid="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_Z_Point_ID],0))&'"/><cablays><cablay id="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_Support_Seg_ID],0))&'" type="yinshangduan" name="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_Support_Seg_Name],0))&'" aid="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_A_Point_ID],0))&'" zid="'&CStr(Math.Round(Para_G_OC_Info[G_OC_Info_Index_Z_Point_ID],0))&'"/></cablays></xmldata>'
     XML_Info_Encoded = "xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
     Content_Lenth = CStr(Len(XML_Info_Encoded))
     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}

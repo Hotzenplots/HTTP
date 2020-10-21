@@ -56,10 +56,10 @@ Function Prepare_Data()
         Dim G_OC_Info_Index_OC_Sys_Name       = 34
         Dim G_OC_Info_Index_OC_Sys_ID         = 35
         Dim G_OC_Info_Index_Support_Seg_Name  = 36
+        Dim G_OC_Info_Index_OC_Name           = 37
+        Dim G_OC_Info_Index_Support_Seg_ID    = 38
+        Dim G_OC_Info_Index_OC_ID             = 39
 
-        Dim G_OC_Info_Index_Support_Seg_ID = 22 //查询
-        Dim G_OC_Info_Index_OC_Name = 25 //计算
-        Dim G_OC_Info_Index_OC_ID = 26 //查询
         Dim G_OC_Info_Index_OC_Fiber_IDs = 27 //查询
     
     // Box 相关变量
@@ -88,9 +88,6 @@ Function Prepare_Data()
         Dim Content_Lenth
         Dim Post_Header
         Dim Response_Body
-
-
-
     XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
     If (G_P1 = 1) OR (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
         // List7013 构建
@@ -264,8 +261,11 @@ Function Prepare_Data()
                 OC_Info_Sheet_Exist = 1
                 Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
                 Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
-                //此处判断rows&colums
-                OC_Info_Sheet_Filled = 0
+                If Temp_Data_1 = G_OC_Count
+                    OC_Info_Sheet_Filled = 1
+                Else
+                    OC_Info_Sheet_Filled = 0
+                End If
             Else
                 OC_Info_Sheet_Exist = 0
                 OC_Info_Sheet_Filled = 0
@@ -420,10 +420,86 @@ Function Prepare_Data()
                         G_OC_Info[RL1][G_OC_Info_Index_OC_Sys_Name] = OC_Sys_Name
                         G_OC_Info[RL1][G_OC_Info_Index_OC_Sys_ID] = OC_Sys_Name_ID
                         G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name] = G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name]&"资源点"&"-"&G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name]&"资源点"
+                        G_OC_Info[RL1][G_OC_Info_Index_OC_Name] = G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name]&"001"
                     Next
+                For RL1 = 1 to G_OC_Count //解决ReadRange的bug
+                    G_OC_Info[RL1][0] = "yyz"
+                Next
                 //写入Sheet
                 Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
             End If
+    End If
+    If (G_P4 = 1) OR (G_P5 = 1)
+        // OC_Info_Sheet 填充是否完整判定
+            Temp_Data_1 = 0
+            Temp_Data_2 = 0
+            Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
+            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
+            If (Temp_Data_1 = G_OC_Count ) AND (Temp_Data_2 = 40)
+                OC_Info_Sheet_Filled = 1
+            Else
+                OC_Info_Sheet_Filled = 0
+            End If
+        // G_OC_Info 填充
+            If OC_Info_Sheet_Filled = 1
+                //读表,写入G_OC_Info
+                G_OC_Info = Excel.ReadRange(XLS_Obj,"OC_Info","A1")
+                G_OC_Info = Unshift(G_OC_Info,"")
+            Elseif OC_Info_Sheet_Filled = 0
+                For RL1 = 1 to G_OC_Count
+                    OC_Query_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
+                    XML_Info = '<request><query mc="yinshangduan" where="1=1 AND ZH_LABEL LIKE \'%'&G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+                    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",OC_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_1 = domtools.xpath("//@int_id")
+
+                    XML_Info = '<request><query mc="guanglanduan" where="1=1 AND ZH_LABEL LIKE \'%'&G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+                    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",OC_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_2 = domtools.xpath("//@int_id")
+
+                    G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_ID] = Temp_List_1[0]
+                    G_OC_Info[RL1][G_OC_Info_Index_OC_ID] = Temp_List_2[0]
+                Next
+                //写入Sheet
+                Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
+            End If
+
+    End If
+    // OCT Variables
+        Dim Line_Num
+        Dim Segment_Num
+    If G_P5 = 1
+        // G_OC_Topology Creat
+            Temp_Data_1 = ""
+            Temp_Data_2 = ""
+            Line_Num = 1
+            Segment_Num = 1
+            For RL1 = 1 to G_OC_Count
+                Temp_Data_1 =  Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+                Temp_Data_2 =  Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,2])
+                If RL1 = 1 
+                    G_OC_Topology[Line_Num] = [Temp_Data_1, Temp_Data_2]
+                    Segment_Num = Segment_Num + 1
+                    Continue
+                End If
+                If Temp_Data_1 = G_OC_Topology[Line_Num][Segment_Num - 1]
+                    G_OC_Topology[Line_Num][Segment_Num] = Temp_Data_2
+                    Segment_Num = Segment_Num + 1
+                    Continue
+                Else
+                    Line_Num = Line_Num + 1
+                    Segment_Num = 2
+                    G_OC_Topology[Line_Num] = [Temp_Data_1, Temp_Data_2]
+                End If
+            Next
+        // 123
     End If
     Excel.CloseExcel(XLS_Obj,true)
 End Function
