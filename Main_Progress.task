@@ -15,6 +15,8 @@ Dim Add_State
 Dim Lay_State
 Dim P1_Repeat_Start
 Dim P1_Repeat_Sum
+Dim P2_Repeat_Start
+Dim P2_Repeat_Sum
 G_XLS_File_Path = G_Path&G_XLS
 G_CSV_File_Path = G_Path&G_CSV
 
@@ -65,10 +67,30 @@ Function MainProgress()
     End If
 
     If G_P2 = 1
-        P2.Prepare_Support_System()
-        Prepare_Data.P2()
-        Add_State = P2.Add_Support_Segment()
-        Traceprint("引上段建立"&Add_State)
+        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        // G_OC_Count 构建
+            For RL1 = 1 To 500
+                Temp_Data_1 = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+                If Temp_Data_1 = ""
+                    Break
+                End If
+                G_OC_Count = RL1
+            Next
+        // 构建断点控制参数
+            P2_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[3,5]) //读取P2的Repeat_Start和Repeat_Sum
+            P2_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[3,6]) //读取P2的Repeat_Start和Repeat_Sum
+        Excel.CloseExcel(XLS_Obj,true)
+        For RL0 = 1 To 1 //嵌套一层一次循环,判断 P2_Repeat_Start 和 P2_Repeat_Sum
+            If P2_Repeat_Start >= P2_Repeat_Sum
+                Break
+            End If
+            P0.Prepare_Data()
+            Add_State = P2.Add_Support_Segment()
+            Traceprint("引上段建立"&Add_State)
+            XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+            Excel.WriteCell(XLS_Obj,"Info",[3,5],(P2_Repeat_Start + 1),true)
+            Excel.CloseExcel(XLS_Obj,true)
+        Next
     End If
 
     If G_P3 = 1
@@ -79,8 +101,7 @@ Function MainProgress()
     End If
 
     If G_P4 = 1
-        P2.Prepare_Support_System()
-        P3.Prepare_OC_System()
+
         Prepare_Data.P4()
         For RL0 = 1 To 1 //嵌套一层一次循环,判断 P1_Repeat_Start 和 P1_Repeat_Sum
             If G_P4_Repeat_Start = G_P4_Repeat_Sum

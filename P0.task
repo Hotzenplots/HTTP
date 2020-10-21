@@ -20,46 +20,47 @@ Function Prepare_Data()
         Dim G_Box_Info_Index_2FS_Count = 15 //2FS数量
         Dim G_Box_Info_Index_DL_2FS_Count = 16 //下挂2FS数量
 
-        Dim G_OC_Info_Index_A_Box_Name = 1 //读表
-        Dim G_OC_Info_Index_A_Box_ID = 2 //查询
-        Dim G_OC_Info_Index_A_Box_Type = 3 //判断
-        Dim G_OC_Info_Index_A_Box_Type_ID = 4 //Template 读取
-        Dim G_OC_Info_Index_A_Point_ID = 5 //查询
-        Dim G_OC_Info_Index_A_Point_Type_ID = 6 //Template 读取
-        Dim G_OC_Info_Index_A_Longitude = 7 //计算
-        Dim G_OC_Info_Index_A_Latitude = 8 //计算
-        Dim G_OC_Info_Index_Z_Box_Name = 9 //读表
-        Dim G_OC_Info_Index_Z_Box_ID = 10 //查询
-        Dim G_OC_Info_Index_Z_Box_Type = 11 //判断
-        Dim G_OC_Info_Index_Z_Box_Type_ID = 12 //Template 读取
-        Dim G_OC_Info_Index_Z_Point_ID = 13 //查询
-        Dim G_OC_Info_Index_Z_Point_Type_ID = 14 //Template 读取
-        Dim G_OC_Info_Index_Z_Longitude = 15 //计算
-        Dim G_OC_Info_Index_Z_Latitude = 16 //计算  
-        Dim G_OC_Info_Index_Width = 17 //读取
-        Dim G_OC_Info_Index_Lenth = 18 //计算
-        Dim G_OC_Info_Index_Support_Sys_Name = 19 //计算
-        Dim G_OC_Info_Index_Support_Sys_ID = 20 //查询
-        Dim G_OC_Info_Index_Support_Seg_Name = 21 //计算
+        Dim G_OC_Info_Index_A_Box_Name        = 01
+        Dim G_OC_Info_Index_A_Box_ID          = 02
+        Dim G_OC_Info_Index_A_Box_Type        = 03
+        Dim G_OC_Info_Index_A_Box_Type_ID     = 04 
+        Dim G_OC_Info_Index_A_Point_ID        = 05
+        Dim G_OC_Info_Index_A_Point_Type_ID   = 06
+        Dim G_OC_Info_Index_A_Longitude       = 07
+        Dim G_OC_Info_Index_A_Latitude        = 08
+        Dim G_OC_Info_Index_Z_Box_Name        = 09
+        Dim G_OC_Info_Index_Z_Box_ID          = 10
+        Dim G_OC_Info_Index_Z_Box_Type        = 11
+        Dim G_OC_Info_Index_Z_Box_Type_ID     = 12
+        Dim G_OC_Info_Index_Z_Point_ID        = 13
+        Dim G_OC_Info_Index_Z_Point_Type_ID   = 14
+        Dim G_OC_Info_Index_Z_Longitude       = 15
+        Dim G_OC_Info_Index_Z_Latitude        = 16
+        Dim G_OC_Info_Index_Width             = 17
+        Dim G_OC_Info_Index_Lenth             = 18
+        Dim G_OC_Info_Index_Project_Code_ID   = 19
+        Dim G_OC_Info_Index_Task_Name_ID      = 20
+        Dim G_OC_Info_Index_Business_Level    = 21
+        Dim G_OC_Info_Index_City_ID           = 22
+        Dim G_OC_Info_Index_County_ID         = 23
+        Dim G_OC_Info_Index_DQS_Project_ID    = 24
+        Dim G_OC_Info_Index_DQS_ID            = 25
+        Dim G_OC_Info_Index_DQS_County_ID     = 26
+        Dim G_OC_Info_Index_DQS_Maintainer_ID = 27
+        Dim G_OC_Info_Index_Life_Cycle        = 28
+        Dim G_OC_Info_Index_Owner_Type        = 29
+        Dim G_OC_Info_Index_Owner_Name        = 30
+        Dim G_OC_Info_Index_Field_Type        = 31
+        Dim G_OC_Info_Index_Support_Sys_Name  = 32
+        Dim G_OC_Info_Index_Support_Sys_ID    = 33
+        Dim G_OC_Info_Index_OC_Sys_Name       = 34
+        Dim G_OC_Info_Index_OC_Sys_ID         = 35
+        Dim G_OC_Info_Index_Support_Seg_Name  = 36
+
         Dim G_OC_Info_Index_Support_Seg_ID = 22 //查询
-        Dim G_OC_Info_Index_OC_Sys_Name = 23 //计算
-        Dim G_OC_Info_Index_OC_Sys_ID = 24 //查询
         Dim G_OC_Info_Index_OC_Name = 25 //计算
         Dim G_OC_Info_Index_OC_ID = 26 //查询
         Dim G_OC_Info_Index_OC_Fiber_IDs = 27 //查询
-        Dim G_OC_Info_Index_Project_Num_ID = 28 //查询
-        Dim G_OC_Info_Index_Task_Name_ID = 29 //查询
-        Dim G_OC_Info_Index_Business_Level = 30 //常量
-        Dim G_OC_Info_Index_City_ID = 31 //读取
-        Dim G_OC_Info_Index_County_ID = 32 //读取
-        Dim G_OC_Info_Index_DQS_Project_ID = 33 //读取
-        Dim G_OC_Info_Index_DQS_ID = 34 //读取
-        Dim G_OC_Info_Index_DQS_County_ID = 35 //读取
-        Dim G_OC_Info_Index_DQS_Maintainer_ID = 36 //读取
-        Dim G_OC_Info_Index_Life_Cycle = 37 //常量
-        Dim G_OC_Info_Index_Owner_Type = 38 //常量
-        Dim G_OC_Info_Index_Owner_Name = 39 //常量
-        Dim G_OC_Info_Index_Field_Type = 40 //常量
     
     // Box 相关变量
         Dim XLS_Obj
@@ -88,6 +89,8 @@ Function Prepare_Data()
         Dim Post_Header
         Dim Response_Body
 
+
+
     XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
     If (G_P1 = 1) OR (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
         // List7013 构建
@@ -96,6 +99,28 @@ Function Prepare_Data()
             DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,10,11]) //所属地市,所属区县,所属小区,项目编号,任务名称
             List7013 = []
             List7013 = Datatable.GetDataTableByArray(DT_obj,false)
+        // G_Box_Count 和 G_Box_RC 构建
+            Box_Count_Correction = 0
+            G_Box_Count = 0
+            G_Box_RC = []
+            For RL1 = 1 To 100
+                For RL2 = 1 To 100
+                    Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,RL2])
+                    If Temp_Data_1 = ""
+                        Break
+                    End If
+                    If Temp_Data_1 = "empty"
+                        Box_Count_Correction = Box_Count_Correction + 1
+                    End If
+                Next
+                Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,1])
+                If Temp_Data_1 = ""
+                    Break
+                End If 
+                G_Box_RC[RL1] = RL2 - 1
+                G_Box_Count = G_Box_Count + G_Box_RC[RL1]
+            Next
+            G_Box_Count = G_Box_Count - Box_Count_Correction
         // Box_Info_Sheet 存在和填充的判定
             Temp_Data_1 = 0
             Temp_List_1 = Excel.GetSheetsName(XLS_Obj)
@@ -119,7 +144,7 @@ Function Prepare_Data()
                 G_Box_Info = Unshift(G_Box_Info,"")
             Elseif Box_Info_Sheet_Filled = 0
                 If Box_Info_Sheet_Exist = 0
-                    // 建Sheet
+                    //建Sheet
                     Excel.CreateSheet(XLS_Obj,"Box_Info","after",true)
                 End If
                 //运算,写入G_Box_Info,写入Sheet
@@ -197,12 +222,208 @@ Function Prepare_Data()
                     G_Box_Info[RL1][G_Box_Info_Index_Box_ID] = Temp_List_1[0]
                     G_Box_Info[RL1][G_Box_Info_Index_Point_ID] = Temp_List_1[2]
                 Next
+                For RL1 = 1 to G_Box_Count //解决ReadRange的bug
+                    G_Box_Info[RL1][0] = "yyz"
+                Next
                 //写入Sheet
                 Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
             End If
     End If
+    // SS&OC 相关变量
+        Dim OC_Info_Sheet_Exist
+        Dim OC_Info_Sheet_Filled
+        Dim Horizontal_Metre 
+        Dim Vertical_Metre
+        Dim Project_Code_ID
+        Dim Task_Name_ID_List = []
+        Dim Task_Name_ID
+        Dim City_ID
+        Dim County_ID_List = []
+        Dim County_ID_Index
+        Dim OC_Query_URL
+        Dim OC_ADD_Support_Sys_URL
+        Dim OC_ADD_OC_Sys_URL
+        Dim Support_Sys_Name
+        Dim Support_Sys_Name_ID
+        Dim OC_Sys_Name
+        Dim OC_Sys_Name_ID
     If (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
+        // G_OC_Count 构建
+            For RL1 = 1 To 500
+                Temp_Data_1 = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+                If Temp_Data_1 = ""
+                    Break
+                End If
+                G_OC_Count = RL1
+            Next
+        // OC_Info_Sheet 存在和填充的判定
+            Temp_Data_1 = 0
+            Temp_List_1 = Excel.GetSheetsName(XLS_Obj)
+            Temp_Data_2 = Join(Temp_List_1,"&")
+            If InStr(Temp_Data_2,"OC_Info",1,false) <> 0
+                OC_Info_Sheet_Exist = 1
+                Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
+                Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
+                //此处判断rows&colums
+                OC_Info_Sheet_Filled = 0
+            Else
+                OC_Info_Sheet_Exist = 0
+                OC_Info_Sheet_Filled = 0
+            End If
+        // G_OC_Info 填充
+            If OC_Info_Sheet_Filled = 1
+                //读表,写入G_OC_Info
+                G_OC_Info = Excel.ReadRange(XLS_Obj,"OC_Info","A1")
+                G_OC_Info = Unshift(G_OC_Info,"")
+            Elseif OC_Info_Sheet_Filled = 0
+                If OC_Info_Sheet_Exist = 0
+                    //建Sheet
+                    Excel.CreateSheet(XLS_Obj,"OC_Info","after",true)
+                End If
+                //运算,写入G_OC_Info,写入Sheet
 
+                // Lenth 准备
+                    Horizontal_Density = Excel.ReadCell(XLS_Obj,"Info",[3,2])
+                    Vertical_Density = Excel.ReadCell(XLS_Obj,"Info",[4,2])
+                    Latitude_Start = Excel.ReadCell(XLS_Obj,"Info",[2,2])
+                    Horizontal_Metre = 111.11 * 1000 * Math.Cos(Latitude_Start * 3.1415926535 / 180) //1经度米数
+                    Vertical_Metre = 111.11 * 1000 //1纬度米数
+                // Project_Code_ID 查询
+                    Temp_Data_1 = "http://10.209.199.74:8120/igisserver_osl/rest/datatrans/expall?model=yinshangduan&fname=PROJECT_CODE&p1="
+                    OC_Query_URL = Temp_Data_1&CStr(List7013[1][3])
+                    Response_Body = HttpSession.Request("GET",OC_Query_URL,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_Data_1 =  domtools.xpath("//@value")
+                    Project_Code_ID = Math.Round(CNumber(Temp_Data_1[0]),0)
+                // Task_Name_ID_List 准备
+                    Task_Name_ID_List = Split(List7013[1][4],"-") 
+                    Task_Name_ID = Task_Name_ID_List[0]
+                // City_ID 准备
+                    Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","R2:S12")
+                    For RL1 = 0 to Len(Temp_List_1)
+                        If List7013[1][0] = Temp_List_1[RL1][0]
+                            City_ID = Temp_List_1[RL1][1]
+                            Break
+                        End If
+                    Next
+                // County_ID 准备
+                    County_ID_List = Excel.ReadRange(XLS_Obj,"Template","F2:P11")
+                    For RL1 = 0 to Len(County_ID_List)
+                        If List7013[1][1] = County_ID_List[RL1][0]
+                            County_ID_Index = RL1
+                            Break
+                        End If
+                    Next
+
+                // G_OC_Info [][40] 构建
+                    For RL1 = 1 To G_OC_Count
+                        For RL2 = 0 To 40
+                            Temp_List_1[RL2] = ""
+                        Next
+                        G_OC_Info[RL1] = Clone(Temp_List_1)
+                    Next
+                // 开始填充
+                    For RL1 = 1 to G_OC_Count
+                        G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name] = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
+                        G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name] = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,2])
+                        For RL2 = 1 to Ubound(G_Box_Info)
+                            If G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Box_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Box_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Box_Type] = G_Box_Info[RL2][G_Box_Info_Index_Box_Type]
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Box_Type_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Box_Type_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Point_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Point_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Point_Type_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Point_Type_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Longitude] = G_Box_Info[RL2][G_Box_Info_Index_Box_Longitude]
+                                G_OC_Info[RL1][G_OC_Info_Index_A_Latitude] = G_Box_Info[RL2][G_Box_Info_Index_Box_Latitude]
+                            End If
+                            If G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Box_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Box_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Type] = G_Box_Info[RL2][G_Box_Info_Index_Box_Type]
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Type_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Box_Type_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Point_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Point_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Point_Type_ID] = CStr(Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Point_Type_ID],0))
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Longitude] = G_Box_Info[RL2][G_Box_Info_Index_Box_Longitude]
+                                G_OC_Info[RL1][G_OC_Info_Index_Z_Latitude] = G_Box_Info[RL2][G_Box_Info_Index_Box_Latitude]
+                            End If
+                        Next
+                        G_OC_Info[RL1][G_OC_Info_Index_Width] = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,3])
+                        G_OC_Info[RL1][G_OC_Info_Index_Lenth] = Math.Round(Math.Sqr(((CNumber(G_OC_Info[RL1][G_OC_Info_Index_A_Longitude]) - CNumber(G_OC_Info[RL1][G_OC_Info_Index_Z_Longitude])) * Horizontal_Metre) ^ 2 + ((CNumber(G_OC_Info[RL1][G_OC_Info_Index_A_Latitude]) - CNumber(G_OC_Info[RL1][G_OC_Info_Index_Z_Latitude])) * Vertical_Metre) ^ 2),0)
+                        G_OC_Info[RL1][G_OC_Info_Index_Project_Code_ID] = Project_Code_ID
+                        G_OC_Info[RL1][G_OC_Info_Index_Task_Name_ID] = Task_Name_ID
+                        G_OC_Info[RL1][G_OC_Info_Index_Business_Level] = 8
+                        G_OC_Info[RL1][G_OC_Info_Index_City_ID] = CStr(Math.Round(City_ID,0))
+                        G_OC_Info[RL1][G_OC_Info_Index_County_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][1],0))
+                        G_OC_Info[RL1][G_OC_Info_Index_DQS_Project_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][3],0))
+                        G_OC_Info[RL1][G_OC_Info_Index_DQS_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][5],0))
+                        G_OC_Info[RL1][G_OC_Info_Index_DQS_County_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][7],0))
+                        G_OC_Info[RL1][G_OC_Info_Index_DQS_Maintainer_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][9],0))
+                        G_OC_Info[RL1][G_OC_Info_Index_Life_Cycle] = 8
+                        G_OC_Info[RL1][G_OC_Info_Index_Owner_Type] = 1
+                        G_OC_Info[RL1][G_OC_Info_Index_Owner_Name] = 0
+                        G_OC_Info[RL1][G_OC_Info_Index_Field_Type] = "市城区域"
+                    Next
+                // Support_Sys_Name&OC_Sys_Name 准备
+                    Support_Sys_Name = List7013[1][0]&List7013[1][1]&List7013[1][2]&"区内引上系统"
+                    OC_Sys_Name = List7013[1][0]&List7013[1][1]&List7013[1][2]&"区内光缆系统"
+                    // Support_Sys 查询/建立
+                    OC_Query_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
+                    XML_Info = '<request><query mc="xitong" where="1=1 AND LINESEG_TYPE=\'9108\' AND ZH_LABEL LIKE \'%'&Support_Sys_Name&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+                    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",OC_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_1 = domtools.xpath("//@counts")
+                    If Temp_List_1[0] <> "0" //查找到
+                        Temp_List_1 = domtools.xpath("//@int_id")
+                        Support_Sys_Name_ID = Math.Round(CNumber(Temp_List_1[0]),0)
+                        //考虑删除
+                    Else //没查找到
+                        OC_ADD_Support_Sys_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalSave"
+                        XML_Info = '<response mode="add"><mc type="xitong"><mo group="1"><fv k="SYSTEM_LEVEL" v="8"/><fv k="CITY_ID" v="'&G_OC_Info[1][G_OC_Info_Index_City_ID]&'"/><fv k="STATUS" v="8"/><fv k="COUNTY_ID" v="'&G_OC_Info[1][G_OC_Info_Index_County_ID]&'"/><fv k="LINESEG_TYPE" v="9108"/><fv k="ZH_LABEL" v="'&Support_Sys_Name&'"/><fv k="INT_ID" v="new-27991311"/></mo></mc></response>'
+                        XML_Info_Encoded = "xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                        Content_Lenth = CStr(Len(XML_Info_Encoded))
+                        Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                        Response_Body = HttpSession.Request("POST",OC_ADD_Support_Sys_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                        domtools.InitDom(Response_Body)
+                        Temp_List_1 = domtools.xpath("//@newid")
+                        Support_Sys_Name_ID = Math.Round(CNumber(Temp_List_1[0]),0)
+                    End If
+                    // OC_Sys 查询/建立
+                    OC_Query_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
+                    XML_Info = '<request><query mc="guanglanxitong" where="1=1 AND ZH_LABEL LIKE \'%'&OC_Sys_Name&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+                    XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",OC_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_1 = domtools.xpath("//@counts")
+                    If Temp_List_1[0] <> "0" //查找到
+                        Temp_List_1 = domtools.xpath("//@int_id")
+                        OC_Sys_Name_ID = Math.Round(CNumber(Temp_List_1[0]),0)
+                        //考虑删除
+                    Else //没查找到
+                        OC_ADD_OC_Sys_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalSave"
+                        XML_Info = '<response mode="add"><mc type="guanglanxitong"><mo group="1"><fv k="SYSTEM_LEVEL" v="8"/><fv k="CITY_ID" v="'&G_OC_Info[1][G_OC_Info_Index_City_ID]&'"/><fv k="STATUS" v="8"/><fv k="COUNTY_ID" v="'&G_OC_Info[1][G_OC_Info_Index_County_ID]&'"/><fv k="ZH_LABEL" v="'&OC_Sys_Name&'"/><fv k="INT_ID" v="new-27991311"/><fv k="OPT_TYPE" v="GYTA-12"/></mo></mc></response>'
+                        XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                        Content_Lenth = CStr(Len(XML_Info_Encoded))
+                        Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                        Response_Body = HttpSession.Request("POST",OC_ADD_OC_Sys_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                        domtools.InitDom(Response_Body)
+                        Temp_List_1 = domtools.xpath("//@newid")
+                        OC_Sys_Name_ID = Math.Round(CNumber(Temp_List_1[0]),0)
+                    End If
+                // 继续填充
+                    For RL1 = 1 to G_OC_Count
+                        G_OC_Info[RL1][G_OC_Info_Index_Support_Sys_Name] = Support_Sys_Name
+                        G_OC_Info[RL1][G_OC_Info_Index_Support_Sys_ID] = Support_Sys_Name_ID
+                        G_OC_Info[RL1][G_OC_Info_Index_OC_Sys_Name] = OC_Sys_Name
+                        G_OC_Info[RL1][G_OC_Info_Index_OC_Sys_ID] = OC_Sys_Name_ID
+                        G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name] = G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name]&"资源点"&"-"&G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name]&"资源点"
+                    Next
+                //写入Sheet
+                Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
+            End If
     End If
     Excel.CloseExcel(XLS_Obj,true)
 End Function
