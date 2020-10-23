@@ -12,13 +12,13 @@ Function Prepare_Data()
         Dim G_Box_Info_Index_Box_County_ID       = 07
         Dim G_Box_Info_Index_Point_ID            = 08
         Dim G_Box_Info_Index_Point_Type_ID       = 09
-        Dim G_Box_Info_Index_Required_ODM_Rows = 10 //
-        Dim G_Box_Info_Index_ODM_ID = 11 //P5_1之后写入
-        Dim G_Box_Info_Index_Required_Tray_Count = 12 //等于Required_ODM_Rows
-        Dim G_Box_Info_Index_Tray_Terminal_IDs = 13 //P5_2之后写入,前期用0填充,用&连接的String
-        Dim G_Box_Info_Index_1FS_Count = 14 //1FS数量
-        Dim G_Box_Info_Index_2FS_Count = 15 //2FS数量
-        Dim G_Box_Info_Index_DL_2FS_Count = 16 //下挂2FS数量
+        Dim G_Box_Info_Index_1FS_Count           = 10
+        Dim G_Box_Info_Index_2FS_Count           = 11
+        Dim G_Box_Info_Index_DL_2FS_Count        = 12
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
+        Dim G_Box_Info_Index_Required_Tray_Count = 14
+        Dim G_Box_Info_Index_ODM_ID              = 15
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
 
         Dim G_OC_Info_Index_A_Box_Name        = 01
         Dim G_OC_Info_Index_A_Box_ID          = 02
@@ -82,6 +82,7 @@ Function Prepare_Data()
         Dim CSV_obj
         Dim DT_obj
         Dim List7013 = []
+        Dim List7013_Shape
         Dim Box_Query_URL
         Dim XML_Info
         Dim XML_Info_Encoded
@@ -138,7 +139,7 @@ Function Prepare_Data()
             If Box_Info_Sheet_Filled = 1
                 //读表,写入G_Box_Info
                 G_Box_Info = Excel.ReadRange(XLS_Obj,"Box_Info","A1")
-                G_Box_Info = Unshift(G_Box_Info,"")
+                G_Box_Info = Unshift(G_Box_Info,"") // Interesting
             Elseif Box_Info_Sheet_Filled = 0
                 If Box_Info_Sheet_Exist = 0
                     //建Sheet
@@ -476,6 +477,16 @@ Function Prepare_Data()
         Dim Line_Num
         Dim Segment_Num
     If G_P5 = 1
+        // Box_Info_Sheet 填充是否完整判定
+            Temp_Data_1 = 0
+            Temp_Data_2 = 0
+            Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
+            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"Box_Info")
+            If (Temp_Data_1 = G_Box_Count ) AND (Temp_Data_2 = 15)
+                Box_Info_Sheet_Filled = 1
+            Else
+                Box_Info_Sheet_Filled = 0
+            End If
         // G_OC_Topology Creat
             Temp_Data_1 = ""
             Temp_Data_2 = ""
@@ -499,7 +510,110 @@ Function Prepare_Data()
                     G_OC_Topology[Line_Num] = [Temp_Data_1, Temp_Data_2]
                 End If
             Next
-        // 123
+        // List7013 Creat 2.0
+            CSV_obj = CSV.Open(G_CSV_File_Path)
+            DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
+            DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22]) //所属地市,所属区县,所属小区,中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别
+            List7013 = []
+            List7013 = Datatable.GetDataTableByArray(DT_obj,false)
+            List7013_Shape = Datatable.GetDataTableShape(DT_obj) //DT长宽 [0]y [1]x
+        // G_Box_Info Filling 2.0
+            If Box_Info_Sheet_Filled = 1
+                //读表,写入G_Box_Info
+                G_Box_Info = Excel.ReadRange(XLS_Obj,"Box_Info","A1")
+                G_Box_Info = Unshift(G_Box_Info,"")
+            Elseif Box_Info_Sheet_Filled = 0
+                // 1FS&2FS&DL_2FS&ODM_Rows&Tray_Count Filled by 0
+                    For RL1 = 1 to G_Box_Count
+                        G_Box_Info[RL1][G_Box_Info_Index_1FS_Count] = 0
+                        G_Box_Info[RL1][G_Box_Info_Index_2FS_Count] = 0
+                        G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count] = 0
+                        G_Box_Info[RL1][G_Box_Info_Index_Required_ODM_Rows] = 0
+                        G_Box_Info[RL1][G_Box_Info_Index_Required_Tray_Count] = 0
+                    Next
+                // 1FS&2FS_Count
+                    For RL1 = 1 to (List7013_Shape[0] - 1)
+                        For RL2 = 1 to G_Box_Count
+                            If List7013[RL1][4] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                If List7013[RL1][9] = "一级"
+                                    G_Box_Info[RL2][G_Box_Info_Index_1FS_Count] = G_Box_Info[RL2][G_Box_Info_Index_1FS_Count] + 1
+                                Elseif List7013[RL1][9] = "二级"
+                                    G_Box_Info[RL2][G_Box_Info_Index_2FS_Count] = G_Box_Info[RL2][G_Box_Info_Index_2FS_Count] + 1
+                                End If
+                            End If
+                        Next
+                    Next
+                // DL_2FS_Count
+                    Temp_Data_1 = Shift(G_OC_Topology)
+                    For RL1 = Ubound(G_OC_Topology) to 0 Step - 1
+                        For RL2 = Ubound(G_OC_Topology[RL1]) to 0 Step -1
+                            If RL2 = Ubound(G_OC_Topology[RL1]) // Tail
+                                For RL3 = 1 to G_Box_Count
+                                    If G_OC_Topology[RL1][RL2] = G_Box_Info[RL3][G_Box_Info_Index_Box_Name]
+                                        G_Box_Info[RL3][G_Box_Info_Index_DL_2FS_Count] = 0
+                                    End If
+                                Next
+                            Elseif RL2 = 0 // Head
+                                For RL3 = 1 to G_Box_Count
+                                    If G_OC_Topology[RL1][RL2] = G_Box_Info[RL3][G_Box_Info_Index_Box_Name]
+                                        G_Box_Info[RL3][G_Box_Info_Index_DL_2FS_Count] = 0
+                                    End If
+                                Next
+                            Else
+                                For RL3 = 1 to G_Box_Count // Not_Tail
+                                    If G_OC_Topology[RL1][RL2 + 1] = G_Box_Info[RL3][G_Box_Info_Index_Box_Name]
+                                        Temp_Data_1 = G_Box_Info[RL3][G_Box_Info_Index_2FS_Count] + G_Box_Info[RL3][G_Box_Info_Index_DL_2FS_Count]
+                                    End If
+                                Next
+                                For RL3 = 1 to G_Box_Count
+                                    If G_OC_Topology[RL1][RL2] = G_Box_Info[RL3][G_Box_Info_Index_Box_Name]
+                                        G_Box_Info[RL3][G_Box_Info_Index_DL_2FS_Count] = Temp_Data_1
+                                    End If
+                                Next
+                            End If
+                        Next
+                    Next
+                // DL_2FS_Count Lv1 Box Correction
+                    For RL1 = 1 to (List7013_Shape[0] - 1)
+                        If List7013[RL1][9] = "二级"
+                            Continue
+                        Elseif List7013[RL1][9] = "一级"
+                            Temp_Data_1 = 0
+                            For RL2 = 1 to (List7013_Shape[0] - 1)
+                                If List7013[RL1][3] = List7013[RL2][7]
+                                    Temp_Data_1 = Temp_Data_1 + 1
+                                End If
+                            Next
+                            For RL2 = 1 to G_Box_Count
+                                If List7013[RL1][4] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                    G_Box_Info[RL2][G_Box_Info_Index_DL_2FS_Count] = G_Box_Info[RL2][G_Box_Info_Index_DL_2FS_Count] + Temp_Data_1
+                                End If
+                            Next
+                        End If
+                    Next
+                // ODM_Rows&Tray_Count
+                    For RL1 = 1 to G_Box_Count
+                        If G_Box_Info[RL1][G_Box_Info_Index_1FS_Count] = 0
+                            For RL2 = 1 to G_OC_Count
+                                If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Info[RL2][G_OC_Info_Index_Z_Box_Name]
+                                    G_Box_Info[RL1][G_Box_Info_Index_Required_ODM_Rows] = Math.Abs(Math.Int( - (G_OC_Info[RL2][G_OC_Info_Index_Width] / 12)))
+                                    G_Box_Info[RL1][G_Box_Info_Index_Required_Tray_Count] = G_Box_Info[RL1][G_Box_Info_Index_Required_ODM_Rows]
+                                End If
+                            Next
+                        Elseif G_Box_Info[RL1][G_Box_Info_Index_1FS_Count] <> 0
+                            For RL2 = 1 to G_OC_Count
+                                If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Info[RL2][G_OC_Info_Index_A_Box_Name]
+                                    G_Box_Info[RL1][G_Box_Info_Index_Required_ODM_Rows] = G_Box_Info[RL1][G_Box_Info_Index_Required_ODM_Rows] + Math.Abs(Math.Int( - (G_OC_Info[RL2][G_OC_Info_Index_Width] / 12)))
+                                    G_Box_Info[RL1][G_Box_Info_Index_Required_Tray_Count] = G_Box_Info[RL1][G_Box_Info_Index_Required_ODM_Rows]
+                                End If
+                            Next
+                        End If
+                    Next
+                //写入Sheet
+                Temp_Data_1 = Shift(G_Box_Info) // Interesting
+                Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
+                G_Box_Info = Unshift(G_Box_Info,"") // Interesting
+            End If
     End If
     Excel.CloseExcel(XLS_Obj,true)
 End Function

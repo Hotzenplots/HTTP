@@ -1,1 +1,82 @@
+Import domtools
+Function Add_ODM(Para_Box_Info)
+    // Box_Info_Index
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_1FS_Count           = 10
+        Dim G_Box_Info_Index_2FS_Count           = 11
+        Dim G_Box_Info_Index_DL_2FS_Count        = 12
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
+        Dim G_Box_Info_Index_Required_Tray_Count = 14
+    Dim Add_URL
+    Dim Response_Body
+    Dim Add_State
+    Dim XML_Info_1
+    Dim XML_Info_2
+    Dim XML_Info_Encoded
+    Dim Post_Header
+    Dim Content_Lenth
+    Dim Temp_List_1
 
+    Add_URL = "http://10.209.199.74:8120/nxapp/room/editODMData.ilf"
+    XML_Info_1 = '<params><odm id="" rowflag="+" rownum="1" colflag="+" colnum="12"><attribute module_rowno="1" rowno="'&Para_Box_Info[G_Box_Info_Index_Required_ODM_Rows]&'" columnno="12" terminal_arr="0" maintain_county="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_County_ID],0)&'" maintain_city="445835190" structure_id="'&Para_Box_Info[G_Box_Info_Index_Point_ID]&'" structure_type="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Point_Type_ID],0)&'" related_rack="'&Para_Box_Info[G_Box_Info_Index_Box_ID]&'" related_type="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_Type_ID],0)&'" status="8" model="odm"/></odm></params>'
+    XML_Info_2 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
+    XML_Info_Encoded = "params="&Replace(encode_decode.str_encode(XML_Info_1),"/","%2F",true)&"&model=odm&"&"lifeparams="&Replace(encode_decode.str_encode(XML_Info_2),"/","%2F",true)
+    Content_Lenth = CStr(Len(XML_Info_Encoded))
+    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+    Response_Body = HttpSession.Request("POST",Add_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    domtools.InitDom(Response_Body)
+    Temp_List_1 = domtools.xpath("//@int_id")
+    Return Temp_List_1[0]
+End Function
+
+Function Add_Tray(Para_Box_Info)
+    // Box_Info 索引
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_1FS_Count           = 10
+        Dim G_Box_Info_Index_2FS_Count           = 11
+        Dim G_Box_Info_Index_DL_2FS_Count        = 12
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
+        Dim G_Box_Info_Index_Required_Tray_Count = 14
+        Dim G_Box_Info_Index_ODM_ID              = 15
+
+    Dim Add_URL
+    Dim Response_Body
+    Dim Add_State
+    Dim XML_Info_1
+    Dim XML_Info_2
+    Dim XML_Info_Encoded
+    Dim Post_Header
+    Dim Content_Lenth
+    Dim Temp_List_1
+    Dim Temp_Data_1
+
+    Add_URL = "http://10.209.199.74:8120/nxapp/room/editTray_sx.ilf"
+    XML_Info_1 = '<params model="tray"><obj related_rack="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_ID],0)&'" related_type="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_Type_ID],0)&'" structure_id="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Point_ID],0)&'" structure_type="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Point_Type_ID],0)&'" deviceshelf_id="'&Para_Box_Info[G_Box_Info_Index_ODM_ID]&'" tray_no="1" tray_num="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Required_Tray_Count],0)&'" row_count="1" col_count="12" int_id=""/></params>'
+    XML_Info_2 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
+    XML_Info_Encoded = "params="&Replace(encode_decode.str_encode(XML_Info_1),"/","%2F",true)&"&lifeparams="&Replace(encode_decode.str_encode(XML_Info_2),"/","%2F",true)
+    Content_Lenth = CStr(Len(XML_Info_Encoded))
+    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+    Response_Body = HttpSession.Request("POST",Add_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    domtools.InitDom(Response_Body)
+    Temp_List_1 = domtools.xpath("//@int_id")
+    Temp_Data_1 = Shift(Temp_List_1)
+    Temp_Data_1 = Shift(Temp_List_1)
+    Return Temp_List_1
+    
+End Function
