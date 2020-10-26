@@ -1,1 +1,156 @@
+Import domtools
+TracePrint("TEST")
+Function Termination(Para_Box_Info)
+    // Box_Info_Index&OC_Info_Index
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_1FS_Count           = 10
+        Dim G_Box_Info_Index_2FS_Count           = 11
+        Dim G_Box_Info_Index_DL_2FS_Count        = 12
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
+        Dim G_Box_Info_Index_Required_Tray_Count = 14
+        Dim G_Box_Info_Index_ODM_ID              = 15
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
+        Dim G_Box_Info_Index_Termination_Start   = 17
+        Dim G_Box_Info_Index_Termination_Count   = 18
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 19
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 20
 
+        Dim G_OC_Info_Index_A_Box_Name        = 01
+        Dim G_OC_Info_Index_A_Box_ID          = 02
+        Dim G_OC_Info_Index_A_Box_Type        = 03
+        Dim G_OC_Info_Index_A_Box_Type_ID     = 04 
+        Dim G_OC_Info_Index_A_Point_ID        = 05
+        Dim G_OC_Info_Index_A_Point_Type_ID   = 06
+        Dim G_OC_Info_Index_A_Longitude       = 07
+        Dim G_OC_Info_Index_A_Latitude        = 08
+        Dim G_OC_Info_Index_Z_Box_Name        = 09
+        Dim G_OC_Info_Index_Z_Box_ID          = 10
+        Dim G_OC_Info_Index_Z_Box_Type        = 11
+        Dim G_OC_Info_Index_Z_Box_Type_ID     = 12
+        Dim G_OC_Info_Index_Z_Point_ID        = 13
+        Dim G_OC_Info_Index_Z_Point_Type_ID   = 14
+        Dim G_OC_Info_Index_Z_Longitude       = 15
+        Dim G_OC_Info_Index_Z_Latitude        = 16
+        Dim G_OC_Info_Index_Width             = 17
+        Dim G_OC_Info_Index_Lenth             = 18
+        Dim G_OC_Info_Index_Project_Code_ID   = 19
+        Dim G_OC_Info_Index_Task_Name_ID      = 20
+        Dim G_OC_Info_Index_Business_Level    = 21
+        Dim G_OC_Info_Index_City_ID           = 22
+        Dim G_OC_Info_Index_County_ID         = 23
+        Dim G_OC_Info_Index_DQS_Project_ID    = 24
+        Dim G_OC_Info_Index_DQS_ID            = 25
+        Dim G_OC_Info_Index_DQS_County_ID     = 26
+        Dim G_OC_Info_Index_DQS_Maintainer_ID = 27
+        Dim G_OC_Info_Index_Life_Cycle        = 28
+        Dim G_OC_Info_Index_Owner_Type        = 29
+        Dim G_OC_Info_Index_Owner_Name        = 30
+        Dim G_OC_Info_Index_Field_Type        = 31
+        Dim G_OC_Info_Index_Support_Sys_Name  = 32
+        Dim G_OC_Info_Index_Support_Sys_ID    = 33
+        Dim G_OC_Info_Index_OC_Sys_Name       = 34
+        Dim G_OC_Info_Index_OC_Sys_ID         = 35
+        Dim G_OC_Info_Index_Support_Seg_Name  = 36
+        Dim G_OC_Info_Index_OC_Name           = 37
+        Dim G_OC_Info_Index_Support_Seg_ID    = 38
+        Dim G_OC_Info_Index_OC_ID             = 39
+        Dim G_OC_Info_Index_OC_Fiber_IDs      = 40
+
+    // Variables
+        Dim Content_Lenth
+        Dim Post_Header
+        Dim Response_Body
+        Dim Temp_Data_1
+        Dim Temp_Data_2
+        Dim Temp_Data_3
+        Dim Temp_List_1 = []
+        Dim Temp_List_2 = []
+        Dim Temp_List_3 = []
+        Dim Temp_List_4 = []
+        Dim Termination_URL
+        Dim TestExcelObj
+        Dim XML_Info_1
+        Dim XML_Info_2
+        Dim XML_Info_3
+        Dim XML_Info_4
+        Dim XML_Info_Encoded
+
+    If Para_Box_Info[G_Box_Info_Index_1FS_Count] <> 0 
+        Temp_List_1 = Unshift(Split(Para_Box_Info[G_Box_Info_Index_Termination_Count],"&"),"")
+        Temp_List_2 = Unshift(Split(Para_Box_Info[G_Box_Info_Index_Tray_Terminal_IDs],"&"),"")
+        Temp_List_3 = []
+        Temp_List_4 = []
+        Temp_Data_1 = 1
+        Temp_Data_3 = 1 // As a Pointer
+        For RL1 = 1 to G_OC_Count
+            If Para_Box_Info[G_Box_Info_Index_Box_Name] = G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name]
+                Temp_List_3[Temp_Data_1] = Unshift(Split(G_OC_Info[RL1][G_OC_Info_Index_OC_Fiber_IDs],"&"),"")
+                Temp_Data_1 = Temp_Data_1 + 1
+            End If
+        Next
+        For RL1 = 1 to Ubound(Temp_List_1)
+            If Temp_Data_3 Mod 12 <> 1
+                For RL2 = 1 to 11
+                    Temp_Data_3 = Temp_Data_3 + 1
+                    If Temp_Data_3 Mod 12 = 1
+                        Break
+                    End If
+                Next
+            End If
+            For RL2 = 1  to CNumber(Temp_List_1[RL1])
+                If Para_Box_Info[G_Box_Info_Index_Box_Type] = "guangfenxianxiang"
+                    Temp_Data_1 = "gfxx"
+                Elseif Para_Box_Info[G_Box_Info_Index_Box_Type] = "guangjiaojiexiang"
+                    Temp_Data_1 = "gjjx"
+                End If
+                Temp_Data_2 = '<param fiber_id="'&Temp_List_3[RL1][RL2]&'" a_equ_id="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_ID],0)&'" a_equ_type="'&Temp_Data_1&'" a_port_id="'&Temp_List_2[Temp_data_3]&'" z_equ_id="" z_port_id="" room_id="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Point_ID],0)&'"/>'
+                Temp_Data_3 = Temp_Data_3 + 1
+                Temp_List_4 = Push(Temp_List_4,Temp_Data_2)
+            Next
+        Next
+        XML_Info_2 = Join(Temp_List_4,"")
+    Elseif Para_Box_Info[G_Box_Info_Index_1FS_Count] = 0
+        Temp_List_2 = Unshift(Split(Para_Box_Info[G_Box_Info_Index_Tray_Terminal_IDs],"&"),"") // Terminal_IDs
+        If Para_Box_Info[G_Box_Info_Index_Box_Type] = "guangfenxianxiang"
+            Temp_Data_1 = "gfxx"
+        Elseif Para_Box_Info[G_Box_Info_Index_Box_Type] = "guangjiaojiexiang"
+            Temp_Data_1 = "gjjx"
+        End If
+        For RL1 = 1 to G_OC_Count
+            If Para_Box_Info[G_Box_Info_Index_Box_Name] = G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name]
+                Temp_List_1 = Unshift(Split(G_OC_Info[RL1][G_OC_Info_Index_OC_Fiber_IDs],"&"),"") // Fiber_IDs
+                Break
+            End If
+        Next
+        For RL1 = 1 to Math.Round(CNumber(Para_Box_Info[G_Box_Info_Index_Termination_Count]),0)
+            Temp_Data_2 = '<param fiber_id="'&Temp_List_1[RL1]&'" z_equ_id="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_ID],0)&'" z_equ_type="'&Temp_Data_1&'" z_port_id="'&Temp_List_2[RL1]&'" a_equ_id="" a_port_id="" room_id="'&Math.Round(Para_Box_Info[G_Box_Info_Index_Point_ID],0)&'"/>'
+            Temp_List_3 = Push(Temp_List_3,Temp_Data_2)
+        Next
+        XML_Info_2 = Join(Temp_List_3,"")
+    End If
+    If G_Test_Output = 1
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P6数据验证.xlsx",false)
+        Excel.WriteColumn(TestExcelObj,"Sheet1","A1",Temp_List_4,false)
+        Excel.CloseExcel(TestExcelObj,true)
+    End If
+    Termination_URL = "http://10.209.199.74:8120/igisserver_osl/rest/jumperandfiber/saveFiber"
+    XML_Info_1 = '<params>'
+    XML_Info_3 = '</params>'
+    XML_Info_4 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
+    XML_Info_Encoded = "params="&Replace(encode_decode.str_encode(XML_Info_1&XML_Info_2&XML_Info_3),"/","%2F",true)&"&lifeparams="&Replace(encode_decode.str_encode(XML_Info_4),"/","%2F",true)
+    Content_Lenth = CStr(Len(XML_Info_Encoded))
+    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+    Response_Body = HttpSession.Request("POST",Termination_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    domtools.InitDom(Response_Body)
+    Temp_List_1 = domtools.xpath("//@msg")
+    Temp_Data_1 = Temp_List_1[0]
+    Return Temp_Data_1
+End Function

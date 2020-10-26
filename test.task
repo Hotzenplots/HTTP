@@ -1,5 +1,7 @@
-dim dRet = ""
-dim deRet = ""
+list1 = [5]
+data1 = Join(list1,"&")
+TracePrint(data1)
+list2 = Split(data1,"&")
+TracePrint(list2)
 
-deRet = Decimal(varData)
-dRet = CNumber(varData)
+TracePrint(113 mod 12)

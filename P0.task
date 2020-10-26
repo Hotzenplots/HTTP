@@ -2,7 +2,7 @@ Import encode_decode
 Import domtools
 //TracePrint("TEST")
 Function Prepare_Data()
-    // Box_Info 和 OC_Info 的索引
+    // Box_Info_Index&OC_Info_Index
         Dim G_Box_Info_Index_Box_Name            = 01
         Dim G_Box_Info_Index_Box_Longitude       = 02
         Dim G_Box_Info_Index_Box_Latitude        = 03
@@ -59,16 +59,16 @@ Function Prepare_Data()
         Dim G_OC_Info_Index_OC_Name           = 37
         Dim G_OC_Info_Index_Support_Seg_ID    = 38
         Dim G_OC_Info_Index_OC_ID             = 39
-
-        Dim G_OC_Info_Index_OC_Fiber_IDs = 27 //查询
+        Dim G_OC_Info_Index_OC_Fiber_IDs      = 40
     
-    // Box 相关变量
+    // Variables
         Dim XLS_Obj
         Dim RL1
         Dim RL2
         Dim RL3
         Dim Temp_Data_1
         Dim Temp_Data_2
+        Dim Temp_Data_3
         Dim Temp_List_1 = []
         Dim Temp_List_2 = []
         Dim Box_Count_Correction
@@ -85,12 +85,34 @@ Function Prepare_Data()
         Dim List7013_Shape
         Dim Box_Query_URL
         Dim XML_Info
+        Dim XML_Info_1
+        Dim XML_Info_2
         Dim XML_Info_Encoded
         Dim Content_Lenth
         Dim Post_Header
         Dim Response_Body
+        Dim Line_Num
+        Dim Segment_Num
+        Dim OC_Info_Sheet_Exist
+        Dim OC_Info_Sheet_Filled
+        Dim Horizontal_Metre 
+        Dim Vertical_Metre
+        Dim Project_Code_ID
+        Dim Task_Name_ID_List = []
+        Dim Task_Name_ID
+        Dim City_ID
+        Dim County_ID_List = []
+        Dim County_ID_Index
+        Dim OC_Query_URL
+        Dim OC_ADD_Support_Sys_URL
+        Dim OC_ADD_OC_Sys_URL
+        Dim Support_Sys_Name
+        Dim Support_Sys_Name_ID
+        Dim OC_Sys_Name
+        Dim OC_Sys_Name_ID
+
     XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
-    If (G_P1 = 1) OR (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
+    If (G_P1 = 1) OR (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1) OR (G_P6 = 1)
         // List7013 构建
             CSV_obj = CSV.Open(G_CSV_File_Path)
             DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
@@ -227,25 +249,7 @@ Function Prepare_Data()
                 Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
             End If
     End If
-    // SS&OC 相关变量
-        Dim OC_Info_Sheet_Exist
-        Dim OC_Info_Sheet_Filled
-        Dim Horizontal_Metre 
-        Dim Vertical_Metre
-        Dim Project_Code_ID
-        Dim Task_Name_ID_List = []
-        Dim Task_Name_ID
-        Dim City_ID
-        Dim County_ID_List = []
-        Dim County_ID_Index
-        Dim OC_Query_URL
-        Dim OC_ADD_Support_Sys_URL
-        Dim OC_ADD_OC_Sys_URL
-        Dim Support_Sys_Name
-        Dim Support_Sys_Name_ID
-        Dim OC_Sys_Name
-        Dim OC_Sys_Name_ID
-    If (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1)
+    If (G_P2 = 1) OR (G_P3 = 1) OR (G_P4 = 1) OR (G_P5 = 1) OR (G_P6 = 1)
         // G_OC_Count 构建
             For RL1 = 1 To 500
                 Temp_Data_1 = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
@@ -316,9 +320,9 @@ Function Prepare_Data()
                         End If
                     Next
 
-                // G_OC_Info [][40] 构建
+                // G_OC_Info [][45] 构建
                     For RL1 = 1 To G_OC_Count
-                        For RL2 = 0 To 40
+                        For RL2 = 0 To 45
                             Temp_List_1[RL2] = ""
                         Next
                         G_OC_Info[RL1] = Clone(Temp_List_1)
@@ -430,13 +434,13 @@ Function Prepare_Data()
                 Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
             End If
     End If
-    If (G_P4 = 1) OR (G_P5 = 1)
+    If (G_P4 = 1) OR (G_P5 = 1) OR (G_P6 = 1)
         // OC_Info_Sheet 填充是否完整判定
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
             Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
-            If (Temp_Data_1 = G_OC_Count ) AND (Temp_Data_2 = 40)
+            If (Temp_Data_1 = G_OC_Count ) AND (Temp_Data_2 >= 40)
                 OC_Info_Sheet_Filled = 1
             Else
                 OC_Info_Sheet_Filled = 0
@@ -468,21 +472,20 @@ Function Prepare_Data()
                     G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_ID] = Temp_List_1[0]
                     G_OC_Info[RL1][G_OC_Info_Index_OC_ID] = Temp_List_2[0]
                 Next
-                //写入Sheet
+                Temp_Data_1 = Shift(G_OC_Info)
                 Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
+                G_OC_Info = Unshift(G_OC_Info,"")
             End If
 
     End If
-    // OCT Variables
-        Dim Line_Num
-        Dim Segment_Num
-    If G_P5 = 1
-        // Box_Info_Sheet 填充是否完整判定
+    If (G_P5 = 1) OR (G_P6 = 1)
+        // Box_Info_Sheet Filling Complete Determination 2.0
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"Box_Info")
-            If (Temp_Data_1 = G_Box_Count ) AND (Temp_Data_2 = 15)
+            Temp_Data_2 = 15 //Excel.GetColumsCount(XLS_Obj,"Box_Info")
+            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,Temp_Data_2])
+            If (Temp_Data_3 <> "")
                 Box_Info_Sheet_Filled = 1
             Else
                 Box_Info_Sheet_Filled = 0
@@ -519,7 +522,7 @@ Function Prepare_Data()
             List7013_Shape = Datatable.GetDataTableShape(DT_obj) //DT长宽 [0]y [1]x
         // G_Box_Info Filling 2.0
             If Box_Info_Sheet_Filled = 1
-                //读表,写入G_Box_Info
+                // G_Box_Info Refill
                 G_Box_Info = Excel.ReadRange(XLS_Obj,"Box_Info","A1")
                 G_Box_Info = Unshift(G_Box_Info,"")
             Elseif Box_Info_Sheet_Filled = 0
@@ -544,7 +547,9 @@ Function Prepare_Data()
                         Next
                     Next
                 // DL_2FS_Count
-                    Temp_Data_1 = Shift(G_OC_Topology)
+                    If G_OC_Topology[0] = null
+                        Temp_Data_1 = Shift(G_OC_Topology)
+                    End If
                     For RL1 = Ubound(G_OC_Topology) to 0 Step - 1
                         For RL2 = Ubound(G_OC_Topology[RL1]) to 0 Step -1
                             If RL2 = Ubound(G_OC_Topology[RL1]) // Tail
@@ -574,21 +579,31 @@ Function Prepare_Data()
                         Next
                     Next
                 // DL_2FS_Count Lv1 Box Correction
-                    For RL1 = 1 to (List7013_Shape[0] - 1)
-                        If List7013[RL1][9] = "二级"
-                            Continue
-                        Elseif List7013[RL1][9] = "一级"
-                            Temp_Data_1 = 0
-                            For RL2 = 1 to (List7013_Shape[0] - 1)
-                                If List7013[RL1][3] = List7013[RL2][7]
-                                    Temp_Data_1 = Temp_Data_1 + 1
+                    For RL1 = 1 to G_Box_Count
+                        If G_Box_Info[RL1][G_Box_Info_Index_1FS_Count] <> 0
+                            Temp_List_2 = []
+                            If G_OC_Topology[0] = null
+                                Temp_Data_1 = Shift(G_OC_Topology)
+                            End If 
+                            For RL2 = 0 to Ubound(G_OC_Topology) //3
+                                Temp_Data_1 = ""
+                                Temp_Data_2 = 0
+                                Temp_List_1 = []
+                                If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Topology[RL2][0]
+                                    For RL3 = 1 to Ubound(G_OC_Topology[RL2]) //4
+                                        For RL4 = 1 to G_Box_Count
+                                            If G_OC_Topology[RL2][RL3] = G_Box_Info[RL4][G_Box_Info_Index_Box_Name]
+                                                Temp_Data_1 = Push(Temp_List_1,G_Box_Info[RL4][G_Box_Info_Index_2FS_Count])
+                                            End If
+                                        Next
+                                    Next
                                 End If
+                                For Each RL3 In Temp_List_1
+                                    Temp_Data_2 = Temp_Data_2 + RL3
+                                Next
+                                Temp_Data_1 = Push(Temp_List_2,Temp_Data_2)
                             Next
-                            For RL2 = 1 to G_Box_Count
-                                If List7013[RL1][4] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
-                                    G_Box_Info[RL2][G_Box_Info_Index_DL_2FS_Count] = G_Box_Info[RL2][G_Box_Info_Index_DL_2FS_Count] + Temp_Data_1
-                                End If
-                            Next
+                            G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count] = Join(Temp_List_2,"&")
                         End If
                     Next
                 // ODM_Rows&Tray_Count
@@ -609,7 +624,6 @@ Function Prepare_Data()
                             Next
                         End If
                     Next
-                //写入Sheet
                 Temp_Data_1 = Shift(G_Box_Info) // Interesting
                 Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
                 G_Box_Info = Unshift(G_Box_Info,"") // Interesting
@@ -618,4 +632,233 @@ Function Prepare_Data()
     Excel.CloseExcel(XLS_Obj,true)
 End Function
 
+Function Prepare_Data2()
+    // Box_Info_Index&OC_Info_Index
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_1FS_Count           = 10
+        Dim G_Box_Info_Index_2FS_Count           = 11
+        Dim G_Box_Info_Index_DL_2FS_Count        = 12
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
+        Dim G_Box_Info_Index_Required_Tray_Count = 14
+        Dim G_Box_Info_Index_ODM_ID              = 15
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
+        Dim G_Box_Info_Index_Termination_Start   = 17
+        Dim G_Box_Info_Index_Termination_Count   = 18
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 19
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 20
 
+        Dim G_OC_Info_Index_A_Box_Name        = 01
+        Dim G_OC_Info_Index_A_Box_ID          = 02
+        Dim G_OC_Info_Index_A_Box_Type        = 03
+        Dim G_OC_Info_Index_A_Box_Type_ID     = 04 
+        Dim G_OC_Info_Index_A_Point_ID        = 05
+        Dim G_OC_Info_Index_A_Point_Type_ID   = 06
+        Dim G_OC_Info_Index_A_Longitude       = 07
+        Dim G_OC_Info_Index_A_Latitude        = 08
+        Dim G_OC_Info_Index_Z_Box_Name        = 09
+        Dim G_OC_Info_Index_Z_Box_ID          = 10
+        Dim G_OC_Info_Index_Z_Box_Type        = 11
+        Dim G_OC_Info_Index_Z_Box_Type_ID     = 12
+        Dim G_OC_Info_Index_Z_Point_ID        = 13
+        Dim G_OC_Info_Index_Z_Point_Type_ID   = 14
+        Dim G_OC_Info_Index_Z_Longitude       = 15
+        Dim G_OC_Info_Index_Z_Latitude        = 16
+        Dim G_OC_Info_Index_Width             = 17
+        Dim G_OC_Info_Index_Lenth             = 18
+        Dim G_OC_Info_Index_Project_Code_ID   = 19
+        Dim G_OC_Info_Index_Task_Name_ID      = 20
+        Dim G_OC_Info_Index_Business_Level    = 21
+        Dim G_OC_Info_Index_City_ID           = 22
+        Dim G_OC_Info_Index_County_ID         = 23
+        Dim G_OC_Info_Index_DQS_Project_ID    = 24
+        Dim G_OC_Info_Index_DQS_ID            = 25
+        Dim G_OC_Info_Index_DQS_County_ID     = 26
+        Dim G_OC_Info_Index_DQS_Maintainer_ID = 27
+        Dim G_OC_Info_Index_Life_Cycle        = 28
+        Dim G_OC_Info_Index_Owner_Type        = 29
+        Dim G_OC_Info_Index_Owner_Name        = 30
+        Dim G_OC_Info_Index_Field_Type        = 31
+        Dim G_OC_Info_Index_Support_Sys_Name  = 32
+        Dim G_OC_Info_Index_Support_Sys_ID    = 33
+        Dim G_OC_Info_Index_OC_Sys_Name       = 34
+        Dim G_OC_Info_Index_OC_Sys_ID         = 35
+        Dim G_OC_Info_Index_Support_Seg_Name  = 36
+        Dim G_OC_Info_Index_OC_Name           = 37
+        Dim G_OC_Info_Index_Support_Seg_ID    = 38
+        Dim G_OC_Info_Index_OC_ID             = 39
+        Dim G_OC_Info_Index_OC_Fiber_IDs      = 40
+
+    // Variables
+        Dim Box_Info_Sheet_Filled
+        Dim Box_Query_URL
+        Dim Content_Lenth
+        Dim Post_Header
+        Dim Response_Body
+        Dim Temp_Data_1
+        Dim Temp_Data_2
+        Dim Temp_Data_3
+        Dim Temp_List_1 = []
+        Dim Temp_List_2 = []
+        Dim Temp_List_3 = []
+        Dim Temp_List_4 = []
+        Dim XLS_Obj
+        Dim XML_Info_1
+        Dim XML_Info_2
+        Dim XML_Info_Encoded
+        Dim OC_Query_URL
+        Dim OC_Info_Sheet_Filled
+
+    Prepare_Data()
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+    If G_P6 = 1
+        // Box_Info_Sheet Filling Complete Determination 3.0
+            Temp_Data_1 = 0
+            Temp_Data_2 = 0
+            Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
+            Temp_Data_2 = 17 //Excel.GetColumsCount(XLS_Obj,"Box_Info")
+            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,Temp_Data_2])
+            If (Temp_Data_3 <> "")
+                Box_Info_Sheet_Filled = 1
+            Else
+                Box_Info_Sheet_Filled = 0
+            End If
+        // G_Box_Info Filling 3.0
+            If Box_Info_Sheet_Filled = 1
+                // G_Box_Info Refill
+                G_Box_Info = Excel.ReadRange(XLS_Obj,"Box_Info","A1")
+                G_Box_Info = Unshift(G_Box_Info,"")
+            Elseif Box_Info_Sheet_Filled = 0
+                For RL1 = 1 to G_Box_Count
+                    Box_Query_URL = "http://10.209.199.74:8120/nxapp/room/queryShelfAndModuleData.ilf"
+                    If G_Box_Info[RL1][G_Box_Info_Index_Box_Type] = "guangfenxianxiang"
+                        Temp_Data_1 = "gfxx"
+                    Elseif G_Box_Info[RL1][G_Box_Info_Index_Box_Type] = "guangjiaojiexiang"
+                        Temp_Data_1 = "gjjx"
+                    End If
+                    XML_Info_1 = '<params><param key="type" value="'&Temp_Data_1&'"/><param key="rack_id" value="'&Math.Round(G_Box_Info[RL1][G_Box_Info_Index_Box_ID],0)&'"/></params>'
+                    XML_Info_2 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
+                    XML_Info_Encoded = "params="&Replace(encode_decode.str_encode(XML_Info_1),"/","%2F",true)&"&lifeparams="&Replace(encode_decode.str_encode(XML_Info_2),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",Box_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_1 = domtools.xpath("//@id")
+                    Temp_Data_1 = Shift(Temp_List_1)
+                    Temp_Data_1 = Shift(Temp_List_1)
+                    G_Box_Info[RL1][G_Box_Info_Index_ODM_ID] = Temp_Data_1
+                    G_Box_Info[RL1][G_Box_Info_Index_Tray_Terminal_IDs] = Join(Temp_List_1,"&")
+                Next
+                Temp_Data_1 = Shift(G_Box_Info) // Interesting
+                Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
+                G_Box_Info = Unshift(G_Box_Info,"") // Interesting
+            End If
+        // OC_Info_Sheet Filling Complete Determination 2.0
+            Temp_Data_1 = 0
+            Temp_Data_2 = 0
+            Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
+            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
+            If (Temp_Data_1 = G_OC_Count ) AND (Temp_Data_2 = 41)
+                OC_Info_Sheet_Filled = 1
+            Else
+                OC_Info_Sheet_Filled = 0
+            End If
+        // G_OC_Info Filling 2.0
+            If OC_Info_Sheet_Filled = 1
+                // Read&Fill G_OC_Info
+                G_OC_Info = Excel.ReadRange(XLS_Obj,"OC_Info","A1")
+                G_OC_Info = Unshift(G_OC_Info,"")
+            Elseif OC_Info_Sheet_Filled = 0
+                For RL1 = 1 to G_OC_Count
+                    OC_Query_URL = "http://10.209.199.74:8120/igisserver_osl/rest/EquipEditModule1/getEquipModuleTerminals"
+                    XML_Info_1 = '<params><param key="equ_type" value="fiberseg"/><param key="equ_id" value="'&G_OC_Info[RL1][G_OC_Info_Index_OC_ID]&'"/></params>'
+                    XML_Info_2 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
+                    XML_Info_Encoded = "params="&Replace(encode_decode.str_encode(XML_Info_1),"/","%2F",true)&"&lifeparams="&Replace(encode_decode.str_encode(XML_Info_2),"/","%2F",true)
+                    Content_Lenth = CStr(Len(XML_Info_Encoded))
+                    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                    Response_Body = HttpSession.Request("POST",OC_Query_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                    domtools.InitDom(Response_Body)
+                    Temp_List_1 = domtools.xpath("//@id")
+                    Temp_Data_1 = Shift(Temp_List_1)
+                    Temp_Data_1 = Join(Temp_List_1,"&")
+                    G_OC_Info[RL1][G_OC_Info_Index_OC_Fiber_IDs] = Temp_Data_1
+                Next
+                Temp_Data_1 = Shift(G_OC_Info)
+                Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
+                G_OC_Info = Unshift(G_OC_Info,"")
+            End If
+        // Box_Info_Sheet Filling Complete Determination 4.0
+            Temp_Data_1 = 0
+            Temp_Data_2 = 0
+            Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
+            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"Box_Info")
+            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,Temp_Data_2])
+            If (Temp_Data_3 <> "")
+                Box_Info_Sheet_Filled = 1
+            Else
+                Box_Info_Sheet_Filled = 0
+            End If
+        // G_Box_Info Filling 4.0
+            If Box_Info_Sheet_Filled = 1
+                // G_Box_Info Refill
+                G_Box_Info = Excel.ReadRange(XLS_Obj,"Box_Info","A1")
+                G_Box_Info = Unshift(G_Box_Info,"")
+            Elseif Box_Info_Sheet_Filled = 0
+                For RL1 = 1 to G_Box_Count
+                    If G_Box_Info[RL1][G_Box_Info_Index_1FS_Count] = 0
+                        For RL2 = 1 to G_OC_Count
+                            If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Info[RL2][G_OC_Info_Index_Z_Box_Name]
+                                If G_OC_Info[RL2][G_OC_Info_Index_Width] >= (G_Box_Info[RL1][G_Box_Info_Index_2FS_Count] * 3 + G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count] * 3)
+                                    Temp_Data_1 = 3
+                                Else
+                                    Temp_Data_1 = 2
+                                End If
+                                Break
+                            End If
+                        Next
+                        G_Box_Info[RL1][G_Box_Info_Index_Termination_Start] = 1
+                        G_Box_Info[RL1][G_Box_Info_Index_Termination_Count] = G_Box_Info[RL1][G_Box_Info_Index_2FS_Count] * Temp_Data_1
+                        G_Box_Info[RL1][G_Box_Info_Index_Direct_Melt_Start] = G_Box_Info[RL1][G_Box_Info_Index_2FS_Count] * Temp_Data_1 + 1
+                        G_Box_Info[RL1][G_Box_Info_Index_Direct_Melt_Count] = G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count] * Temp_Data_1
+                    Elseif G_Box_Info[RL1][G_Box_Info_Index_1FS_Count] <> 0
+                        Temp_List_1 = []
+                        Temp_List_2 = []
+                        Temp_List_3 = []
+                        Temp_List_4 = []
+                        Temp_List_1 = Split(G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count],"&")
+                        For RL2 = 0 to Ubound(Temp_List_1)
+                            For RL3 = 1 to G_OC_Count
+                                If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Info[RL3][G_OC_Info_Index_A_Box_Name]
+                                    If G_OC_Info[RL3][G_OC_Info_Index_Width] >= Temp_List_1[RL2] * 3
+                                        Temp_List_2[RL2] = 3
+                                    Else
+                                        Temp_List_2[RL2] = 2
+                                    End If
+                                    Break
+                                End If
+                            Next
+                        Next
+                        For RL2 = 0 to Ubound(Temp_List_1)
+                            Temp_List_3[RL2] =  Math.Round(Temp_List_1[RL2] * Temp_List_2[RL2],0)
+                            Temp_List_4 = Push(Temp_List_4,"1")
+                        Next
+                        G_Box_Info[RL1][G_Box_Info_Index_Termination_Start] = Join(Temp_List_4,"&")
+                        G_Box_Info[RL1][G_Box_Info_Index_Termination_Count] = Join(Temp_List_3,"&")
+                        G_Box_Info[RL1][G_Box_Info_Index_Direct_Melt_Start] = 0
+                        G_Box_Info[RL1][G_Box_Info_Index_Direct_Melt_Count] = 0
+                    End If
+                Next
+                Temp_Data_1 = Shift(G_Box_Info) // Interesting
+                Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
+                G_Box_Info = Unshift(G_Box_Info,"") // Interesting
+            End If
+    End If
+    Excel.CloseExcel(XLS_Obj,true)
+End Function
