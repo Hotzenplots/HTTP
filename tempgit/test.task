@@ -1,3 +1,5 @@
+dim hWeb = ""
+dim sRet = ""
 list1 = [5]
 data1 = Join(list1,"&")
 TracePrint(data1)
@@ -5,3 +7,6 @@ list2 = Split(data1,"&")
 TracePrint(list2)
 
 TracePrint(113 mod 12)
+hWeb = WebBrowser.Create("ie","about:blank",30000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"sBrowserPath":"","sStartArgs":""})
+hWeb = WebBrowser.BindBrowser("ie",10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200})
+
