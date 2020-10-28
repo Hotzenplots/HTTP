@@ -61,6 +61,8 @@ G_CSV_File_Path = File_Path&G_CSV
 2.无法处理一级分光器串联
 3.无法处理二级分纤箱多下行
 4.上架直熔只有太原的信息(扩展Box_Info)
+5.P0的完整性验证
+6.List7013的合并
 */
 
 Function MainProgress()
@@ -166,7 +168,7 @@ Function MainProgress()
                 Break
             End If
             For RL1 = P4_Repeat_Start To P4_Repeat_Sum
-                P0.Prepare_Data()
+                P0.Prepare_Data_2()
                 Lay_State = P4.Optical_Cable_Lay(G_OC_Info[RL1])
                 Traceprint(G_OC_Info[RL1][36]&"001光缆段"&Lay_State)
                 XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
@@ -209,7 +211,7 @@ Function MainProgress()
             If P5_Repeat_Start > P5_Repeat_Sum
                 Break
             End If
-            P0.Prepare_Data()
+            P0.Prepare_Data_2()
             For RL1 = P5_Repeat_Start To P5_Repeat_Sum
                 G_Box_Info[RL1][G_Box_Info_Index_ODM_ID] = P5.Add_ODM(G_Box_Info[RL1])
                 Traceprint(G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&"已建立ODM")
@@ -259,7 +261,7 @@ Function MainProgress()
             If P6_Repeat_Start > P6_Repeat_Sum
                 Break
             End If
-            P0.Prepare_Data2()
+            P0.Prepare_Data_3()
             For RL1 = P6_Repeat_Start To P6_Repeat_Sum
                 Termination_State = P6.Termination(G_Box_Info[RL1])
                 Traceprint(G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&Termination_State)

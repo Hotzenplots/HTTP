@@ -141,14 +141,17 @@ Function Prepare_Data()
                 G_Box_Count = G_Box_Count + G_Box_RC[RL1]
             Next
             G_Box_Count = G_Box_Count - Box_Count_Correction
-        // Box_Info_Sheet 存在和填充的判定
+        // Box_Info_Sheet Filling Complete Determination 1.0
             Temp_Data_1 = 0
             Temp_List_1 = Excel.GetSheetsName(XLS_Obj)
             Temp_Data_2 = Join(Temp_List_1,"&")
             If InStr(Temp_Data_2,"Box_Info",1,false) <> 0
                 Box_Info_Sheet_Exist = 1
+                Temp_Data_1 = 0
+                Temp_Data_2 = 0
                 Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-                If Temp_Data_1 = G_Box_Count
+                Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,10])
+                If Temp_Data_2 <> ""
                     Box_Info_Sheet_Filled = 1
                 Else
                     Box_Info_Sheet_Filled = 0
@@ -258,15 +261,17 @@ Function Prepare_Data()
                 End If
                 G_OC_Count = RL1
             Next
-        // OC_Info_Sheet 存在和填充的判定
+        // OC_Info_Sheet  Filling Complete Determination 1.0
             Temp_Data_1 = 0
             Temp_List_1 = Excel.GetSheetsName(XLS_Obj)
             Temp_Data_2 = Join(Temp_List_1,"&")
             If InStr(Temp_Data_2,"OC_Info",1,false) <> 0
                 OC_Info_Sheet_Exist = 1
+                Temp_Data_1 = 0
+                Temp_Data_2 = 0
                 Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
-                Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
-                If Temp_Data_1 = G_OC_Count
+                Temp_Data_2 = Excel.ReadCell(XLS_Obj,"OC_Info",[Temp_Data_1,38])
+                If Temp_Data_2 <> ""
                     OC_Info_Sheet_Filled = 1
                 Else
                     OC_Info_Sheet_Filled = 0
@@ -434,18 +439,105 @@ Function Prepare_Data()
                 Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
             End If
     End If
+    Excel.CloseExcel(XLS_Obj,true)
+End Function
+
+Function Prepare_Data_2()
+    // Box_Info_Index&OC_Info_Index
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_County_ID       = 07
+        Dim G_Box_Info_Index_Point_ID            = 08
+        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_1FS_Count           = 10
+        Dim G_Box_Info_Index_2FS_Count           = 11
+        Dim G_Box_Info_Index_DL_2FS_Count        = 12
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
+        Dim G_Box_Info_Index_Required_Tray_Count = 14
+        Dim G_Box_Info_Index_ODM_ID              = 15
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
+
+        Dim G_OC_Info_Index_A_Box_Name        = 01
+        Dim G_OC_Info_Index_A_Box_ID          = 02
+        Dim G_OC_Info_Index_A_Box_Type        = 03
+        Dim G_OC_Info_Index_A_Box_Type_ID     = 04 
+        Dim G_OC_Info_Index_A_Point_ID        = 05
+        Dim G_OC_Info_Index_A_Point_Type_ID   = 06
+        Dim G_OC_Info_Index_A_Longitude       = 07
+        Dim G_OC_Info_Index_A_Latitude        = 08
+        Dim G_OC_Info_Index_Z_Box_Name        = 09
+        Dim G_OC_Info_Index_Z_Box_ID          = 10
+        Dim G_OC_Info_Index_Z_Box_Type        = 11
+        Dim G_OC_Info_Index_Z_Box_Type_ID     = 12
+        Dim G_OC_Info_Index_Z_Point_ID        = 13
+        Dim G_OC_Info_Index_Z_Point_Type_ID   = 14
+        Dim G_OC_Info_Index_Z_Longitude       = 15
+        Dim G_OC_Info_Index_Z_Latitude        = 16
+        Dim G_OC_Info_Index_Width             = 17
+        Dim G_OC_Info_Index_Lenth             = 18
+        Dim G_OC_Info_Index_Project_Code_ID   = 19
+        Dim G_OC_Info_Index_Task_Name_ID      = 20
+        Dim G_OC_Info_Index_Business_Level    = 21
+        Dim G_OC_Info_Index_City_ID           = 22
+        Dim G_OC_Info_Index_County_ID         = 23
+        Dim G_OC_Info_Index_DQS_Project_ID    = 24
+        Dim G_OC_Info_Index_DQS_ID            = 25
+        Dim G_OC_Info_Index_DQS_County_ID     = 26
+        Dim G_OC_Info_Index_DQS_Maintainer_ID = 27
+        Dim G_OC_Info_Index_Life_Cycle        = 28
+        Dim G_OC_Info_Index_Owner_Type        = 29
+        Dim G_OC_Info_Index_Owner_Name        = 30
+        Dim G_OC_Info_Index_Field_Type        = 31
+        Dim G_OC_Info_Index_Support_Sys_Name  = 32
+        Dim G_OC_Info_Index_Support_Sys_ID    = 33
+        Dim G_OC_Info_Index_OC_Sys_Name       = 34
+        Dim G_OC_Info_Index_OC_Sys_ID         = 35
+        Dim G_OC_Info_Index_Support_Seg_Name  = 36
+        Dim G_OC_Info_Index_OC_Name           = 37
+        Dim G_OC_Info_Index_Support_Seg_ID    = 38
+        Dim G_OC_Info_Index_OC_ID             = 39
+        Dim G_OC_Info_Index_OC_Fiber_IDs      = 40
+
+    // Variables
+        Dim Box_Info_Sheet_Filled
+        Dim Content_Lenth
+        Dim CSV_obj
+        Dim DT_obj
+        Dim Line_Num
+        Dim List7013
+        Dim List7013_Shape
+        Dim OC_Info_Sheet_Filled
+        Dim OC_Query_URL
+        Dim Post_Header
+        Dim Response_Body
+        Dim Segment_Num
+        Dim Temp_Data_1
+        Dim Temp_Data_2
+        Dim Temp_Data_3
+        Dim Temp_List_1
+        Dim Temp_List_2
+        Dim XML_Info
+        Dim XML_Info_Encoded
+        Dim XLS_Obj
+
+    Prepare_Data()
+    XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
     If (G_P4 = 1) OR (G_P5 = 1) OR (G_P6 = 1)
-        // OC_Info_Sheet 填充是否完整判定
+        // OC_Info_Sheet Filling Complete Determination 2.0
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
-            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
-            If (Temp_Data_1 = G_OC_Count ) AND (Temp_Data_2 >= 40)
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"OC_Info",[Temp_Data_1,40])
+            If Temp_Data_2 <> ""
                 OC_Info_Sheet_Filled = 1
             Else
                 OC_Info_Sheet_Filled = 0
             End If
-        // G_OC_Info 填充
+        // G_OC_Info Filling 2.0
             If OC_Info_Sheet_Filled = 1
                 //读表,写入G_OC_Info
                 G_OC_Info = Excel.ReadRange(XLS_Obj,"OC_Info","A1")
@@ -476,16 +568,14 @@ Function Prepare_Data()
                 Excel.WriteRange(XLS_Obj,"OC_Info","A1",G_OC_Info,false)
                 G_OC_Info = Unshift(G_OC_Info,"")
             End If
-
     End If
     If (G_P5 = 1) OR (G_P6 = 1)
         // Box_Info_Sheet Filling Complete Determination 2.0
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = 15 //Excel.GetColumsCount(XLS_Obj,"Box_Info")
-            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,Temp_Data_2])
-            If (Temp_Data_3 <> "")
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,15])
+            If (Temp_Data_2 <> "") AND (Temp_Data_2 <> 0)
                 Box_Info_Sheet_Filled = 1
             Else
                 Box_Info_Sheet_Filled = 0
@@ -498,7 +588,7 @@ Function Prepare_Data()
             For RL1 = 1 to G_OC_Count
                 Temp_Data_1 =  Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
                 Temp_Data_2 =  Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,2])
-                If RL1 = 1 
+                If RL1 = 1
                     G_OC_Topology[Line_Num] = [Temp_Data_1, Temp_Data_2]
                     Segment_Num = Segment_Num + 1
                     Continue
@@ -631,8 +721,7 @@ Function Prepare_Data()
     End If
     Excel.CloseExcel(XLS_Obj,true)
 End Function
-
-Function Prepare_Data2()
+Function Prepare_Data_3()
     // Box_Info_Index&OC_Info_Index
         Dim G_Box_Info_Index_Box_Name            = 01
         Dim G_Box_Info_Index_Box_Longitude       = 02
@@ -716,16 +805,15 @@ Function Prepare_Data2()
         Dim OC_Query_URL
         Dim OC_Info_Sheet_Filled
 
-    Prepare_Data()
+    Prepare_Data_2()
     XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
     If G_P6 = 1
         // Box_Info_Sheet Filling Complete Determination 3.0
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = 17 //Excel.GetColumsCount(XLS_Obj,"Box_Info")
-            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,Temp_Data_2])
-            If (Temp_Data_3 <> "")
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,17])
+            If Temp_Data_2 <> ""
                 Box_Info_Sheet_Filled = 1
             Else
                 Box_Info_Sheet_Filled = 0
@@ -760,17 +848,17 @@ Function Prepare_Data2()
                 Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
                 G_Box_Info = Unshift(G_Box_Info,"") // Interesting
             End If
-        // OC_Info_Sheet Filling Complete Determination 2.0
+        // OC_Info_Sheet Filling Complete Determination 3.0
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"OC_Info")
-            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"OC_Info")
-            If (Temp_Data_1 = G_OC_Count ) AND (Temp_Data_2 = 41)
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"OC_Info",[Temp_Data_1,41])
+            If Temp_Data_2 <> ""
                 OC_Info_Sheet_Filled = 1
             Else
                 OC_Info_Sheet_Filled = 0
             End If
-        // G_OC_Info Filling 2.0
+        // G_OC_Info Filling 3.0
             If OC_Info_Sheet_Filled = 1
                 // Read&Fill G_OC_Info
                 G_OC_Info = Excel.ReadRange(XLS_Obj,"OC_Info","A1")
@@ -798,9 +886,8 @@ Function Prepare_Data2()
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"Box_Info")
-            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,(Temp_Data_2 + 4)])
-            If (Temp_Data_3 <> "")
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,21])
+            If Temp_Data_2 <> ""
                 Box_Info_Sheet_Filled = 1
             Else
                 Box_Info_Sheet_Filled = 0
@@ -862,3 +949,4 @@ Function Prepare_Data2()
     End If
     Excel.CloseExcel(XLS_Obj,true)
 End Function
+
