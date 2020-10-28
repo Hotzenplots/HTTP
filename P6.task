@@ -137,7 +137,7 @@ Function Termination(Para_Box_Info)
         XML_Info_2 = Join(Temp_List_3,"")
     End If
     If G_Test_Output = 1
-        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\P6数据验证.xlsx",false)
+        TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\上架数据验证.xlsx",false)
         Excel.WriteColumn(TestExcelObj,"Sheet1","A1",Temp_List_4,false)
         Excel.CloseExcel(TestExcelObj,true)
     End If
@@ -229,6 +229,7 @@ Function Direct_Melt(Para_Box_Info)
         Dim Temp_List_1 = []
         Dim Temp_List_2 = []
         Dim Temp_List_3 = []
+        Dim TestExcelObj 
         Dim XML_Info_1
         Dim XML_Info_2
         Dim XML_Info_3
@@ -258,6 +259,11 @@ Function Direct_Melt(Para_Box_Info)
             Temp_List_3[RL1] = '<param a_fiber_id="'&Temp_List_1[(RL1 + Para_Box_Info[G_Box_Info_Index_Direct_Melt_Start] - 1)]&'" z_fiber_id="'&Temp_List_2[RL1]&'"/>'
         Next
         Temp_Data_2 = Shift(Temp_List_3)
+        If G_Test_Output = 1
+            TestExcelObj = Excel.OpenExcel("C:\\Users\\Administrator\\Desktop\\上架数据验证.xlsx",false)
+            Excel.WriteColumn(TestExcelObj,"Sheet1","A1",Temp_List_2,false)
+            Excel.CloseExcel(TestExcelObj,true)
+        End If
         XML_Info_2 = Join(Temp_List_3,"")
         XML_Info_3 = '</params>'
         XML_Info_4 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
@@ -272,3 +278,4 @@ Function Direct_Melt(Para_Box_Info)
     End If
 
 End Function
+

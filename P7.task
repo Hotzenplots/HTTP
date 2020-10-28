@@ -1,0 +1,10 @@
+//TracePrint("TEST")
+Function Test()
+    HttpSession.SetCookies({"route":"5fb592aa37b5606b0629ebaa738ace15"})
+    URL = "http://10.209.199.72:7112/irms/login.ilf"
+    body = HttpSession.Request("GET",URL,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+    cookies = HttpSession.GetCookies()
+    TracePrint(cookies)
+    HttpSession.Reset()
+End Function
+

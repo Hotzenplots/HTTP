@@ -799,7 +799,7 @@ Function Prepare_Data2()
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
             Temp_Data_2 = Excel.GetColumsCount(XLS_Obj,"Box_Info")
-            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,Temp_Data_2])
+            Temp_Data_3 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,(Temp_Data_2 + 4)])
             If (Temp_Data_3 <> "")
                 Box_Info_Sheet_Filled = 1
             Else

@@ -5,6 +5,7 @@ Import P3
 Import P4
 Import P5
 Import P6
+Import P7
 
     // Box_Info 和 OC_Info 的索引
         Dim G_Box_Info_Index_Box_Name            = 01
@@ -24,31 +25,32 @@ Import P6
         Dim G_Box_Info_Index_ODM_ID              = 15
         Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
 
-Dim XLS_Obj
-Dim File_Path
-Dim Box_Count_Correction
-Dim Temp_Data_1
-Dim Temp_List_1 = []
-Dim RL0
-Dim RL1
-Dim RL2
-Dim Push_State
-Dim Add_State
-Dim Lay_State
-Dim Termination_State
-Dim Direct_Melt_State
-Dim P1_Repeat_Start
-Dim P1_Repeat_Sum
-Dim P2_Repeat_Start
-Dim P2_Repeat_Sum
-Dim P3_Repeat_Start
-Dim P3_Repeat_Sum
-Dim P4_Repeat_Start
-Dim P4_Repeat_Sum
-Dim P5_Repeat_Start
-Dim P5_Repeat_Sum
-Dim P6_Repeat_Start
-Dim P6_Repeat_Sum
+    // Variables
+        Dim XLS_Obj
+        Dim File_Path
+        Dim Box_Count_Correction
+        Dim Temp_Data_1
+        Dim Temp_List_1 = []
+        Dim RL0
+        Dim RL1
+        Dim RL2
+        Dim Push_State
+        Dim Add_State
+        Dim Lay_State
+        Dim Termination_State
+        Dim Direct_Melt_State
+        Dim P1_Repeat_Start
+        Dim P1_Repeat_Sum
+        Dim P2_Repeat_Start
+        Dim P2_Repeat_Sum
+        Dim P3_Repeat_Start
+        Dim P3_Repeat_Sum
+        Dim P4_Repeat_Start
+        Dim P4_Repeat_Sum
+        Dim P5_Repeat_Start
+        Dim P5_Repeat_Sum
+        Dim P6_Repeat_Start
+        Dim P6_Repeat_Sum
 
 File_Path = "C:\\Users\\Administrator\\Desktop\\"
 G_XLS_File_Path = File_Path&G_XLS
@@ -59,7 +61,6 @@ G_CSV_File_Path = File_Path&G_CSV
 2.无法处理一级分光器串联
 3.无法处理二级分纤箱多下行
 4.上架直熔只有太原的信息(扩展Box_Info)
-5.一级箱子上架没有按照光缆分盘
 */
 
 Function MainProgress()
@@ -275,5 +276,10 @@ Function MainProgress()
             Next
         Next
     End If
+
+    If G_P7 = 1
+        P7.Test()
+    End If
+
 End Function
 MainProgress()
