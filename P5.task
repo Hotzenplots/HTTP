@@ -74,9 +74,7 @@ Function Add_Tray(Para_Box_Info)
     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
     Response_Body = HttpSession.Request("POST",Add_URL,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
     domtools.InitDom(Response_Body)
-    Temp_List_1 = domtools.xpath("//@int_id")
-    Temp_Data_1 = Shift(Temp_List_1)
-    Temp_Data_1 = Shift(Temp_List_1)
+    Temp_List_1 = domtools.xpath("//terminal/@int_id")
     Return Temp_List_1
     
 End Function

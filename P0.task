@@ -675,12 +675,12 @@ Function Prepare_Data_2()
                             If G_OC_Topology[0] = null
                                 Temp_Data_1 = Shift(G_OC_Topology)
                             End If 
-                            For RL2 = 0 to Ubound(G_OC_Topology) //3
+                            For RL2 = 0 to Ubound(G_OC_Topology)
                                 Temp_Data_1 = ""
                                 Temp_Data_2 = 0
                                 Temp_List_1 = []
                                 If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Topology[RL2][0]
-                                    For RL3 = 1 to Ubound(G_OC_Topology[RL2]) //4
+                                    For RL3 = 1 to Ubound(G_OC_Topology[RL2])
                                         For RL4 = 1 to G_Box_Count
                                             If G_OC_Topology[RL2][RL3] = G_Box_Info[RL4][G_Box_Info_Index_Box_Name]
                                                 Temp_Data_1 = Push(Temp_List_1,G_Box_Info[RL4][G_Box_Info_Index_2FS_Count])
@@ -691,7 +691,9 @@ Function Prepare_Data_2()
                                 For Each RL3 In Temp_List_1
                                     Temp_Data_2 = Temp_Data_2 + RL3
                                 Next
-                                Temp_Data_1 = Push(Temp_List_2,Temp_Data_2)
+                                If Temp_Data_2 <> 0
+                                    Temp_Data_1 = Push(Temp_List_2,Temp_Data_2)
+                                End If
                             Next
                             G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count] = Join(Temp_List_2,"&")
                         End If
@@ -798,6 +800,7 @@ Function Prepare_Data_3()
         Dim Temp_List_2 = []
         Dim Temp_List_3 = []
         Dim Temp_List_4 = []
+        Dim Temp_List_5 = []
         Dim XLS_Obj
         Dim XML_Info_1
         Dim XML_Info_2
@@ -919,21 +922,30 @@ Function Prepare_Data_3()
                         Temp_List_2 = []
                         Temp_List_3 = []
                         Temp_List_4 = []
-                        Temp_List_1 = Split(G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count],"&")
-                        For RL2 = 0 to Ubound(Temp_List_1)
+                        Temp_List_5 = []
+                        If InStr(G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count],"&",1,false) <> 0
+                            Temp_List_1 = Split(G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count],"&")
+                        Elseif InStr(G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count],"&",1,false) = 0
+                            Temp_List_1[0] = CStr(Math.Round(G_Box_Info[RL1][G_Box_Info_Index_DL_2FS_Count],0))
+                        End If
+                        For RL2 = 1 to Len(Temp_List_1)
+                            Temp_List_5 = []
                             For RL3 = 1 to G_OC_Count
                                 If G_Box_Info[RL1][G_Box_Info_Index_Box_Name] = G_OC_Info[RL3][G_OC_Info_Index_A_Box_Name]
-                                    If G_OC_Info[RL3][G_OC_Info_Index_Width] >= Temp_List_1[RL2] * 3
-                                        Temp_List_2[RL2] = 3
-                                    Else
-                                        Temp_List_2[RL2] = 2
-                                    End If
-                                    Break
+                                    Temp_List_5 = Push(Temp_List_5,G_OC_Info[RL3][G_OC_Info_Index_Width])
+                                End If
+                            Next
+                            Temp_List_5 = Unshift(Temp_List_5,"")
+                            For RL3 = 1 to Len(Temp_List_1)
+                                If Temp_List_5[RL3] >= Temp_List_1[RL2 - 1] * 3
+                                    Temp_List_2[RL2] = 3
+                                Else
+                                    Temp_List_2[RL2] = 2
                                 End If
                             Next
                         Next
                         For RL2 = 0 to Ubound(Temp_List_1)
-                            Temp_List_3[RL2] =  Math.Round(Temp_List_1[RL2] * Temp_List_2[RL2],0)
+                            Temp_List_3[RL2] =  Math.Round(Temp_List_1[RL2] * Temp_List_2[RL2 + 1],0)
                             Temp_List_4 = Push(Temp_List_4,"1")
                         Next
                         G_Box_Info[RL1][G_Box_Info_Index_Termination_Start] = Join(Temp_List_4,"&")
