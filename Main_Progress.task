@@ -61,8 +61,7 @@ G_CSV_File_Path = File_Path&G_CSV
 2.无法处理一级分光器串联
 3.无法处理二级分纤箱多下行
 4.上架直熔只有太原的信息(扩展Box_Info)
-5.P0的完整性验证
-6.List7013的合并
+5.List7013的合并
 */
 
 Function MainProgress()

@@ -65,7 +65,7 @@ Function Add_Support_Segment()
     XML_Info_Full = XML_Info_Head&Body_String&XML_Info_Tail
     XML_Info_Encoded = "xml="&Replace(encode_decode.str_encode(XML_Info_Full),"/","%2F",true)
     Content_Lenth = CStr(Len(XML_Info_Encoded))
-    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}    
+    Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
     Response_Body = HttpSession.Request("POST",URL_ADD,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
     domtools.InitDom(Response_Body)
     Temp_List_1 = domtools.xpath("//@loaded")

@@ -1,10 +1,37 @@
-//TracePrint("TEST")
-Function Test()
-    HttpSession.SetCookies({"route":"5fb592aa37b5606b0629ebaa738ace15"})
-    URL = "http://10.209.199.72:7112/irms/login.ilf"
-    body = HttpSession.Request("GET",URL,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-    cookies = HttpSession.GetCookies()
-    TracePrint(cookies)
-    HttpSession.Reset()
-End Function
+dim cookies = ""
+dim body = ""
+dim tab = ""
+
+EasyBrowser.openBrowser("C:\\360\\360se6\\Application\\360se.exe",{"--remote-debugging-port":9222})
+EasyBrowser.bindBrowser("http://127.0.0.1:9222")
+tabs = EasyBrowser.getTabs()
+tab = tabs[0]
+EasyBrowser.clearBrowserCookies(tab)
+EasyBrowser.goUrl(tab, "http://portal.sx.cmcc/sxmcc_was/uploadResource/public/login/login.html")
+#icon("@res:td0o0d6l-6v32-i1i1-lpgk-mpmk6t9c2tls.png")
+Keyboard.InputText({"html":[{"id":"username","tag":"INPUT"}],"wnd":[{"app":"360se","cls":"360se6_Frame","title":"*"},{"cls":"Internet Explorer_Server"}]},"tyyangwei",true,20,10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":500,"sKeyModifiers":[],"sSimulate":"message","bValidate":false,"bClickBeforeInput":false})
+#icon("@res:l1pddaos-79np-01r7-ilpm-t328ue0k25se.png")
+Keyboard.InputText({"html":[{"id":"password","tag":"INPUT"}],"wnd":[{"app":"360se","cls":"360se6_Frame","title":"*"},{"cls":"Internet Explorer_Server"}]},"tyyw159...",true,20,10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":500,"sKeyModifiers":[],"sSimulate":"message","bValidate":false,"bClickBeforeInput":false})
+#icon("@res:odlicddh-k6jq-mmqv-bm0t-g8n9ck92et9b.png")
+Mouse.Action({"html":[{"css-selector":"body>div>div>form>div","idx":2,"parentid":"login_bg","tag":"DIV"}],"wnd":[{"app":"360se","cls":"360se6_Frame","title":"*"},{"cls":"Internet Explorer_Server"}]},"left","click",10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":true,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate"})
+Delay 2000
+#icon("@res:49jeub7i-lemo-3ln9-7l1l-nupolhfj3sg7.png")
+Window.SetActive({"wnd":[{"cls":"360se6_Frame","title":"统一信息平台门户 － 太原分公司 - 360安全浏览器 12.2","app":"360se"}]})
+#icon("@res:49jeub7i-lemo-3ln9-7l1l-nupolhfj3sg7.png")
+Window.Show({"wnd":[{"cls":"360se6_Frame","title":"统一信息平台门户 － 太原分公司 - 360安全浏览器 12.2","app":"360se"}]},"max")
+// tab = EasyBrowser.createTab("http://portal.sx.cmcc/sxmcc_wcm/middelwebpage/app_recoder_log.jsp?app_flg=zhwlzygl_ywzl")
+EasyBrowser.goUrl(tab, "http://portal.sx.cmcc/sxmcc_wcm/middelwebpage/app_recoder_log.jsp?app_flg=zhwlzygl_ywzl")
+Delay 5000
+cookies = EasyBrowser.getCookies(tab)
+// TracePrint(cookies)
+// TracePrint(cookies[0]["value"])
+// TracePrint(cookies[1]["value"])
+#icon("@res:ukparvla-kjsa-cfi6-0rss-u2ki64rh74l0.png")
+Window.Show({"wnd":[{"cls":"360se6_Frame","title":"中国移动综合网络资源管理系统 - 360安全浏览器 12.2","app":"360se"}]},"min")
+
+HttpSession.SetCookies({cookies[0]["name"]:cookies[0]["value"],cookies[1]["name"]:cookies[1]["value"]})
+URL_New_Sheet = "http://10.209.199.72:7112/irms/opticalSchedulingAction!init.ilf"
+body = HttpSession.Request("GET",URL_New_Sheet,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+TracePrint(body)
+
 

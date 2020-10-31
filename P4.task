@@ -53,7 +53,7 @@ Function Optical_Cable_Lay(Para_OC_Info)
     Dim TestExcelObj
 
     URL_Add = "http://10.209.199.74:8120/igisserver_osl/rest/optCabLayInspur/saveFiberSegM1"
-    XML_Info = '<xmldata><fiberseg id="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_OC_ID],0))&'" aid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_A_Point_ID],0))&'" zid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Z_Point_ID],0))&'"/><cablays><cablay id="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Support_Seg_ID],0))&'" type="yinshangduan" name="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Support_Seg_Name],0))&'" aid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_A_Point_ID],0))&'" zid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Z_Point_ID],0))&'"/></cablays></xmldata>'
+    XML_Info = '<xmldata><fiberseg id="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_OC_ID],0))&'" aid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_A_Point_ID],0))&'" zid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Z_Point_ID],0))&'"/><cablays><cablay id="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Support_Seg_ID],0))&'" type="yinshangduan" name="'&Para_OC_Info[G_OC_Info_Index_Support_Seg_Name]&'" aid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_A_Point_ID],0))&'" zid="'&CStr(Math.Round(Para_OC_Info[G_OC_Info_Index_Z_Point_ID],0))&'"/></cablays></xmldata>'
     XML_Info_Encoded = "xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
     Content_Lenth = CStr(Len(XML_Info_Encoded))
     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}

@@ -1,19 +1,2 @@
-dim iRet = ""
-dim dictRet = ""
-dim IE_Obj = ""
-
-App.Kill("iexplore.exe")
-IE_Obj = WebBrowser.Create("ie","http://portal.sx.cmcc/sxmcc_was/uploadResource/public/login/login.html",30000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"sBrowserPath":"","sStartArgs":""})
-#icon("@res:qsig74lu-cuj4-l6fb-se2t-u9sreve198du.png")
-Keyboard.InputText({"html":[{"id":"username","tag":"INPUT"}],"wnd":[{"app":"iexplore","cls":"IEFrame","title":"*"},{"cls":"Internet Explorer_Server"}]},"tyyangwei",true,20,10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":500,"sKeyModifiers":[],"sSimulate":"message","bValidate":false,"bClickBeforeInput":false})
-#icon("@res:a6s5u0mc-2g1e-eoj0-qrn2-7fqrkbuvll41.png")
-Keyboard.InputText({"html":[{"id":"password","tag":"INPUT"}],"wnd":[{"app":"iexplore","cls":"IEFrame","title":"*"},{"cls":"Internet Explorer_Server"}]},"tyyw159...",true,20,10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":500,"sKeyModifiers":[],"sSimulate":"message","bValidate":false,"bClickBeforeInput":false})
-#icon("@res:8ujju79v-4ia4-9a33-ifcj-jkvasbhflm7o.png")
-Mouse.Action({"html":[{"css-selector":"body>div>div>form>div","idx":2,"parentid":"login_bg","tag":"DIV"}],"wnd":[{"app":"iexplore","cls":"IEFrame","title":"*"},{"cls":"Internet Explorer_Server"}]},"left","click",10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":true,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate"})
-// #icon("@res:tslpk7c2-6n11-i98n-eg4p-hluljr4mh4th.png")
-// Mouse.Action({"html":[{"id":"one3","tag":"LI"}],"wnd":[{"app":"iexplore","cls":"IEFrame","title":"*"},{"cls":"Internet Explorer_Server"}]},"left","click",10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":true,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate"})
-// #icon("@res:7k8urh6n-0jfg-nlem-o3fc-vhcp4d2bnps0.png")
-// Mouse.Action({"html":[{"idx":2,"parentid":"all_items3","tag":"LI"}],"wnd":[{"app":"iexplore","cls":"IEFrame","title":"*"},{"cls":"Internet Explorer_Server"}]},"left","click",10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":true,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate"})
-dictRet = WebBrowser.GetCookies(IE_Obj,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200})
-TracePrint(dictret)
-
+dim dic1 = {"one":"1","two":"2"}
+TracePrint(dic1["one"])
