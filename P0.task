@@ -308,23 +308,14 @@ Function Prepare_Data()
                 // Task_Name_ID_List 准备
                     Task_Name_ID_List = Split(List7013[1][4],"-") 
                     Task_Name_ID = Task_Name_ID_List[0]
-                // City_ID 准备
-                    Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","R2:S12")
-                    For RL1 = 0 to Len(Temp_List_1)
-                        If List7013[1][0] = Temp_List_1[RL1][0]
-                            City_ID = Temp_List_1[RL1][1]
-                            Break
-                        End If
-                    Next
                 // County_ID 准备
-                    County_ID_List = Excel.ReadRange(XLS_Obj,"Template","F2:P11")
+                    County_ID_List = Excel.ReadRange(XLS_Obj,"Template","F2:V11")
                     For RL1 = 0 to Len(County_ID_List)
                         If List7013[1][1] = County_ID_List[RL1][0]
                             County_ID_Index = RL1
                             Break
                         End If
                     Next
-
                 // G_OC_Info [][45] 构建
                     For RL1 = 1 To G_OC_Count
                         For RL2 = 0 To 45
@@ -361,7 +352,7 @@ Function Prepare_Data()
                         G_OC_Info[RL1][G_OC_Info_Index_Project_Code_ID] = Project_Code_ID
                         G_OC_Info[RL1][G_OC_Info_Index_Task_Name_ID] = Task_Name_ID
                         G_OC_Info[RL1][G_OC_Info_Index_Business_Level] = 8
-                        G_OC_Info[RL1][G_OC_Info_Index_City_ID] = CStr(Math.Round(City_ID,0))
+                        G_OC_Info[RL1][G_OC_Info_Index_City_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][16],0))
                         G_OC_Info[RL1][G_OC_Info_Index_County_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][1],0))
                         G_OC_Info[RL1][G_OC_Info_Index_DQS_Project_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][3],0))
                         G_OC_Info[RL1][G_OC_Info_Index_DQS_ID] = CStr(Math.Round(County_ID_List[County_ID_Index][5],0))
@@ -962,3 +953,6 @@ Function Prepare_Data_3()
     Excel.CloseExcel(XLS_Obj,true)
 End Function
 
+Function Prepare_Data_P7()
+
+End Function

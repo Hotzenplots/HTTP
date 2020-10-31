@@ -1,2 +1,1 @@
-dim dic1 = {"one":"1","two":"2"}
-TracePrint(dic1["one"])
+
