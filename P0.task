@@ -9,16 +9,21 @@ Function Prepare_Data()
         Dim G_Box_Info_Index_Box_Type            = 04
         Dim G_Box_Info_Index_Box_Type_ID         = 05
         Dim G_Box_Info_Index_Box_ID              = 06
-        Dim G_Box_Info_Index_Box_County_ID       = 07
-        Dim G_Box_Info_Index_Point_ID            = 08
-        Dim G_Box_Info_Index_Point_Type_ID       = 09
-        Dim G_Box_Info_Index_1FS_Count           = 10
-        Dim G_Box_Info_Index_2FS_Count           = 11
-        Dim G_Box_Info_Index_DL_2FS_Count        = 12
-        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
-        Dim G_Box_Info_Index_Required_Tray_Count = 14
-        Dim G_Box_Info_Index_ODM_ID              = 15
-        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
+        Dim G_Box_Info_Index_Box_City_ID         = 07
+        Dim G_Box_Info_Index_Box_County_ID       = 08
+        Dim G_Box_Info_Index_Point_ID            = 09
+        Dim G_Box_Info_Index_Point_Type_ID       = 10
+        Dim G_Box_Info_Index_1FS_Count           = 11
+        Dim G_Box_Info_Index_2FS_Count           = 12
+        Dim G_Box_Info_Index_DL_2FS_Count        = 13
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 14
+        Dim G_Box_Info_Index_Required_Tray_Count = 15
+        Dim G_Box_Info_Index_ODM_ID              = 16
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 17
+        Dim G_Box_Info_Index_Termination_Start   = 18
+        Dim G_Box_Info_Index_Termination_Count   = 19
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 20
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 21
 
         Dim G_OC_Info_Index_A_Box_Name        = 01
         Dim G_OC_Info_Index_A_Box_ID          = 02
@@ -150,7 +155,7 @@ Function Prepare_Data()
                 Temp_Data_1 = 0
                 Temp_Data_2 = 0
                 Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-                Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,10])
+                Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,11])
                 If Temp_Data_2 <> ""
                     Box_Info_Sheet_Filled = 1
                 Else
@@ -211,13 +216,14 @@ Function Prepare_Data()
                         Temp_Data_1 = Temp_Data_1 + 1
                     Next
                 Next // 此刻,已写入01-04四个字段
-                Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","F2:P11")
+                Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","F2:V11")
                 For RL1 = 1 to G_Box_Count
                     For RL2 = 0 to Len(Temp_List_1)
                         If List7013[2][1] = Temp_List_1[RL2][0]
                             G_Box_Info[RL1][G_Box_Info_Index_Box_Type_ID] = 000
                             G_Box_Info[RL1][G_Box_Info_Index_Box_ID] = 000
                             G_Box_Info[RL1][G_Box_Info_Index_Box_County_ID] = Temp_List_1[RL2][1]
+                            G_Box_Info[RL1][G_Box_Info_Index_Box_City_ID] = Temp_List_1[RL2][16]
                             Break
                         End If
                     Next
@@ -441,16 +447,21 @@ Function Prepare_Data_2()
         Dim G_Box_Info_Index_Box_Type            = 04
         Dim G_Box_Info_Index_Box_Type_ID         = 05
         Dim G_Box_Info_Index_Box_ID              = 06
-        Dim G_Box_Info_Index_Box_County_ID       = 07
-        Dim G_Box_Info_Index_Point_ID            = 08
-        Dim G_Box_Info_Index_Point_Type_ID       = 09
-        Dim G_Box_Info_Index_1FS_Count           = 10
-        Dim G_Box_Info_Index_2FS_Count           = 11
-        Dim G_Box_Info_Index_DL_2FS_Count        = 12
-        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
-        Dim G_Box_Info_Index_Required_Tray_Count = 14
-        Dim G_Box_Info_Index_ODM_ID              = 15
-        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
+        Dim G_Box_Info_Index_Box_City_ID         = 07
+        Dim G_Box_Info_Index_Box_County_ID       = 08
+        Dim G_Box_Info_Index_Point_ID            = 09
+        Dim G_Box_Info_Index_Point_Type_ID       = 10
+        Dim G_Box_Info_Index_1FS_Count           = 11
+        Dim G_Box_Info_Index_2FS_Count           = 12
+        Dim G_Box_Info_Index_DL_2FS_Count        = 13
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 14
+        Dim G_Box_Info_Index_Required_Tray_Count = 15
+        Dim G_Box_Info_Index_ODM_ID              = 16
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 17
+        Dim G_Box_Info_Index_Termination_Start   = 18
+        Dim G_Box_Info_Index_Termination_Count   = 19
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 20
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 21
 
         Dim G_OC_Info_Index_A_Box_Name        = 01
         Dim G_OC_Info_Index_A_Box_ID          = 02
@@ -565,7 +576,7 @@ Function Prepare_Data_2()
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,15])
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,16])
             If (Temp_Data_2 <> "") AND (Temp_Data_2 <> 0)
                 Box_Info_Sheet_Filled = 1
             Else
@@ -722,20 +733,21 @@ Function Prepare_Data_3()
         Dim G_Box_Info_Index_Box_Type            = 04
         Dim G_Box_Info_Index_Box_Type_ID         = 05
         Dim G_Box_Info_Index_Box_ID              = 06
-        Dim G_Box_Info_Index_Box_County_ID       = 07
-        Dim G_Box_Info_Index_Point_ID            = 08
-        Dim G_Box_Info_Index_Point_Type_ID       = 09
-        Dim G_Box_Info_Index_1FS_Count           = 10
-        Dim G_Box_Info_Index_2FS_Count           = 11
-        Dim G_Box_Info_Index_DL_2FS_Count        = 12
-        Dim G_Box_Info_Index_Required_ODM_Rows   = 13
-        Dim G_Box_Info_Index_Required_Tray_Count = 14
-        Dim G_Box_Info_Index_ODM_ID              = 15
-        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 16
-        Dim G_Box_Info_Index_Termination_Start   = 17
-        Dim G_Box_Info_Index_Termination_Count   = 18
-        Dim G_Box_Info_Index_Direct_Melt_Start   = 19
-        Dim G_Box_Info_Index_Direct_Melt_Count   = 20
+        Dim G_Box_Info_Index_Box_City_ID         = 07
+        Dim G_Box_Info_Index_Box_County_ID       = 08
+        Dim G_Box_Info_Index_Point_ID            = 09
+        Dim G_Box_Info_Index_Point_Type_ID       = 10
+        Dim G_Box_Info_Index_1FS_Count           = 11
+        Dim G_Box_Info_Index_2FS_Count           = 12
+        Dim G_Box_Info_Index_DL_2FS_Count        = 13
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 14
+        Dim G_Box_Info_Index_Required_Tray_Count = 15
+        Dim G_Box_Info_Index_ODM_ID              = 16
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 17
+        Dim G_Box_Info_Index_Termination_Start   = 18
+        Dim G_Box_Info_Index_Termination_Count   = 19
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 20
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 21
 
         Dim G_OC_Info_Index_A_Box_Name        = 01
         Dim G_OC_Info_Index_A_Box_ID          = 02
@@ -806,7 +818,7 @@ Function Prepare_Data_3()
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,17])
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,18])
             If Temp_Data_2 <> ""
                 Box_Info_Sheet_Filled = 1
             Else
@@ -880,7 +892,7 @@ Function Prepare_Data_3()
             Temp_Data_1 = 0
             Temp_Data_2 = 0
             Temp_Data_1 = Excel.GetRowsCount(XLS_Obj,"Box_Info")
-            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,21])
+            Temp_Data_2 = Excel.ReadCell(XLS_Obj,"Box_Info",[Temp_Data_1,22])
             If Temp_Data_2 <> ""
                 Box_Info_Sheet_Filled = 1
             Else
@@ -951,8 +963,4 @@ Function Prepare_Data_3()
             End If
     End If
     Excel.CloseExcel(XLS_Obj,true)
-End Function
-
-Function Prepare_Data_P7()
-
 End Function

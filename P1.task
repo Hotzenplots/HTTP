@@ -12,9 +12,21 @@ Function Push_Box(Para_Box_Info)
         Dim G_Box_Info_Index_Box_Type            = 04
         Dim G_Box_Info_Index_Box_Type_ID         = 05
         Dim G_Box_Info_Index_Box_ID              = 06
-        Dim G_Box_Info_Index_Box_County_ID       = 07
-        Dim G_Box_Info_Index_Point_ID            = 08
-        Dim G_Box_Info_Index_Point_Type_ID       = 09
+        Dim G_Box_Info_Index_Box_City_ID         = 07
+        Dim G_Box_Info_Index_Box_County_ID       = 08
+        Dim G_Box_Info_Index_Point_ID            = 09
+        Dim G_Box_Info_Index_Point_Type_ID       = 10
+        Dim G_Box_Info_Index_1FS_Count           = 11
+        Dim G_Box_Info_Index_2FS_Count           = 12
+        Dim G_Box_Info_Index_DL_2FS_Count        = 13
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 14
+        Dim G_Box_Info_Index_Required_Tray_Count = 15
+        Dim G_Box_Info_Index_ODM_ID              = 16
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 17
+        Dim G_Box_Info_Index_Termination_Start   = 18
+        Dim G_Box_Info_Index_Termination_Count   = 19
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 20
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 21
 
     Push_URL_Partial_1 = "http://10.209.199.74:8120/igisserver_osl/rest/SynchroController/synchroData"
     Push_URL_Partial_2 = "?sid="&Math.Round(Para_Box_Info[G_Box_Info_Index_Box_ID],0)&"&sType="&Para_Box_Info[G_Box_Info_Index_Box_Type]&"&longi="&Para_Box_Info[G_Box_Info_Index_Box_Longitude]&"&lati="&Para_Box_Info[G_Box_Info_Index_Box_Latitude]
