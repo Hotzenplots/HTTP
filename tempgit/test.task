@@ -1,18 +1,2 @@
-List1 = [0,1,2,3]
 
-Dim zero = 1
-Dim one = 2
-Dim two = 3
-
-
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-TracePrint(list1[zero])
-
-
+File.WriteFile("","","gbk")
