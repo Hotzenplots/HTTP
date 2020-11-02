@@ -1,2 +1,4 @@
-list1 = [[a1,a2],[b1,b2]]
-File.WriteFile("","","gbk")
+dim dictRet = ""
+list1 = [["a1","a2"],["b1","b2"]]
+CSV.Save(list1,"C:\\123.csv")
+

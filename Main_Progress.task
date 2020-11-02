@@ -32,7 +32,10 @@ Import P7
 
     // Variables
         Dim XLS_Obj
-        Dim File_Path
+        Dim Base_Path
+        Dim G_XLSX_File
+        Dim G_CSV_File
+        Dim G_Template_File
         Dim Box_Count_Correction
         Dim Temp_Data_1
         Dim Temp_List_1 = []
@@ -57,9 +60,14 @@ Import P7
         Dim P6_Repeat_Start
         Dim P6_Repeat_Sum
 
-File_Path = "C:\\Users\\Administrator\\Desktop\\"
-G_XLS_File_Path = File_Path&G_XLS
-G_CSV_File_Path = File_Path&G_CSV
+
+Base_Path = "C:\\Users\\Administrator\\Desktop\\"
+XLSX_File_Name = File_name&".xlsx"
+CSV_File_Name = File_name&".csv"
+Template_File_Name = "Template.csv"
+G_XLSX_File = Base_Path&XLSX_File_Name
+G_CSV_File = Base_Path&CSV_File_Name
+G_Template_File = Base_Path&Template_File_Name
 
 /*
 1.无法处理一二级分光器在同一个箱子
@@ -70,7 +78,7 @@ G_CSV_File_Path = File_Path&G_CSV
 
 Function MainProgress()
     If G_P1 = 1
-        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
         // G_Box_Count 和 G_Box_RC 构建
             Box_Count_Correction = 0
             G_Box_Count = 0
@@ -106,7 +114,7 @@ Function MainProgress()
             For RL1 = P1_Repeat_Start To P1_Repeat_Sum
                 Push_State = P1.Push_Box(G_Box_Info[RL1])
                 Traceprint(G_Box_Info[RL1][1]&Push_State[0])
-                XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+                XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
                 Excel.WriteCell(XLS_Obj,"Info",[2,5],RL1 + 1,true)
                 Excel.CloseExcel(XLS_Obj,true)
             Next
@@ -114,7 +122,7 @@ Function MainProgress()
     End If
 
     If G_P2 = 1
-        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
         // 构建断点控制参数
             P2_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[3,5]) //读取P2的Repeat_Start和Repeat_Sum
             P2_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[3,6]) //读取P2的Repeat_Start和Repeat_Sum
@@ -126,14 +134,14 @@ Function MainProgress()
             P0.Prepare_Data()
             Add_State = P2.Add_Support_Segment()
             Traceprint("引上段建立"&Add_State)
-            XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+            XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
             Excel.WriteCell(XLS_Obj,"Info",[3,5],(P2_Repeat_Start + 1),true)
             Excel.CloseExcel(XLS_Obj,true)
         Next
     End If
 
     If G_P3 = 1
-        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
         // 构建断点控制参数
             P3_Repeat_Start = Excel.ReadCell(XLS_Obj,"Info",[4,5]) //读取P3的Repeat_Start和Repeat_Sum
             P3_Repeat_Sum = Excel.ReadCell(XLS_Obj,"Info",[4,6]) //读取P3的Repeat_Start和Repeat_Sum
@@ -145,14 +153,14 @@ Function MainProgress()
             P0.Prepare_Data()
             Add_State = P3.Add_OC_Segment()
             Traceprint("光缆段建立"&Add_State)
-            XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+            XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
             Excel.WriteCell(XLS_Obj,"Info",[4,5],(P3_Repeat_Start + 1),true)
             Excel.CloseExcel(XLS_Obj,true)
         Next
     End If
 
     If G_P4 = 1
-        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
         // G_OC_Count 构建
             For RL1 = 1 To 500
                 Temp_Data_1 = Excel.ReadCell(XLS_Obj,"OC_Topology",[RL1,1])
@@ -174,7 +182,7 @@ Function MainProgress()
                 P0.Prepare_Data_2()
                 Lay_State = P4.Optical_Cable_Lay(G_OC_Info[RL1])
                 Traceprint(G_OC_Info[RL1][36]&"001光缆段"&Lay_State)
-                XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+                XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
                 Excel.WriteCell(XLS_Obj,"Info",[5,5],RL1 + 1,true)
                 Excel.CloseExcel(XLS_Obj,true)
             Next
@@ -182,7 +190,7 @@ Function MainProgress()
     End If
 
     If G_P5 = 1
-        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
         // G_Box_Count 和 G_Box_RC Creat
             Box_Count_Correction = 0
             G_Box_Count = 0
@@ -221,7 +229,7 @@ Function MainProgress()
                 Temp_List_1 = P5.Add_Tray(G_Box_Info[RL1])
                 G_Box_Info[RL1][G_Box_Info_Index_Tray_Terminal_IDs] = Join(Temp_List_1,"&")
                 Traceprint(G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&"已建立托盘")
-                XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+                XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
                 Excel.WriteCell(XLS_Obj,"Info",[6,5],RL1 + 1,true)
                 Temp_Data_1 = Shift(G_Box_Info) // Interesting
                 Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
@@ -232,7 +240,7 @@ Function MainProgress()
     End If
 
     If G_P6 = 1
-        XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+        XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
         // G_Box_Count 和 G_Box_RC Creat
             Box_Count_Correction = 0
             G_Box_Count = 0
@@ -275,7 +283,7 @@ Function MainProgress()
                     Temp_Data_1 = "直熔数据"
                 End If
                 Traceprint(G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&Temp_Data_1&Direct_Melt_State)
-                XLS_Obj = Excel.OpenExcel(G_XLS_File_Path,false)
+                XLS_Obj = Excel.OpenExcel(G_XLSX_File,false)
                 Excel.WriteCell(XLS_Obj,"Info",[7,5],RL1 + 1,true)
                 Excel.CloseExcel(XLS_Obj,true)
             Next
@@ -288,5 +296,3 @@ Function MainProgress()
 
 End Function
 MainProgress()
-
-
