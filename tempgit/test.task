@@ -1,0 +1,15 @@
+dim iRet = ""
+dim sRet = ""
+dim dTime = ""
+
+dTime = Time.Now()
+TracePrint(dtime)
+
+sRet = Time.Format(dTime,"yyyy-mm-dd hh:mm:ss")
+TracePrint(sRet)
+
+iRet = Time.DateAdd("d",1,dTime)
+TracePrint(iRet)
+iRet = Time.Format(iRet,"yyyy-mm-dd hh:mm:ss")
+TracePrint(iRet)
+
