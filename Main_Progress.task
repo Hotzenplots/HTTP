@@ -287,6 +287,7 @@ Function MainProgress()
 
     If G_P7 = 1
         P7.Prepare_Data_P7()
+        P7.Add_Optical_Circuits()
         CSV.Save(G_OpticalCircuit_Info,G_Base_Path&G_File_Name&"光路数据.csv")
     End If
 

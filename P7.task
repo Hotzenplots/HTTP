@@ -19,7 +19,7 @@ Function Prepare_Data_P7()
         Dim G_OpticalCircuit_Info_Index_Z_Point_Name         = 14
         Dim G_OpticalCircuit_Info_Index_Z_Point_ID           = 15
         Dim G_OpticalCircuit_Info_Index_Z_Point_Type_ID      = 16
-        Dim G_OpticalCircuit_Info_Index_ProID = 17
+        Dim G_OpticalCircuit_Info_Index_ProID                = 17
         Dim G_OpticalCircuit_Info_Index_Optical_Circuit_Name = 18
         Dim G_OpticalCircuit_Info_Index_City_ID              = 19
         Dim G_OpticalCircuit_Info_Index_County_ID            = 20
@@ -164,7 +164,7 @@ Function Prepare_Data_P7()
                 G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_DQS_ID] = List_Template[List_Template_Index][5]
                 G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_DQS_County] = List_Template[List_Template_Index][13]
                 G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_DQS_County_ID] = List_Template[List_Template_Index][7]
-                G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_DQS_Maintainer] = List_Template[List_Template_Index][14]
+                G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_DQS_Maintainer] = List_Template[List_Template_Index][8]
                 G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_DQS_Maintainer_ID] = List_Template[List_Template_Index][9]
                 G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AEquType] = 10002
                 G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_ZEquType] = 10002
@@ -416,9 +416,71 @@ Function Prepare_Data_P7()
         Next
 End Function
 
-
 Function Add_Optical_Circuits()
+    // OpticalCircuit_Info_Index
+        Dim G_OpticalCircuit_Info_Index_A_FS_Name            = 01
+        Dim G_OpticalCircuit_Info_Index_A_FS_ID              = 02
+        Dim G_OpticalCircuit_Info_Index_A_Box_Name           = 03
+        Dim G_OpticalCircuit_Info_Index_A_Box_ID             = 04
+        Dim G_OpticalCircuit_Info_Index_A_Box_Type_ID        = 05
+        Dim G_OpticalCircuit_Info_Index_A_Point_Name         = 06
+        Dim G_OpticalCircuit_Info_Index_A_Point_ID           = 07
+        Dim G_OpticalCircuit_Info_Index_A_Point_Type_ID      = 08
+        Dim G_OpticalCircuit_Info_Index_Z_FS_Name            = 09
+        Dim G_OpticalCircuit_Info_Index_Z_FS_ID              = 10
+        Dim G_OpticalCircuit_Info_Index_Z_Box_Name           = 11
+        Dim G_OpticalCircuit_Info_Index_Z_Box_ID             = 12
+        Dim G_OpticalCircuit_Info_Index_Z_Box_Type_ID        = 13
+        Dim G_OpticalCircuit_Info_Index_Z_Point_Name         = 14
+        Dim G_OpticalCircuit_Info_Index_Z_Point_ID           = 15
+        Dim G_OpticalCircuit_Info_Index_Z_Point_Type_ID      = 16
+        Dim G_OpticalCircuit_Info_Index_ProID                = 17
+        Dim G_OpticalCircuit_Info_Index_Optical_Circuit_Name = 18
+        Dim G_OpticalCircuit_Info_Index_City_ID              = 19
+        Dim G_OpticalCircuit_Info_Index_County_ID            = 20
+        Dim G_OpticalCircuit_Info_Index_Business_Name        = 21
+        Dim G_OpticalCircuit_Info_Index_Project_Code         = 22
+        Dim G_OpticalCircuit_Info_Index_Project_Code_ID      = 23
+        Dim G_OpticalCircuit_Info_Index_Task_Name            = 24
+        Dim G_OpticalCircuit_Info_Index_Task_Name_ID         = 25
+        Dim G_OpticalCircuit_Info_Index_DQS_Project          = 26
+        Dim G_OpticalCircuit_Info_Index_DQS_Project_ID       = 27
+        Dim G_OpticalCircuit_Info_Index_DQS                  = 28
+        Dim G_OpticalCircuit_Info_Index_DQS_ID               = 29
+        Dim G_OpticalCircuit_Info_Index_DQS_County           = 30
+        Dim G_OpticalCircuit_Info_Index_DQS_County_ID        = 31
+        Dim G_OpticalCircuit_Info_Index_DQS_Maintainer       = 32
+        Dim G_OpticalCircuit_Info_Index_DQS_Maintainer_ID    = 33
+        Dim G_OpticalCircuit_Info_Index_AEquType             = 34
+        Dim G_OpticalCircuit_Info_Index_ZEquType             = 35
+        Dim G_OpticalCircuit_Info_Index_SXBussType           = 36
+        Dim G_OpticalCircuit_Info_Index_BussType             = 37
+        Dim G_OpticalCircuit_Info_Index_AppType              = 38
+        Dim G_OpticalCircuit_Info_Index_ServiceLevel         = 39
+        Dim G_OpticalCircuit_Info_Index_FiberCount           = 40
+        Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
+        Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
+
+    For RL1 = 1 to G_OpticalCircuit_Count
+        URL_Add_Optical_Circuit = "http://10.209.199.72:7112/irms/opticOpenAction!saveOptictemp.ilf"
+        XML_Info_Encoded = "proId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&cityId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&countyId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_County_ID],0)&"&aportequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Name])&"&aportequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Type_ID],0)&"&aportequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_ID],0)&"&asitename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Name])&"&asitetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Type_ID],0)&"&asiteid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&aequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"&aequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&aequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AEquType],0)&"&ajoinName="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AJoinName])&"&zportequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Name])&"&zportequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Type_ID],0)&"&zportequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_ID],0)&"&zsitename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Name])&"&zsitetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Type_ID],0)&"&zsiteid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&"&zequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_Name])&"&zequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&"&zequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZEquType],0)&"&zjoinName="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZJoinName])&"&opticname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name])&"&chengzaiyewu="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Business_Name])&"&sxbusstype="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_SXBussType])&"&bakinfo="&encode_decode.str_encode("无")&"&bussType="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_BussType],0)&"&apptype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AppType],0)&"&serviceLevel="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ServiceLevel],0)&"&fiberCount="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_FiberCount],0)&"&qualityGc="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Project])&"&qualityGcId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Project_ID],0)&"&qualityDs="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS])&"&qualityDsId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_ID],0)&"&qualityQx="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_County])&"&qualityQxId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_County_ID],0)&"&maintain="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Maintainer]&"&maintainId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Maintainer_ID],0)&"&projectCodeName="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Project_Code]&"&projectCodeId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Project_Code_ID],0)&"&taskName="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Task_Name])&"&taskNameid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Task_Name_ID],0)
+        Content_Lenth = CStr(Len(XML_Info_Encoded))
+        Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+        Response_Body = HttpSession.Request("POST",URL_Add_Optical_Circuit,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+        Response_Body = Replace(Response_Body,"success",'"success"',false)
+        Response_Body = Replace(Response_Body,"mesg",'"mesg"',false)
+        Response_Body = Replace(Response_Body,"lyxx",'"lyxx"',false)
+        Response_Body = Replace(Response_Body,"lytypexx",'"lytypexx"',false)
+        Response_Body = Replace(Response_Body,"workorder",'"workorder"',false)
+        Response_Body = Replace(Response_Body,"\'",'\"',false)
+        Response_Body = Replace(Response_Body,"x\"t",'xt',false)
+        Response_Body = Replace(Response_Body,"r\"i",'ri',false)
+        Response_Body = Replace(Response_Body,"\"\"",'\"',false)
+        TracePrint(Response_Body)
+        domtools.InitJson(JSON.Parse(Response_Body))
+        Temp_List_1 = []
+        Temp_List_1 = domtools.Jpath("$..mesg")
+        TracePrint(Temp_List_1[0])
+    Next
 
 End Function
-
-

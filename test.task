@@ -1,9 +1,11 @@
-import encode_decode
-Dim Sheet_Time = []
-Sheet_Time[1] = Time.Format(Time.Now(),"yyyy-mm-dd hh:mm:ss")
-Sheet_Time[2] = Time.Format(Time.DateAdd("d",2,Time.Now()),"yyyy-mm-dd hh:mm:ss")
-Sheet_Time[3] = Time.Format(Time.DateAdd("d",4,Time.Now()),"yyyy-mm-dd hh:mm:ss")
-Sheet_Time[4] = Time.Format(Time.DateAdd("d",6,Time.Now()),"yyyy-mm-dd hh:mm:ss")
-
-TracePrint(encode_decode.str_encode(Sheet_Time[1]))
-TracePrint(Sheet_Time[1])
+str1="{success:true,mesg:'成功',lyxx: 'lyxxtemp',lytypexx: 'lytypexxtemp',workorder: 'workorderinfo'}"
+str1 = Replace(str1,"success",'"success"',false)
+str1 = Replace(str1,"mesg",'"mesg"',false)
+str1 = Replace(str1,"lyxx",'"lyxx"',false)
+str1 = Replace(str1,"lytypexx",'"lytypexx"',false)
+str1 = Replace(str1,"workorder",'"workorder"',false)
+str1 = Replace(str1,"\'",'\"',false)
+str1 = Replace(str1,"x\"t",'xt',false)
+str1 = Replace(str1,"r\"i",'ri',false)
+str1 = Replace(str1,"\"\"",'\"',false)
+TracePrint(str1)

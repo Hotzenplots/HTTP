@@ -1,1 +1,11 @@
-str1={success: true,mesg:'成功',lyxx: 'lyxxtemp',lytypexx: 'lytypexxtemp',workorder: 'workorderinfo'}
+str1="{success:true,mesg:'成功',lyxx: 'lyxxtemp',lytypexx: 'lytypexxtemp',workorder: 'workorderinfo'}"
+str1 = Replace(str1,"success",'"success"',false)
+str1 = Replace(str1,"mesg",'"mesg"',false)
+str1 = Replace(str1,"lyxx",'"lyxx"',false)
+str1 = Replace(str1,"lytypexx",'"lytypexx"',false)
+str1 = Replace(str1,"workorder",'"workorder"',false)
+str1 = Replace(str1,"\'",'\"',false)
+str1 = Replace(str1,"x\"t",'xt',false)
+str1 = Replace(str1,"r\"i",'ri',false)
+str1 = Replace(str1,"\"\"",'\"',false)
+TracePrint(str1)
