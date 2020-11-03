@@ -32,10 +32,7 @@ Import P7
 
     // Variables
         Dim XLS_Obj
-        Dim Base_Path
-        Dim G_XLSX_File
-        Dim G_CSV_File
-        Dim G_Template_File
+        Dim Template_File_Name
         Dim Box_Count_Correction
         Dim Temp_Data_1
         Dim Temp_List_1 = []
@@ -61,13 +58,11 @@ Import P7
         Dim P6_Repeat_Sum
 
 
-Base_Path = "C:\\Users\\Administrator\\Desktop\\"
-XLSX_File_Name = File_name&".xlsx"
-CSV_File_Name = File_name&".csv"
+G_Base_Path = "C:\\Users\\Administrator\\Desktop\\"
 Template_File_Name = "Template.csv"
-G_XLSX_File = Base_Path&XLSX_File_Name
-G_CSV_File = Base_Path&CSV_File_Name
-G_Template_File = Base_Path&Template_File_Name
+G_XLSX_File = G_Base_Path&G_File_Name&".xlsx"
+G_CSV_File = G_Base_Path&G_File_Name&".csv"
+G_Template_File = G_Base_Path&Template_File_Name
 
 /*
 1.无法处理一二级分光器在同一个箱子
@@ -292,6 +287,7 @@ Function MainProgress()
 
     If G_P7 = 1
         P7.Prepare_Data_P7()
+        CSV.Save(G_OpticalCircuit_Info,G_Base_Path&G_File_Name&"光路数据.csv")
     End If
 
 End Function

@@ -1,4 +1,25 @@
-dim dictRet = ""
-list1 = [["a1","a2"],["b1","b2"]]
-CSV.Save(list1,"C:\\123.csv")
+Dim temp_List_1 =[]
+Dim temp_List_2 =[]
+
+Response_Body = "ess:true,totalProperty:3,data:[{int_id:'738301350',endEquipType:'',trans_site_type:'',trans_site_id:'738024963',trans_site_name:'太原阳曲县莎沟村壁挂式48芯分纤箱',zh_label:'太原阳曲县莎沟村电力杆上1号一级分光器'},{int_id:'738301483',endEquipType:'',trans_site_type:'',trans_site_id:'738024963',trans_site_name:'太原阳曲县莎沟村壁挂式48芯分纤箱',zh_label:'太原阳曲县莎沟村电力杆上2号一级分光器'},{int_id:'738301779',endEquipType:'',trans_site_type:'',trans_site_id:'738024963',trans_site_name:'太原阳曲县莎沟村壁挂式48芯分纤箱',zh_label:'太原阳曲县莎沟村电力杆上3号一级分光器'}]}"
+
+Response_Body = Replace(Response_Body,"success",'"success"',false)
+Response_Body = Replace(Response_Body,"totalProperty",'"totalProperty"',false)
+Response_Body = Replace(Response_Body,"data",'"data"',false)
+Response_Body = Replace(Response_Body,"int_id",'"int_id"',false)
+Response_Body = Replace(Response_Body,"endEquipType",'"endEquipType"',false)
+Response_Body = Replace(Response_Body,"trans_site_type",'"trans_site_type"',false)
+Response_Body = Replace(Response_Body,"trans_site_id",'"trans_site_id"',false)
+Response_Body = Replace(Response_Body,"trans_site_name",'"trans_site_name"',false)
+Response_Body = Replace(Response_Body,"zh_label",'"zh_label"',false)
+Response_Body = Replace(Response_Body,"\'",'"',false)
+Temp_List_1 = domtools.Jpath("$..zh_label")
+Temp_List_2 = domtools.Jpath("$..int_id")
+// TracePrint(domtools.Jpath("$..int_id"))
+// TracePrint(domtools.Jpath("$..zh_label"))
+TracePrint(Temp_List_1)
+TracePrint(Temp_List_2)
+
+
+
 

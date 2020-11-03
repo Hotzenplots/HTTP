@@ -311,7 +311,7 @@ Function Prepare_Data()
                     domtools.InitDom(Response_Body)
                     Temp_Data_1 =  domtools.xpath("//@value")
                     Project_Code_ID = Math.Round(CNumber(Temp_Data_1[0]),0)
-                // Task_Name_ID_List 准备
+                // Task_Name_ID 准备
                     Task_Name_ID_List = Split(List7013[1][4],"-") 
                     Task_Name_ID = Task_Name_ID_List[0]
                 // County_ID 准备
