@@ -46,10 +46,40 @@ Function Prepare_Data_P7()
         Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
         Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
     // Variables
+        Dim Box_Query_URL
+        Dim Content_Lenth
+        Dim CSV_obj
+        Dim DT_obj
+        Dim List_7013 = []
+        Dim List_7013_Shape = []
+        Dim List_Template = []
+        Dim List_Template_Index
+        Dim List_Template_Shape = []
+        Dim Lv1FS_Info = []
+        Dim OA_Password
+        Dim OA_User
+        Dim OC_Query_URL
+        Dim Post_Header
+        Dim Project_Code_ID
+        Dim Response_Body
+        Dim Sheet_Count
+        Dim Sheet_Name
+        Dim Sheet_Time = []
+        Dim Task_Name_ID
+        Dim Task_Name_ID_List = []
+        Dim Temp_Data_1
+        Dim Temp_Data_2
         Dim Temp_List_1 = []
         Dim Temp_List_2 = []
-        Dim Lv1FS_Info = []
-        Dim Sheet_Time = []
+        Dim Temp_List_3 = []
+        Dim URL_New_Sheet_0
+        Dim URL_New_Sheet_1
+        Dim URL_New_Sheet_2
+        Dim URL_Query_POS_ID
+        Dim XML_Info
+        Dim XML_Info_Encoded
+
+
     // List_7013 Creat
         CSV_obj = CSV.Open(G_CSV_File)
         DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
