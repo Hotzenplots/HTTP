@@ -1,4 +1,11 @@
-dim dictRet = ""
-list1 = [["a1","a2"],["b1","b2"]]
-CSV.Save(list1,"C:\\123.csv")
+dim strJSON = ""
+dim data = ""
+dim sRet = ""
+dim objJSON = ""
+
+Str1 = {"success":true,"totalProperty":1,"data":[{"int_id":'738301777',"endEquipType":'',"trans_site_type":'',"trans_site_id":'738024965',"trans_site_name":'太原阳曲县莎沟村电力杆上1-2二级分纤箱GF0001',"zh_label":'太原阳曲县莎沟村电力杆上1-2二级分光器'}]}
+strJSON = JSON.Stringify(Str1)
+domtools.InitJson(Str1)
+TracePrint(domtools.Jpath("$..zh_label"))
+sRet = Replace("","","",false)
 
