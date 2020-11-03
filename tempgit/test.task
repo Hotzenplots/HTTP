@@ -1,15 +1,9 @@
-dim iRet = ""
-dim sRet = ""
-dim dTime = ""
+import encode_decode
+Dim Sheet_Time = []
+Sheet_Time[1] = Time.Format(Time.Now(),"yyyy-mm-dd hh:mm:ss")
+Sheet_Time[2] = Time.Format(Time.DateAdd("d",2,Time.Now()),"yyyy-mm-dd hh:mm:ss")
+Sheet_Time[3] = Time.Format(Time.DateAdd("d",4,Time.Now()),"yyyy-mm-dd hh:mm:ss")
+Sheet_Time[4] = Time.Format(Time.DateAdd("d",6,Time.Now()),"yyyy-mm-dd hh:mm:ss")
 
-dTime = Time.Now()
-TracePrint(dtime)
-
-sRet = Time.Format(dTime,"yyyy-mm-dd hh:mm:ss")
-TracePrint(sRet)
-
-iRet = Time.DateAdd("d",1,dTime)
-TracePrint(iRet)
-iRet = Time.Format(iRet,"yyyy-mm-dd hh:mm:ss")
-TracePrint(iRet)
-
+TracePrint(encode_decode.str_encode(Sheet_Time[1]))
+TracePrint(Sheet_Time[1])
