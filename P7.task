@@ -348,13 +348,19 @@ Function Prepare_Data_P7()
             Temp_List_2 = []
             Temp_List_1 = domtools.Jpath("$..zh_label")
             Temp_List_2 = domtools.Jpath("$..int_id")
-            For RL2 = 1 to G_OpticalCircuit_Count
-                For RL3 = 1 to Ubound(Lv1FS_Info)
-                    If G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_Name] = Temp_List_1[(RL3 - 1)]
-                        G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_ID] = Temp_List_2[(RL3 - 1)]
-                    End If
+            If Len(Temp_List_1) = 1
+                For RL2 = 1 to G_OpticalCircuit_Count
+                    G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_ID] = Temp_List_2[0]
                 Next
-            Next
+            Else
+                For RL2 = 1 to G_OpticalCircuit_Count
+                    For RL3 = 1 to Ubound(Lv1FS_Info)
+                        If G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_Name] = Temp_List_1[(RL3 - 1)]
+                            G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_ID] = Temp_List_2[(RL3 - 1)]
+                        End If
+                    Next
+                Next
+            End If
         Next
     // G_OpticalCircuit_Info Filling 5.0
         For RL1 = 1 to G_OpticalCircuit_Count
@@ -371,7 +377,7 @@ Function Prepare_Data_P7()
             Next
         Next
     // Creat Sheet
-        Temp_Data_1 = G_OpticalCircuit_Count / 10
+        Temp_Data_1 = G_OpticalCircuit_Count / 40
         Sheet_Count = ( - (Math.Int( - Temp_Data_1)))
         For RL1 = 1 to Sheet_Count
             Sheet_Name = List_7013[1][2]&"二级光路申请yry"&"0"&RL1
@@ -398,7 +404,7 @@ Function Prepare_Data_P7()
                 Content_Lenth = CStr(Len(XML_Info_Encoded))
                 Post_Header = {"Host":"10.209.199.72:7119","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
                 Response_Body = HttpSession.Request("POST",URL_New_Sheet_2,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-                For RL2 = (((RL1 - 1) * 10) + 1) to RL1 * 10
+                For RL2 = (((RL1 - 1) * 40) + 1) to (RL1 * 40)
                     G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_ProID] = CStr(Math.Round(Temp_List_3[3]))
                     If RL2 = G_OpticalCircuit_Count
                         Break
@@ -406,7 +412,7 @@ Function Prepare_Data_P7()
                 Next
             Elseif Temp_List_1[0] = 1 // Read FlowID
                 Temp_List_2 = domtools.Jpath("$..FLOW_ID")
-                For RL2 = (((RL1 - 1) * 10) + 1) to RL1 * 10
+                For RL2 = (((RL1 - 1) * 40) + 1) to (RL1 * 40)
                     G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_ProID] = CStr(Math.Round(Temp_List_2[0]))
                     If RL2 = G_OpticalCircuit_Count
                         Break
@@ -460,7 +466,13 @@ Function Add_Optical_Circuits()
         Dim G_OpticalCircuit_Info_Index_FiberCount           = 40
         Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
         Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
-
+    // Variables
+        Dim Content_Lenth
+        Dim Post_Header
+        Dim Response_Body
+        Dim Temp_List_1 =[]
+        Dim URL_Add_Optical_Circuit
+        Dim XML_Info_Encoded
     For RL1 = 1 to G_OpticalCircuit_Count
         URL_Add_Optical_Circuit = "http://10.209.199.72:7112/irms/opticOpenAction!saveOptictemp.ilf"
         XML_Info_Encoded = "proId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&cityId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&countyId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_County_ID],0)&"&aportequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Name])&"&aportequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Type_ID],0)&"&aportequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_ID],0)&"&asitename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Name])&"&asitetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Type_ID],0)&"&asiteid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&aequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"&aequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&aequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AEquType],0)&"&ajoinName="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AJoinName])&"&zportequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Name])&"&zportequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Type_ID],0)&"&zportequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_ID],0)&"&zsitename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Name])&"&zsitetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Type_ID],0)&"&zsiteid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&"&zequname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_Name])&"&zequid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&"&zequtype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZEquType],0)&"&zjoinName="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZJoinName])&"&opticname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name])&"&chengzaiyewu="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Business_Name])&"&sxbusstype="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_SXBussType])&"&bakinfo="&encode_decode.str_encode("无")&"&bussType="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_BussType],0)&"&apptype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AppType],0)&"&serviceLevel="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ServiceLevel],0)&"&fiberCount="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_FiberCount],0)&"&qualityGc="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Project])&"&qualityGcId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Project_ID],0)&"&qualityDs="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS])&"&qualityDsId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_ID],0)&"&qualityQx="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_County])&"&qualityQxId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_County_ID],0)&"&maintain="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Maintainer]&"&maintainId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_DQS_Maintainer_ID],0)&"&projectCodeName="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Project_Code]&"&projectCodeId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Project_Code_ID],0)&"&taskName="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Task_Name])&"&taskNameid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Task_Name_ID],0)
@@ -476,11 +488,10 @@ Function Add_Optical_Circuits()
         Response_Body = Replace(Response_Body,"x\"t",'xt',false)
         Response_Body = Replace(Response_Body,"r\"i",'ri',false)
         Response_Body = Replace(Response_Body,"\"\"",'\"',false)
-        TracePrint(Response_Body)
         domtools.InitJson(JSON.Parse(Response_Body))
         Temp_List_1 = []
         Temp_List_1 = domtools.Jpath("$..mesg")
-        TracePrint(Temp_List_1[0])
+        TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name]&"光路添加"&Temp_List_1[0])
     Next
-
 End Function
+

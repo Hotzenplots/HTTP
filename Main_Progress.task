@@ -65,7 +65,7 @@ G_CSV_File = G_Base_Path&G_File_Name&".csv"
 G_Template_File = G_Base_Path&Template_File_Name
 
 /*
-1.无法处理一二级分光器在同一个箱子
+1.无法处理一二级分光器在同一个箱子(尾纤光路)
 2.无法处理一级分光器串联
 3.无法处理二级分纤箱多下行
 4.List7013的合并
