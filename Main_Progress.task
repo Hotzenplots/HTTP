@@ -287,8 +287,12 @@ Function MainProgress()
 
     If G_P7 = 1
         P7.Prepare_Data_P7()
-        P7.Add_Optical_Circuits()
+        //P7.Add_Optical_Circuits()
     End If
 
+    If G_P8 = 1
+        P7.Prepare_Data_P7()
+        //P7.Add_Optical_Circuits()
+    End If
 End Function
 MainProgress()
