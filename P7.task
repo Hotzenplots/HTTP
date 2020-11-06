@@ -82,6 +82,9 @@ Function Prepare_Data_P7()
         Dim G_OpticalCircuit_Info_Index_FiberCount           = 40
         Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
         Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
+        Dim G_OpticalCircuit_Info_Index_A_Port_ID            = 43
+        Dim G_OpticalCircuit_Info_Index_Z_Port_ID            = 44
+        Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 45
     // List_7013 Creat
         CSV_obj = CSV.Open(G_CSV_File)
         DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
@@ -97,11 +100,11 @@ Function Prepare_Data_P7()
                 End If 
             Next
             G_OpticalCircuit_Count = Temp_Data_1
-    // G_OpticalCircuit_Info[][42] Creat
+    // G_OpticalCircuit_Info[][45] Creat
             Temp_List_1 = []
             Temp_List_2 = []
             For RL1 = 1 To G_OpticalCircuit_Count
-                For RL2 = 0 To 42
+                For RL2 = 0 To 45
                     Temp_List_1[RL2] = ""
                 Next
                 G_OpticalCircuit_Info[RL1] = Clone(Temp_List_1)
@@ -319,7 +322,7 @@ Function Prepare_Data_P7()
                 For RL1 = 1 to Ubound(Lv1FS_Info)
                     URL_Query_POS_ID = "http://10.209.199.72:7112/irms/opticOpenApplyAction!queryEqu.ilf"
                     XML_Info = Lv1FS_Info[RL1][4]
-                    XML_Info_Encoded = "equType=POS"&"&siteId="&Math.Round(Lv1FS_Info[RL1][5],0)&"&sitetype="&Math.Round(Lv1FS_Info[RL1][6],0)&"&sitename="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
+                    XML_Info_Encoded = "limit="&"20"&"&equType=POS"&"&siteId="&Math.Round(Lv1FS_Info[RL1][5],0)&"&sitetype="&Math.Round(Lv1FS_Info[RL1][6],0)&"&sitename="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
                     Content_Lenth = CStr(Len(XML_Info_Encoded))
                     Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
                     Response_Body = HttpSession.Request("POST",URL_Query_POS_ID,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})

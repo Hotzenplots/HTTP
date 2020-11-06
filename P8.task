@@ -1,1 +1,155 @@
+Import encode_decode
+Import domtools
+Import P7
+TracePrint("TEST")
+Function Prepare_Data_P8()
+    // OpticalCircuit_Info_Index
+        Dim G_OpticalCircuit_Info_Index_A_FS_Name            = 01
+        Dim G_OpticalCircuit_Info_Index_A_FS_ID              = 02
+        Dim G_OpticalCircuit_Info_Index_A_Box_Name           = 03
+        Dim G_OpticalCircuit_Info_Index_A_Box_ID             = 04
+        Dim G_OpticalCircuit_Info_Index_A_Box_Type_ID        = 05
+        Dim G_OpticalCircuit_Info_Index_A_Point_Name         = 06
+        Dim G_OpticalCircuit_Info_Index_A_Point_ID           = 07
+        Dim G_OpticalCircuit_Info_Index_A_Point_Type_ID      = 08
+        Dim G_OpticalCircuit_Info_Index_Z_FS_Name            = 09
+        Dim G_OpticalCircuit_Info_Index_Z_FS_ID              = 10
+        Dim G_OpticalCircuit_Info_Index_Z_Box_Name           = 11
+        Dim G_OpticalCircuit_Info_Index_Z_Box_ID             = 12
+        Dim G_OpticalCircuit_Info_Index_Z_Box_Type_ID        = 13
+        Dim G_OpticalCircuit_Info_Index_Z_Point_Name         = 14
+        Dim G_OpticalCircuit_Info_Index_Z_Point_ID           = 15
+        Dim G_OpticalCircuit_Info_Index_Z_Point_Type_ID      = 16
+        Dim G_OpticalCircuit_Info_Index_ProID                = 17
+        Dim G_OpticalCircuit_Info_Index_Optical_Circuit_Name = 18
+        Dim G_OpticalCircuit_Info_Index_City_ID              = 19
+        Dim G_OpticalCircuit_Info_Index_County_ID            = 20
+        Dim G_OpticalCircuit_Info_Index_Business_Name        = 21
+        Dim G_OpticalCircuit_Info_Index_Project_Code         = 22
+        Dim G_OpticalCircuit_Info_Index_Project_Code_ID      = 23
+        Dim G_OpticalCircuit_Info_Index_Task_Name            = 24
+        Dim G_OpticalCircuit_Info_Index_Task_Name_ID         = 25
+        Dim G_OpticalCircuit_Info_Index_DQS_Project          = 26
+        Dim G_OpticalCircuit_Info_Index_DQS_Project_ID       = 27
+        Dim G_OpticalCircuit_Info_Index_DQS                  = 28
+        Dim G_OpticalCircuit_Info_Index_DQS_ID               = 29
+        Dim G_OpticalCircuit_Info_Index_DQS_County           = 30
+        Dim G_OpticalCircuit_Info_Index_DQS_County_ID        = 31
+        Dim G_OpticalCircuit_Info_Index_DQS_Maintainer       = 32
+        Dim G_OpticalCircuit_Info_Index_DQS_Maintainer_ID    = 33
+        Dim G_OpticalCircuit_Info_Index_AEquType             = 34
+        Dim G_OpticalCircuit_Info_Index_ZEquType             = 35
+        Dim G_OpticalCircuit_Info_Index_SXBussType           = 36
+        Dim G_OpticalCircuit_Info_Index_BussType             = 37
+        Dim G_OpticalCircuit_Info_Index_AppType              = 38
+        Dim G_OpticalCircuit_Info_Index_ServiceLevel         = 39
+        Dim G_OpticalCircuit_Info_Index_FiberCount           = 40
+        Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
+        Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
+        Dim G_OpticalCircuit_Info_Index_A_Port_ID            = 43
+        Dim G_OpticalCircuit_Info_Index_Z_Port_ID            = 44
+        Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 45
+    // List_7013 Creat
+        CSV_obj = CSV.Open(G_CSV_File)
+        DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
+        DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22]) //所属地市,所属区县,所属小区,中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别
+        List_7013 = []
+        List_7013 = Datatable.GetDataTableByArray(DT_obj,false)
+        List_7013_Shape = Datatable.GetDataTableShape(DT_obj) //DT长宽 [0]y [1]x
+    // G_OpticalCircuit_Count Creat
+            Temp_Data_1 = 0
+            For RL1 = 1 to (List_7013_Shape[0] - 1)
+                If List_7013[RL1][9] = "二级"
+                    Temp_Data_1 = Temp_Data_1 + 1
+                End If 
+            Next
+            G_OpticalCircuit_Count = Temp_Data_1
+    // G_OpticalCircuit_Info[][45] Creat
+            Temp_List_1 = []
+            Temp_List_2 = []
+            For RL1 = 1 To G_OpticalCircuit_Count
+                For RL2 = 0 To 45
+                    Temp_List_1[RL2] = ""
+                Next
+                G_OpticalCircuit_Info[RL1] = Clone(Temp_List_1)
+            Next
+    // List_Template Creat
+        CSV_obj = CSV.Open(G_Template_File)
+        DT_obj = Datatable.BuildDataTable(CSV_obj,["County","County_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","DQS_Maintainer_ID2","DQS_Project_ZH","DQS_ZH","DQS_County_ZH","DQS_Maintainer_ZH","City","City_ID","User","Password"])
+        List_Template = []
+        List_Template = Datatable.GetDataTableByArray(DT_obj,false)
+        List_Template_Shape = Datatable.GetDataTableShape(DT_obj) //DT长宽 [0]y [1]x
+        For RL1 = 0 to Len(List_Template)
+            If List_7013[1][1] = List_Template[RL1][0]
+                List_Template_Index = RL1
+                Break
+            End If
+        Next
+    // CSV Existing Determination
+        If File.FileExists(G_Base_Path&G_File_Name&"光路数据.csv")
+            TracePrint("光路数据表存在")
+            CSV_obj = CSV.Open(G_Base_Path&G_File_Name&"光路数据.csv")
+            If (Len(CSV_obj) = G_OpticalCircuit_Count) AND (Len(CSV_obj[0]) = 46)
+                Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName","A_Port_ID","Z_Port_ID","Optical_Path_ID"]
+                DT_obj = Datatable.BuildDataTable(CSV_obj,Temp_List_1)
+                G_OpticalCircuit_Info = Datatable.GetDataTableByArray(DT_obj,false)
+                G_OpticalCircuit_Info = Unshift(G_OpticalCircuit_Info,"")
+            Elseif (Len(CSV_obj) = G_OpticalCircuit_Count) AND (Len(CSV_obj[0]) = 43)
+                Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName"]
+                DT_obj = Datatable.BuildDataTable(CSV_obj,Temp_List_1)
+                G_OpticalCircuit_Info = Datatable.GetDataTableByArray(DT_obj,false)
+                G_OpticalCircuit_Info = Unshift(G_OpticalCircuit_Info,"")
+                Optical_Circuit_Sheet_Filled = 5
+            End If
+        Else
+            TracePrint("光路数据表不存在")
+            P7.Prepare_Data_P7()
+            Optical_Circuit_Sheet_Filled = 5
+        End If
+    // G_OpticalCircuit_Info Filling
+        If Optical_Circuit_Sheet_Filled = 5
+            HttpSession.Reset()
+            Jsessionirms_Prepare()
+            URL_Query_Port_ID = "http://10.209.199.72:7112/irms/opticOpenDesignAction!queryPort.ilf"
+            For RL1 = 1 to G_OpticalCircuit_Count
+                XML_Encoded = "start="&"0"&"&limit="&"10"&"&siteId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&neid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&nemodeltype="
+                Response_Body = HttpSession.Request("GET",URL_Query_Port_ID,{"params":{},"data":XML_Encoded,"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                //domtools.InitJson(JSON.Parse(Response_Body))
+                //Temp_List_1 = []
+                //Temp_List_2 = []
+                //Temp_List_1 = domtools.Jpath("$..zh_label")
+                //Temp_List_2 = domtools.Jpath("$..int_id")
+                //TracePrint(Temp_List_1[0])
+                TracePrint(Response_Body)
+            Next
+        End If
+End Function
 
+Function Jsessionirms_Prepare()
+    OA_User = List_Template[List_Template_Index][17]
+    OA_Password = List_Template[List_Template_Index][18]
+    EasyBrowser.openBrowser("C:\\360\\360se6\\Application\\360se.exe",{"--remote-debugging-port":9222})
+    EasyBrowser.bindBrowser("http://127.0.0.1:9222")
+    Temp_List_1 = EasyBrowser.getTabs()
+    Temp_Data_1 = Temp_List_1[0]
+    EasyBrowser.clearBrowserCookies(Temp_Data_1)
+    EasyBrowser.goUrl(Temp_Data_1, "http://portal.sx.cmcc/sxmcc_was/uploadResource/public/login/login.html")
+    #icon("@res:td0o0d6l-6v32-i1i1-lpgk-mpmk6t9c2tls.png")
+    Keyboard.InputText({"html":[{"id":"username","tag":"INPUT"}],"wnd":[{"app":"360se","cls":"360se6_Frame","title":"*"},{"cls":"Internet Explorer_Server"}]},OA_User,true,20,10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":500,"sKeyModifiers":[],"sSimulate":"message","bValidate":false,"bClickBeforeInput":false})
+    #icon("@res:l1pddaos-79np-01r7-ilpm-t328ue0k25se.png")
+    Keyboard.InputText({"html":[{"id":"password","tag":"INPUT"}],"wnd":[{"app":"360se","cls":"360se6_Frame","title":"*"},{"cls":"Internet Explorer_Server"}]},OA_Password,true,20,10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":500,"sKeyModifiers":[],"sSimulate":"message","bValidate":false,"bClickBeforeInput":false})
+    #icon("@res:odlicddh-k6jq-mmqv-bm0t-g8n9ck92et9b.png")
+    Mouse.Action({"html":[{"css-selector":"body>div>div>form>div","idx":2,"parentid":"login_bg","tag":"DIV"}],"wnd":[{"app":"360se","cls":"360se6_Frame","title":"*"},{"cls":"Internet Explorer_Server"}]},"left","click",10000,{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":true,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"simulate"})
+    Delay 2000
+    #icon("@res:49jeub7i-lemo-3ln9-7l1l-nupolhfj3sg7.png")
+    Window.SetActive({"wnd":[{"cls":"360se6_Frame","title":"统一信息平台门户 － 太原分公司 - 360安全浏览器 12.2","app":"360se"}]})
+    #icon("@res:49jeub7i-lemo-3ln9-7l1l-nupolhfj3sg7.png")
+    Window.Show({"wnd":[{"cls":"360se6_Frame","title":"统一信息平台门户 － 太原分公司 - 360安全浏览器 12.2","app":"360se"}]},"max")
+    EasyBrowser.goUrl(Temp_Data_1, "http://portal.sx.cmcc/sxmcc_wcm/middelwebpage/app_recoder_log.jsp?app_flg=zhwlzygl_ywzl")
+    Delay 5000
+    Temp_List_1 = EasyBrowser.getCookies(Temp_Data_1)
+    #icon("@res:ukparvla-kjsa-cfi6-0rss-u2ki64rh74l0.png")
+    Window.Show({"wnd":[{"cls":"360se6_Frame","title":"中国移动综合网络资源管理系统 - 360安全浏览器 12.2","app":"360se"}]},"min")
+    HttpSession.SetCookies({Temp_List_1[0]["name"]:Temp_List_1[0]["value"],Temp_List_1[1]["name"]:Temp_List_1[1]["value"]})
+    App.Kill("360se.exe")
+End Function
