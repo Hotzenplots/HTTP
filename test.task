@@ -9,3 +9,5 @@ str1 = Replace(str1,"x\"t",'xt',false)
 str1 = Replace(str1,"r\"i",'ri',false)
 str1 = Replace(str1,"\"\"",'\"',false)
 TracePrint(str1)
+exit()
+
