@@ -69,6 +69,7 @@ G_Template_File = G_Base_Path&Template_File_Name
 2.无法处理一级分光器串联
 3.无法处理二级分纤箱多下行
 4.List7013的合并
+5.P7&P8还有优化空间
 */
 
 Function MainProgress()

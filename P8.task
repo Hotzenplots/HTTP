@@ -91,7 +91,7 @@ Function Prepare_Data_P8()
         If File.FileExists(G_Base_Path&G_File_Name&"光路数据.csv")
             TracePrint("光路数据表存在")
             CSV_obj = CSV.Open(G_Base_Path&G_File_Name&"光路数据.csv")
-            If (Len(CSV_obj) = G_OpticalCircuit_Count) AND (Len(CSV_obj[0]) = 47)
+            If (Len(CSV_obj) = G_OpticalCircuit_Count) AND (CSV_obj[0][47] <> "")
                 Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName","Int_ID","UL_POS_Port_Name","A_Port_ID","Z_Port_ID","Optical_Path_ID"]
                 DT_obj = Datatable.BuildDataTable(CSV_obj,Temp_List_1)
                 G_OpticalCircuit_Info = Datatable.GetDataTableByArray(DT_obj,false)
@@ -177,6 +177,22 @@ Function Prepare_Data_P8()
                 For RL2 = 0 to Ubound(Temp_List_1)
                     If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name] = Temp_List_1[RL2]
                         G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID] = Temp_List_2[RL2]
+                    End If
+                Next
+            Next
+            For RL1 = 1 to G_OpticalCircuit_Count // Optical_Path_ID
+                URL_Query_Path_ID = "http://10.209.199.72:7112/irms/opticOpenDesignAction!Searchpath4page.ilf?"
+                Query_Detail = "flowId="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID]&"&workorid="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID]&"&aobject="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_ID]&"&zobject="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_ID]&"&aobjectType="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Type_ID]&"&zobjectType="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Type_ID]&"&limit=20&start=1"
+                URL_Query_Path_ID = URL_Query_Path_ID&Query_Detail
+                Response_Body = HttpSession.Request("GET",URL_Query_Path_ID,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                domtools.InitDom(Response_Body)
+                List_Path_ID = domtools.xpath("//line/@id")
+                List_FiberNo = domtools.xpath("//line/@fiberno")
+                For RL2 = 0 to Ubound(List_Path_ID)
+                    Temp_List_1 = []
+                    Temp_List_1 = Split(List_FiberNo[RL2],"-")
+                    If Temp_List_1[0] = "1" OR Temp_List_1[1] = "1"
+                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID] = List_Path_ID[RL2]
                     End If
                 Next
             Next
