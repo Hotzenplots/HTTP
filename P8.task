@@ -46,9 +46,11 @@ Function Prepare_Data_P8()
         Dim G_OpticalCircuit_Info_Index_FiberCount           = 40
         Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
         Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
-        Dim G_OpticalCircuit_Info_Index_A_Port_ID            = 43
-        Dim G_OpticalCircuit_Info_Index_Z_Port_ID            = 44
-        Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 45
+        Dim G_OpticalCircuit_Info_Index_Int_ID               = 43
+        Dim G_OpticalCircuit_Info_Index_UL_POS_Port_Name     = 44
+        Dim G_OpticalCircuit_Info_Index_A_Port_ID            = 45
+        Dim G_OpticalCircuit_Info_Index_Z_Port_ID            = 46
+        Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 47
     // List_7013 Creat
         CSV_obj = CSV.Open(G_CSV_File)
         DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
@@ -64,11 +66,11 @@ Function Prepare_Data_P8()
                 End If 
             Next
             G_OpticalCircuit_Count = Temp_Data_1
-    // G_OpticalCircuit_Info[][45] Creat
+    // G_OpticalCircuit_Info[][47] Creat
             Temp_List_1 = []
             Temp_List_2 = []
             For RL1 = 1 To G_OpticalCircuit_Count
-                For RL2 = 0 To 45
+                For RL2 = 0 To 47
                     Temp_List_1[RL2] = ""
                 Next
                 G_OpticalCircuit_Info[RL1] = Clone(Temp_List_1)
@@ -89,13 +91,13 @@ Function Prepare_Data_P8()
         If File.FileExists(G_Base_Path&G_File_Name&"光路数据.csv")
             TracePrint("光路数据表存在")
             CSV_obj = CSV.Open(G_Base_Path&G_File_Name&"光路数据.csv")
-            If (Len(CSV_obj) = G_OpticalCircuit_Count) AND (Len(CSV_obj[0]) = 46)
-                Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName","A_Port_ID","Z_Port_ID","Optical_Path_ID"]
+            If (Len(CSV_obj) = G_OpticalCircuit_Count) AND (Len(CSV_obj[0]) = 47)
+                Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName","Int_ID","UL_POS_Port_Name","A_Port_ID","Z_Port_ID","Optical_Path_ID"]
                 DT_obj = Datatable.BuildDataTable(CSV_obj,Temp_List_1)
                 G_OpticalCircuit_Info = Datatable.GetDataTableByArray(DT_obj,false)
                 G_OpticalCircuit_Info = Unshift(G_OpticalCircuit_Info,"")
-            Elseif (Len(CSV_obj) = G_OpticalCircuit_Count) AND (Len(CSV_obj[0]) = 43)
-                Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName"]
+            Elseif (Len(CSV_obj) = G_OpticalCircuit_Count) AND (CSV_obj[0][42] <> "")
+                Temp_List_1 = ["yyz","A_FS_Name","A_FS_ID","A_Box_Name","A_Box_ID","A_Box_Type_ID","A_Point_Name","A_Point_ID","A_Point_Type_ID","Z_FS_Name","Z_FS_ID","Z_Box_Name","Z_Box_ID","Z_Box_Type_ID","Z_Point_Name","Z_Point_ID","Z_Point_Type_ID","ProID","Optical_Circuit_Name","City_ID","County_ID","Business_Name","Project_Code","Project_Code_ID","Task_Name","Task_Name_ID","DQS_Project","DQS_Project_ID","DQS","DQS_ID","DQS_County","DQS_County_ID","DQS_Maintainer","DQS_Maintainer_ID","AEquType","ZEquType","SXBussType","BussType","AppType","ServiceLevel","FiberCount","AJoinName","ZJoinName","Int_ID","UL_POS_Port_Name","A_Port_ID","Z_Port_ID","Optical_Path_ID"]
                 DT_obj = Datatable.BuildDataTable(CSV_obj,Temp_List_1)
                 G_OpticalCircuit_Info = Datatable.GetDataTableByArray(DT_obj,false)
                 G_OpticalCircuit_Info = Unshift(G_OpticalCircuit_Info,"")
@@ -110,18 +112,77 @@ Function Prepare_Data_P8()
         If Optical_Circuit_Sheet_Filled = 5
             HttpSession.Reset()
             Jsessionirms_Prepare()
-            URL_Query_Port_ID = "http://10.209.199.72:7112/irms/opticOpenDesignAction!queryPort.ilf"
+            URL_Query_Int_ID = "http://10.209.199.72:7112/irms/opticOpenApplyAction!queryOptictemp.ilf?flowId="
+            Pro_ID = G_OpticalCircuit_Info[1][G_OpticalCircuit_Info_Index_ProID]
+            URL_Query_Int_ID = URL_Query_Int_ID&Pro_ID
+            XML_Info_Encoded = "start="&"0"&"&limit="&"45"
+            Content_Lenth = CStr(Len(XML_Info_Encoded))
+            Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+            Response_Body = HttpSession.Request("POST",URL_Query_Int_ID,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+            domtools.InitJson(JSON.Parse(Response_Body))
+            Temp_List_1 = []
+            Temp_List_2 = []
+            Temp_List_1 = domtools.Jpath("$..opticname")
+            Temp_List_2 = domtools.Jpath("$..intId")
             For RL1 = 1 to G_OpticalCircuit_Count
-                XML_Encoded = "start="&"0"&"&limit="&"10"&"&siteId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&neid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&nemodeltype="
-                Response_Body = HttpSession.Request("GET",URL_Query_Port_ID,{"params":{},"data":XML_Encoded,"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-                //domtools.InitJson(JSON.Parse(Response_Body))
-                //Temp_List_1 = []
-                //Temp_List_2 = []
-                //Temp_List_1 = domtools.Jpath("$..zh_label")
-                //Temp_List_2 = domtools.Jpath("$..int_id")
-                //TracePrint(Temp_List_1[0])
-                TracePrint(Response_Body)
+                For RL2 = 0 to Ubound(Temp_List_1)
+                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name] = Temp_List_1[RL2]
+                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID] = Temp_List_2[RL2]
+                    End If
+                Next
             Next
+            For RL1 = 1 to G_OpticalCircuit_Count
+                For RL2 = 1 to (List_7013_Shape[0] - 1)
+                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name] = List_7013[RL2][3]
+                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name] = List_7013[RL2][8]
+                    End If
+                Next
+            Next
+            For RL1 = 1 to G_OpticalCircuit_Count
+                URL_Query_Port_ID = "http://10.209.199.72:7112/irms/opticOpenDesignAction!queryPort.ilf"
+                XML_Info_Encoded = "start="&"0"&"&limit="&"10"&"&siteId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&neid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&nemodeltype="
+                Content_Lenth = CStr(Len(XML_Info_Encoded))
+                Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                Response_Body = HttpSession.Request("POST",URL_Query_Port_ID,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                Response_Body = Replace(Response_Body,"success",'"success"',false)
+                Response_Body = Replace(Response_Body,"totalProperty",'"totalProperty"',false)
+                Response_Body = Replace(Response_Body,"data",'"data"',false)
+                Response_Body = Replace(Response_Body,"zh_label",'"zh_label"',false)
+                Response_Body = Replace(Response_Body,"int_id",'"int_id"',false)
+                Response_Body = Replace(Response_Body,"rate",'"rate"',false)
+                Response_Body = Replace(Response_Body,"\'",'"',false)
+                domtools.InitJson(JSON.Parse(Response_Body))
+                Temp_List_1 = []
+                Temp_List_1 = domtools.Jpath("$..int_id")
+                G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Port_ID] = Temp_List_1[0]
+            Next
+            For RL1 = 1 to G_OpticalCircuit_Count
+                URL_Query_Port_ID = "http://10.209.199.72:7112/irms/opticOpenDesignAction!queryPort.ilf"
+                XML_Info_Encoded = "start="&"0"&"&limit="&"10"&"&siteId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&"&neid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&"&nemodeltype="
+                Content_Lenth = CStr(Len(XML_Info_Encoded))
+                Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                Response_Body = HttpSession.Request("POST",URL_Query_Port_ID,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                Response_Body = Replace(Response_Body,"success",'"success"',false)
+                Response_Body = Replace(Response_Body,"totalProperty",'"totalProperty"',false)
+                Response_Body = Replace(Response_Body,"data",'"data"',false)
+                Response_Body = Replace(Response_Body,"zh_label",'"zh_label"',false)
+                Response_Body = Replace(Response_Body,"int_id",'"int_id"',false)
+                Response_Body = Replace(Response_Body,"rate",'"rate"',false)
+                Response_Body = Replace(Response_Body,"\'",'"',false)
+                domtools.InitJson(JSON.Parse(Response_Body))
+                Temp_List_1 = []
+                Temp_List_2 = []
+                Temp_List_1 = domtools.Jpath("$..zh_label")
+                Temp_List_2 = domtools.Jpath("$..int_id")
+                For RL2 = 0 to Ubound(Temp_List_1)
+                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name] = Temp_List_1[RL2]
+                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID] = Temp_List_2[RL2]
+                    End If
+                Next
+            Next
+            Shift(G_OpticalCircuit_Info)
+            CSV.Save(G_OpticalCircuit_Info,G_Base_Path&G_File_Name&"光路数据.csv")
+            G_OpticalCircuit_Info = Unshift(G_OpticalCircuit_Info,"")
         End If
 End Function
 

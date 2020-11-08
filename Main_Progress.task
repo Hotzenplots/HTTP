@@ -287,8 +287,8 @@ Function MainProgress()
 
     If G_P7 = 1
         P7.Prepare_Data_P7()
-        P7.Add_Optical_Circuits()
-        Temp_Data_1 = Dialog.MsgBox("批工单","光路申请已经完成","0","1",0)
+        //P7.Add_Optical_Circuits()
+        //Temp_Data_1 = Dialog.MsgBox("批工单","光路申请已经完成","0","1",0)
     End If
 
     If G_P8 = 1
