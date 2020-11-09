@@ -2,6 +2,33 @@ Import encode_decode
 Import domtools
 Import P7
 TracePrint("TEST")
+// Variables
+    Dim List_Template = []
+    Dim List_Template_Index = []
+    Dim OA_Password
+    Dim OA_User
+    Dim Temp_Data_1
+    Dim Temp_List_1 = []
+    Dim Temp_List_2 = []
+    Dim Content_Lenth
+    Dim CSV_obj
+    Dim DT_obj
+    Dim List_7013 = []
+    Dim List_7013_Shape = []
+    Dim List_FiberNo = []
+    Dim List_Path_ID = []
+    Dim List_Template_Shape = []
+    Dim Optical_Circuit_Sheet_Filled
+    Dim Post_Header
+    Dim Pro_ID
+    Dim Query_Detail
+    Dim Response_Body
+    Dim URL_Query_Int_ID
+    Dim URL_Query_Path_ID
+    Dim URL_Query_Port_ID
+    Dim URL_Config_Port
+    Dim XML_Info_Encoded
+
 Function Prepare_Data_P8()
     // OpticalCircuit_Info_Index
         Dim G_OpticalCircuit_Info_Index_A_FS_Name            = 01
@@ -229,4 +256,89 @@ Function Jsessionirms_Prepare()
     Window.Show({"wnd":[{"cls":"360se6_Frame","title":"中国移动综合网络资源管理系统 - 360安全浏览器 12.2","app":"360se"}]},"min")
     HttpSession.SetCookies({Temp_List_1[0]["name"]:Temp_List_1[0]["value"],Temp_List_1[1]["name"]:Temp_List_1[1]["value"]})
     App.Kill("360se.exe")
+End Function
+
+Function Transmission_Design()
+    // OpticalCircuit_Info_Index
+        Dim G_OpticalCircuit_Info_Index_A_FS_Name            = 01
+        Dim G_OpticalCircuit_Info_Index_A_FS_ID              = 02
+        Dim G_OpticalCircuit_Info_Index_A_Box_Name           = 03
+        Dim G_OpticalCircuit_Info_Index_A_Box_ID             = 04
+        Dim G_OpticalCircuit_Info_Index_A_Box_Type_ID        = 05
+        Dim G_OpticalCircuit_Info_Index_A_Point_Name         = 06
+        Dim G_OpticalCircuit_Info_Index_A_Point_ID           = 07
+        Dim G_OpticalCircuit_Info_Index_A_Point_Type_ID      = 08
+        Dim G_OpticalCircuit_Info_Index_Z_FS_Name            = 09
+        Dim G_OpticalCircuit_Info_Index_Z_FS_ID              = 10
+        Dim G_OpticalCircuit_Info_Index_Z_Box_Name           = 11
+        Dim G_OpticalCircuit_Info_Index_Z_Box_ID             = 12
+        Dim G_OpticalCircuit_Info_Index_Z_Box_Type_ID        = 13
+        Dim G_OpticalCircuit_Info_Index_Z_Point_Name         = 14
+        Dim G_OpticalCircuit_Info_Index_Z_Point_ID           = 15
+        Dim G_OpticalCircuit_Info_Index_Z_Point_Type_ID      = 16
+        Dim G_OpticalCircuit_Info_Index_ProID                = 17
+        Dim G_OpticalCircuit_Info_Index_Optical_Circuit_Name = 18
+        Dim G_OpticalCircuit_Info_Index_City_ID              = 19
+        Dim G_OpticalCircuit_Info_Index_County_ID            = 20
+        Dim G_OpticalCircuit_Info_Index_Business_Name        = 21
+        Dim G_OpticalCircuit_Info_Index_Project_Code         = 22
+        Dim G_OpticalCircuit_Info_Index_Project_Code_ID      = 23
+        Dim G_OpticalCircuit_Info_Index_Task_Name            = 24
+        Dim G_OpticalCircuit_Info_Index_Task_Name_ID         = 25
+        Dim G_OpticalCircuit_Info_Index_DQS_Project          = 26
+        Dim G_OpticalCircuit_Info_Index_DQS_Project_ID       = 27
+        Dim G_OpticalCircuit_Info_Index_DQS                  = 28
+        Dim G_OpticalCircuit_Info_Index_DQS_ID               = 29
+        Dim G_OpticalCircuit_Info_Index_DQS_County           = 30
+        Dim G_OpticalCircuit_Info_Index_DQS_County_ID        = 31
+        Dim G_OpticalCircuit_Info_Index_DQS_Maintainer       = 32
+        Dim G_OpticalCircuit_Info_Index_DQS_Maintainer_ID    = 33
+        Dim G_OpticalCircuit_Info_Index_AEquType             = 34
+        Dim G_OpticalCircuit_Info_Index_ZEquType             = 35
+        Dim G_OpticalCircuit_Info_Index_SXBussType           = 36
+        Dim G_OpticalCircuit_Info_Index_BussType             = 37
+        Dim G_OpticalCircuit_Info_Index_AppType              = 38
+        Dim G_OpticalCircuit_Info_Index_ServiceLevel         = 39
+        Dim G_OpticalCircuit_Info_Index_FiberCount           = 40
+        Dim G_OpticalCircuit_Info_Index_AJoinName            = 41
+        Dim G_OpticalCircuit_Info_Index_ZJoinName            = 42
+        Dim G_OpticalCircuit_Info_Index_Int_ID               = 43
+        Dim G_OpticalCircuit_Info_Index_UL_POS_Port_Name     = 44
+        Dim G_OpticalCircuit_Info_Index_A_Port_ID            = 45
+        Dim G_OpticalCircuit_Info_Index_Z_Port_ID            = 46
+        Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 47
+    If Optical_Circuit_Sheet_Filled <> 5
+        Jsessionirms_Prepare()
+    End If
+    For RL1 = 1 to G_OpticalCircuit_Count
+        // Occupy_Path
+            If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID] = ""
+                Continue
+            End If
+            URL_Occupy_Path = "http://10.209.199.72:7112/irms/opticOpenDesignAction!occupyPath.ilf?"
+            Query_Detail = "flowId="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID]&"&workorid="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID]&"&pathid="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_ID]&";"&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_ID]&"-"&"&dpath="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_ID]&";"&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_ID]&"&ids="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID]
+            URL_Occupy_Path = URL_Occupy_Path&Query_Detail
+            Response_Body = HttpSession.Request("GET",URL_Occupy_Path,{"params":{},"data":{},"headers":{},"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+            domtools.InitDom(Response_Body)
+            Temp_List_1 = []
+            Temp_List_1 = domtools.xpath("//@success")
+            TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name&"通路占用"&Temp_List_1[0])
+        // Port_Config
+            If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID] = ""
+                Continue
+            End If
+            URL_Config_Port = "http://10.209.199.72:7112/irms/opticOpenDesignAction!updateworkernew.ilf"
+            XML_Info_Encoded = "flowId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&workorid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID],0)&"&aobjecttype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Type_ID],0)&"&zobjecttype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Type_ID],0)&"&aobjectid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&zobjectid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&"&aobjectname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Name])&"&zobjectname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Name])&"&aneid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&zneid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&"&anename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"&znename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_Name])&"&aportid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Port_ID],0)&"&zportid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID],0)&"&aportname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"-0-001"&"&zportname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name])&"&isgenerateFiber="&"1"&"&apptype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AppType],0)&"&anetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AEquType],0)&"&znetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZEquType],0)&""
+            Content_Lenth = CStr(Len(XML_Info_Encoded))
+            Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+            Response_Body = HttpSession.Request("POST",URL_Config_Port,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+            Response_Body = Replace(Response_Body,"success",'"success"',false)
+            Response_Body = Replace(Response_Body,"mesg",'"mesg"',false)
+            Response_Body = Replace(Response_Body,"detail",'"detail"',false)
+            Response_Body = Replace(Response_Body,"\'",'\"',false)
+            domtools.InitJson(JSON.Parse(Response_Body))
+            Temp_List_2 = []
+            Temp_List_2 = domtools.Jpath("$..mesg")
+            TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name]&"端口配置"&Temp_List_2[0])
+    Next
 End Function
