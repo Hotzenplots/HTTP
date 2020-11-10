@@ -17,6 +17,7 @@ TracePrint("TEST")
     Dim List_7013_Shape = []
     Dim List_FiberNo = []
     Dim List_Path_ID = []
+    Dim List_Pro_ID = []
     Dim List_Template_Shape = []
     Dim Optical_Circuit_Sheet_Filled
     Dim Post_Header
@@ -26,6 +27,7 @@ TracePrint("TEST")
     Dim URL_Query_Int_ID
     Dim URL_Query_Path_ID
     Dim URL_Query_Port_ID
+    Dim URL_Occupy_Path
     Dim URL_Config_Port
     Dim XML_Info_Encoded
 
@@ -139,23 +141,32 @@ Function Prepare_Data_P8()
         If Optical_Circuit_Sheet_Filled = 5
             HttpSession.Reset()
             Jsessionirms_Prepare()
-            URL_Query_Int_ID = "http://10.209.199.72:7112/irms/opticOpenApplyAction!queryOptictemp.ilf?flowId="
-            Pro_ID = G_OpticalCircuit_Info[1][G_OpticalCircuit_Info_Index_ProID]
-            URL_Query_Int_ID = URL_Query_Int_ID&Pro_ID
-            XML_Info_Encoded = "start="&"0"&"&limit="&"45"
-            Content_Lenth = CStr(Len(XML_Info_Encoded))
-            Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
-            Response_Body = HttpSession.Request("POST",URL_Query_Int_ID,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
-            domtools.InitJson(JSON.Parse(Response_Body))
-            Temp_List_1 = []
-            Temp_List_2 = []
-            Temp_List_1 = domtools.Jpath("$..opticname")
-            Temp_List_2 = domtools.Jpath("$..intId")
-            For RL1 = 1 to G_OpticalCircuit_Count
-                For RL2 = 0 to Ubound(Temp_List_1)
-                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name] = Temp_List_1[RL2]
-                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID] = Temp_List_2[RL2]
-                    End If
+            Temp_Data_1 = ""
+            List_Pro_ID = []
+            For RL1 = 1 to G_OpticalCircuit_Count // Int_ID
+                If Temp_Data_1 <> G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID]
+                    List_Pro_ID = Push(List_Pro_ID,G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID])
+                    Temp_Data_1 = G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID]
+                End If
+            Next
+            For RL1 = 0 to Ubound(Temp_List_1) // Int_ID
+                URL_Query_Int_ID = "http://10.209.199.72:7112/irms/opticOpenApplyAction!queryOptictemp.ilf?flowId="
+                URL_Query_Int_ID = URL_Query_Int_ID&List_Pro_ID[RL1]
+                XML_Info_Encoded = "start="&"0"&"&limit="&"45"
+                Content_Lenth = CStr(Len(XML_Info_Encoded))
+                Post_Header = {"Host":"10.209.199.72:7112","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
+                Response_Body = HttpSession.Request("POST",URL_Query_Int_ID,{"params":{},"data":XML_Info_Encoded,"headers":Post_Header,"cookies":{},"timeout":60000,"allow_redirects":true,"verify":false})
+                domtools.InitJson(JSON.Parse(Response_Body))
+                Temp_List_1 = []
+                Temp_List_2 = []
+                Temp_List_1 = domtools.Jpath("$..opticname")
+                Temp_List_2 = domtools.Jpath("$..intId")
+                For RL1 = 1 to G_OpticalCircuit_Count
+                    For RL2 = 0 to Ubound(Temp_List_1)
+                        If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name] = Temp_List_1[RL2]
+                            G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID] = Temp_List_2[RL2]
+                        End If
+                    Next
                 Next
             Next
             For RL1 = 1 to G_OpticalCircuit_Count
@@ -322,7 +333,7 @@ Function Transmission_Design()
             domtools.InitDom(Response_Body)
             Temp_List_1 = []
             Temp_List_1 = domtools.xpath("//@success")
-            TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name&"通路占用"&Temp_List_1[0])
+            TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name]&"通路占用"&Temp_List_1[0])
         // Port_Config
             If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID] = ""
                 Continue

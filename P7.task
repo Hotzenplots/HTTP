@@ -348,19 +348,13 @@ Function Prepare_Data_P7()
                     Temp_List_2 = []
                     Temp_List_1 = domtools.Jpath("$..zh_label")
                     Temp_List_2 = domtools.Jpath("$..int_id")
-                    If Len(Temp_List_1) = 1
-                        For RL2 = 1 to G_OpticalCircuit_Count
-                            G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_ID] = Temp_List_2[0]
+                    For RL2 = 1 to G_OpticalCircuit_Count
+                        For RL3 = 0 to Ubound(Temp_List_1)
+                            If G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_Name] = Temp_List_1[(RL3)]
+                                G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_ID] = Temp_List_2[(RL3)]
+                            End If
                         Next
-                    Else
-                        For RL2 = 1 to G_OpticalCircuit_Count
-                            For RL3 = 0 to Ubound(Temp_List_1)
-                                If G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_Name] = Temp_List_1[(RL3)]
-                                    G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_Z_FS_ID] = Temp_List_2[(RL3)]
-                                End If
-                            Next
-                        Next
-                    End If
+                    Next
                 Next
             // G_OpticalCircuit_Info Filling 5.0
                 For RL1 = 1 to G_OpticalCircuit_Count
