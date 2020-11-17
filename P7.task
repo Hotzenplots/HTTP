@@ -198,7 +198,7 @@ Function Prepare_Data_P7()
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_SXBussType] = "家客业务"
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_BussType] = 207
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AppType] = 1005
-                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_ServiceLevel] = 111 //101家客接入 111驻地网
+                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_ServiceLevel] = 101 //101家客接入 111驻地网
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_FiberCount] = 1
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AJoinName] = "网元成端设备"
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_ZJoinName] = "网元成端设备"
@@ -322,9 +322,13 @@ Function Prepare_Data_P7()
                     Temp_List_2 = []
                     Temp_List_1 = domtools.Jpath("$..zh_label")
                     Temp_List_2 = domtools.Jpath("$..int_id")
-                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name] = Temp_List_1[0]
-                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID] = Temp_List_2[0]
-                    End If
+                    For RL2 = 1 to G_OpticalCircuit_Count
+                        For RL3 = 0 to Ubound(Temp_List_1)
+                            If G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_A_FS_Name] = Temp_List_1[(RL3)]
+                                G_OpticalCircuit_Info[RL2][G_OpticalCircuit_Info_Index_A_FS_ID] = Temp_List_2[(RL3)]
+                            End If
+                        Next
+                    Next
                 Next
                 For RL1 = 1 to Ubound(Lv1FS_Info)
                     URL_Query_POS_ID = "http://10.209.199.72:7112/irms/opticOpenApplyAction!queryEqu.ilf"

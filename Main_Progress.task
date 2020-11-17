@@ -79,8 +79,8 @@ Function MainProgress()
             Box_Count_Correction = 0
             G_Box_Count = 0
             G_Box_RC = []
-            For RL1 = 1 To 100
-                For RL2 = 1 To 100
+            For RL1 = 1 To 200
+                For RL2 = 1 To 200
                     Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,RL2])
                     If Temp_Data_1 = ""
                         Break
@@ -191,8 +191,8 @@ Function MainProgress()
             Box_Count_Correction = 0
             G_Box_Count = 0
             G_Box_RC = []
-            For RL1 = 1 To 100
-                For RL2 = 1 To 100
+            For RL1 = 1 To 200
+                For RL2 = 1 To 200
                     Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,RL2])
                     If Temp_Data_1 = ""
                         Break
@@ -241,8 +241,8 @@ Function MainProgress()
             Box_Count_Correction = 0
             G_Box_Count = 0
             G_Box_RC = []
-            For RL1 = 1 To 100
-                For RL2 = 1 To 100
+            For RL1 = 1 To 200
+                For RL2 = 1 To 200
                     Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,RL2])
                     If Temp_Data_1 = ""
                         Break

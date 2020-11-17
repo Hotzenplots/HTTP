@@ -149,7 +149,7 @@ Function Prepare_Data_P8()
                     Temp_Data_1 = G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID]
                 End If
             Next
-            For RL1 = 0 to Ubound(Temp_List_1) // Int_ID
+            For RL1 = 0 to Ubound(List_Pro_ID) // Int_ID
                 URL_Query_Int_ID = "http://10.209.199.72:7112/irms/opticOpenApplyAction!queryOptictemp.ilf?flowId="
                 URL_Query_Int_ID = URL_Query_Int_ID&List_Pro_ID[RL1]
                 XML_Info_Encoded = "start="&"0"&"&limit="&"45"
@@ -161,6 +161,10 @@ Function Prepare_Data_P8()
                 Temp_List_2 = []
                 Temp_List_1 = domtools.Jpath("$..opticname")
                 Temp_List_2 = domtools.Jpath("$..intId")
+                // 20201113 Json返回的光路名称有问题
+                    For RL1 = 0 to Ubound(Temp_List_1)
+                        Temp_List_1[RL1] = Replace(Temp_List_1[RL1],"\r","",false)
+                    Next
                 For RL1 = 1 to G_OpticalCircuit_Count
                     For RL2 = 0 to Ubound(Temp_List_1)
                         If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name] = Temp_List_1[RL2]

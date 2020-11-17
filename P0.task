@@ -128,8 +128,8 @@ Function Prepare_Data()
             Box_Count_Correction = 0
             G_Box_Count = 0
             G_Box_RC = []
-            For RL1 = 1 To 100
-                For RL2 = 1 To 100
+            For RL1 = 1 To 200
+                For RL2 = 1 To 200
                     Temp_Data_1 = Excel.ReadCell(XLS_Obj,"Box_Topology",[RL1,RL2])
                     If Temp_Data_1 = ""
                         Break
@@ -218,7 +218,7 @@ Function Prepare_Data()
                 Next // 此刻,已写入01-04四个字段
                 Temp_List_1 = Excel.ReadRange(XLS_Obj,"Template","F2:V11")
                 For RL1 = 1 to G_Box_Count
-                    For RL2 = 0 to Len(Temp_List_1)
+                    For RL2 = 0 to Ubound(Temp_List_1)
                         If List7013[2][1] = Temp_List_1[RL2][0]
                             G_Box_Info[RL1][G_Box_Info_Index_Box_Type_ID] = 000
                             G_Box_Info[RL1][G_Box_Info_Index_Box_ID] = 000
@@ -957,6 +957,24 @@ Function Prepare_Data_3()
                         G_Box_Info[RL1][G_Box_Info_Index_Direct_Melt_Count] = 0
                     End If
                 Next
+                //Correction Termination_Start/Termination_Count/Direct_Melt_Start/Direct_Melt_Count
+                    For RL1 = 1 to Ubound(G_OC_Topology)
+                        For RL2 = 1 to G_Box_Count
+                            If G_OC_Topology[RL1][1] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                Temp_Data_1 = Math.Round((G_Box_Info[RL2][G_Box_Info_Index_Termination_Count] / G_Box_Info[RL2][G_Box_Info_Index_2FS_Count]),0)
+                            End If
+                        Next
+                        For RL2 = 2 to Ubound(G_OC_Topology[RL1])
+                            For RL3 = 1 to G_Box_Count
+                                If G_OC_Topology[RL1][RL2] = G_Box_Info[RL3][G_Box_Info_Index_Box_Name]
+                                    G_Box_Info[RL3][G_Box_Info_Index_Termination_Start] = 1
+                                    G_Box_Info[RL3][G_Box_Info_Index_Termination_Count] = G_Box_Info[RL3][G_Box_Info_Index_2FS_Count] * Temp_Data_1
+                                    G_Box_Info[RL3][G_Box_Info_Index_Direct_Melt_Start] = G_Box_Info[RL3][G_Box_Info_Index_2FS_Count] * Temp_Data_1 + 1
+                                    G_Box_Info[RL3][G_Box_Info_Index_Direct_Melt_Count] = G_Box_Info[RL3][G_Box_Info_Index_DL_2FS_Count] * Temp_Data_1
+                                End If
+                            Next
+                        Next
+                    Next
                 Temp_Data_1 = Shift(G_Box_Info) // Interesting
                 Excel.WriteRange(XLS_Obj,"Box_Info","A1",G_Box_Info,false)
                 G_Box_Info = Unshift(G_Box_Info,"") // Interesting
