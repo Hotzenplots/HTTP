@@ -13,17 +13,18 @@ Function Prepare_Data()
         Dim G_Box_Info_Index_Box_County_ID       = 08
         Dim G_Box_Info_Index_Point_ID            = 09
         Dim G_Box_Info_Index_Point_Type_ID       = 10
-        Dim G_Box_Info_Index_1FS_Count           = 11
-        Dim G_Box_Info_Index_2FS_Count           = 12
-        Dim G_Box_Info_Index_DL_2FS_Count        = 13
-        Dim G_Box_Info_Index_Required_ODM_Rows   = 14
-        Dim G_Box_Info_Index_Required_Tray_Count = 15
-        Dim G_Box_Info_Index_ODM_ID              = 16
-        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 17
-        Dim G_Box_Info_Index_Termination_Start   = 18
-        Dim G_Box_Info_Index_Termination_Count   = 19
-        Dim G_Box_Info_Index_Direct_Melt_Start   = 20
-        Dim G_Box_Info_Index_Direct_Melt_Count   = 21
+        Dim G_Box_Info_Alias                     = 11
+        Dim G_Box_Info_Index_1FS_Count           = 12
+        Dim G_Box_Info_Index_2FS_Count           = 13
+        Dim G_Box_Info_Index_DL_2FS_Count        = 14
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 15
+        Dim G_Box_Info_Index_Required_Tray_Count = 16
+        Dim G_Box_Info_Index_ODM_ID              = 17
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 18
+        Dim G_Box_Info_Index_Termination_Start   = 19
+        Dim G_Box_Info_Index_Termination_Count   = 20
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 21
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 22
 
         Dim G_OC_Info_Index_A_Box_Name        = 01
         Dim G_OC_Info_Index_A_Box_ID          = 02
@@ -241,7 +242,7 @@ Function Prepare_Data()
                 Next
                 For RL1 = 1 to G_Box_Count
                     Box_Query_URL = "http://10.209.199.74:8120/igisserver_osl/rest/generalSaveOrGet/generalGetPage"
-                    XML_Info = '<request><query mc="'&G_Box_Info[RL1][G_Box_Info_Index_Box_Type]&'" ids="" where="1=1 AND ZH_LABEL LIKE \'%'&G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&'%\'" returnfields="INT_ID,ZH_LABEL,STRUCTURE_ID"/></request>'
+                    XML_Info = '<request><query mc="'&G_Box_Info[RL1][G_Box_Info_Index_Box_Type]&'" ids="" where="1=1 AND ZH_LABEL LIKE \'%'&G_Box_Info[RL1][G_Box_Info_Index_Box_Name]&'%\'" returnfields="INT_ID,ZH_LABEL,STRUCTURE_ID,ALIAS"/></request>'
                     XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
                     Content_Lenth = CStr(Len(XML_Info_Encoded))
                     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
@@ -250,6 +251,7 @@ Function Prepare_Data()
                     Temp_List_1 = domtools.xpath("//@v")
                     G_Box_Info[RL1][G_Box_Info_Index_Box_ID] = Temp_List_1[0]
                     G_Box_Info[RL1][G_Box_Info_Index_Point_ID] = Temp_List_1[2]
+                    G_Box_Info[RL1][G_Box_Info_Alias] = Temp_List_1[3]
                 Next
                 For RL1 = 1 to G_Box_Count //解决ReadRange的bug
                     G_Box_Info[RL1][0] = "yyz"
@@ -426,7 +428,17 @@ Function Prepare_Data()
                         G_OC_Info[RL1][G_OC_Info_Index_Support_Sys_ID] = Support_Sys_Name_ID
                         G_OC_Info[RL1][G_OC_Info_Index_OC_Sys_Name] = OC_Sys_Name
                         G_OC_Info[RL1][G_OC_Info_Index_OC_Sys_ID] = OC_Sys_Name_ID
-                        G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name] = G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name]&"资源点"&"-"&G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name]&"资源点"
+                        For RL2 = 1 to G_Box_Count
+                            If G_OC_Info[RL1][G_OC_Info_Index_A_Box_Name] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                Temp_Data_1 = G_Box_Info[RL2][G_Box_Info_Alias]
+                            End If
+                        Next
+                        For RL2 = 1 to G_Box_Count
+                            If G_OC_Info[RL1][G_OC_Info_Index_Z_Box_Name] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                                Temp_Data_2 = G_Box_Info[RL2][G_Box_Info_Alias]
+                            End If
+                        Next
+                        G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name] =Temp_Data_1&"资源点"&"-"&Temp_Data_2&"资源点"
                         G_OC_Info[RL1][G_OC_Info_Index_OC_Name] = G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name]&"001"
                     Next
                 For RL1 = 1 to G_OC_Count //解决ReadRange的bug

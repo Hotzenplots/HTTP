@@ -89,8 +89,10 @@ Function Prepare_Data_P7()
         Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 47
     // List_7013 Creat
         CSV_obj = CSV.Open(G_CSV_File)
-        DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
-        DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22]) //所属地市,所属区县,所属小区,中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别
+        //DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
+        DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","资管中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县","中文名称"])
+        //DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22]) //所属地市,所属区县,所属小区,中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别
+        DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22,51]) //所属地市,所属区县,所属小区,资管中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别,中文名称
         List_7013 = []
         List_7013 = Datatable.GetDataTableByArray(DT_obj,false)
         List_7013_Shape = Datatable.GetDataTableShape(DT_obj) //DT长宽 [0]y [1]x
@@ -160,7 +162,7 @@ Function Prepare_Data_P7()
                 For RL1 = 1 to (List_7013_Shape[0] - 1)
                     If List_7013[RL1][9] = "二级"
                         G_OpticalCircuit_Info[Temp_Data_1][0] = "yyz"
-                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_A_FS_Name] = List_7013[RL1][3]
+                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_A_FS_Name] = List_7013[RL1][10]
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_A_FS_ID] = 0
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_A_Box_Name] = List_7013[RL1][4]
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_A_Box_ID] = 0
@@ -196,8 +198,8 @@ Function Prepare_Data_P7()
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AEquType] = 10002
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_ZEquType] = 10002
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_SXBussType] = "家客业务"
-                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_BussType] = 207
-                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AppType] = 1005
+                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_BussType] = 207 // 设备类型 402直连光路 207PON
+                        G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AppType] = 1005 // 应用类型 1006尾纤光路 1005业务光路
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_ServiceLevel] = 101 //101家客接入 111驻地网
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_FiberCount] = 1
                         G_OpticalCircuit_Info[Temp_Data_1][G_OpticalCircuit_Info_Index_AJoinName] = "网元成端设备"
@@ -246,7 +248,7 @@ Function Prepare_Data_P7()
                 Temp_Data_1 = 1
                 For RL1 = 1 to (List_7013_Shape[0] - 1)
                     If List_7013[RL1][9] = "一级"
-                        Lv1FS_Info[Temp_Data_1] = [List_7013[RL1][3],List_7013[RL1][4]]
+                        Lv1FS_Info[Temp_Data_1] = [List_7013[RL1][10],List_7013[RL1][4]]
                         Temp_Data_1 = Temp_Data_1 + 1
                     End If
                 Next

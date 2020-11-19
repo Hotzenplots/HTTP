@@ -80,10 +80,35 @@ Function Prepare_Data_P8()
         Dim G_OpticalCircuit_Info_Index_A_Port_ID            = 45
         Dim G_OpticalCircuit_Info_Index_Z_Port_ID            = 46
         Dim G_OpticalCircuit_Info_Index_Optical_Path_ID      = 47
+    // Box_Info_Index&OC_Info_Index
+        Dim G_Box_Info_Index_Box_Name            = 01
+        Dim G_Box_Info_Index_Box_Longitude       = 02
+        Dim G_Box_Info_Index_Box_Latitude        = 03
+        Dim G_Box_Info_Index_Box_Type            = 04
+        Dim G_Box_Info_Index_Box_Type_ID         = 05
+        Dim G_Box_Info_Index_Box_ID              = 06
+        Dim G_Box_Info_Index_Box_City_ID         = 07
+        Dim G_Box_Info_Index_Box_County_ID       = 08
+        Dim G_Box_Info_Index_Point_ID            = 09
+        Dim G_Box_Info_Index_Point_Type_ID       = 10
+        Dim G_Box_Info_Alias                     = 11
+        Dim G_Box_Info_Index_1FS_Count           = 12
+        Dim G_Box_Info_Index_2FS_Count           = 13
+        Dim G_Box_Info_Index_DL_2FS_Count        = 14
+        Dim G_Box_Info_Index_Required_ODM_Rows   = 15
+        Dim G_Box_Info_Index_Required_Tray_Count = 16
+        Dim G_Box_Info_Index_ODM_ID              = 17
+        Dim G_Box_Info_Index_Tray_Terminal_IDs   = 18
+        Dim G_Box_Info_Index_Termination_Start   = 19
+        Dim G_Box_Info_Index_Termination_Count   = 20
+        Dim G_Box_Info_Index_Direct_Melt_Start   = 21
+        Dim G_Box_Info_Index_Direct_Melt_Count   = 22
     // List_7013 Creat
         CSV_obj = CSV.Open(G_CSV_File)
-        DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
-        DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22]) //所属地市,所属区县,所属小区,中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别
+        //DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","别名","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县"])
+        //DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22]) //所属地市,所属区县,所属小区,中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别
+        DT_obj = Datatable.BuildDataTable(CSV_obj,["网元内部编码","所属地市","所属区县","所属营销区域","所属小区","资管中文名称","业务类型","安装位置","所属对象名称","所属对象类型","项目编号","任务名称","分光比","主用OLT","主用OLT的PON端口","网元状态","产权归属","管理单位","设备型号","上级POS名称","上级设备是否为POS","上级POS端口","级别","厂商","覆盖区域","备用OLT","备用OLT的PON口","资产编号","位置描述","二维码","采集名称","验收状态","未通过原因","时间戳","修改时间","网元内部编码","创建人","创建时间","修改人","是否合格","错误类型","纬度","经度","数据质量责任人(工程)","数据质量责任人(地市)","数据质量责任人(区县)","change_task_id","一线数据维护人（代维/一线）","上联PON口是否为10GE","维护地市","维护区县","中文名称"])
+        DT_obj = Datatable.SliceDataTable(DT_obj,[],[1,2,4,5,7,10,11,19,21,22,51]) //所属地市,所属区县,所属小区,资管中文名称,安装位置,项目编号,任务名称,上级POS名称,上级POS端口,级别,中文名称
         List_7013 = []
         List_7013 = Datatable.GetDataTableByArray(DT_obj,false)
         List_7013_Shape = Datatable.GetDataTableShape(DT_obj) //DT长宽 [0]y [1]x
@@ -175,7 +200,7 @@ Function Prepare_Data_P8()
             Next
             For RL1 = 1 to G_OpticalCircuit_Count
                 For RL2 = 1 to (List_7013_Shape[0] - 1)
-                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name] = List_7013[RL2][3]
+                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name] = List_7013[RL2][10]
                         G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name] = List_7013[RL2][8]
                     End If
                 Next
@@ -230,11 +255,26 @@ Function Prepare_Data_P8()
                 domtools.InitDom(Response_Body)
                 List_Path_ID = domtools.xpath("//line/@id")
                 List_FiberNo = domtools.xpath("//line/@fiberno")
-                For RL2 = 0 to Ubound(List_Path_ID)
-                    Temp_List_1 = []
-                    Temp_List_1 = Split(List_FiberNo[RL2],"-")
-                    If Temp_List_1[0] = "1" OR Temp_List_1[1] = "1"
-                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID] = List_Path_ID[RL2]
+                For RL2 = 1 to G_Box_Count
+                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Name] = G_Box_Info[RL2][G_Box_Info_Index_Box_Name]
+                        Temp_Data_1 = Math.Round(G_Box_Info[RL2][G_Box_Info_Index_Termination_Count] / G_Box_Info[RL2][G_Box_Info_Index_2FS_Count],0)
+                        If Temp_Data_1 = 3
+                            For RL3 = 0 to Ubound(List_Path_ID)
+                                Temp_List_1 = []
+                                Temp_List_1 = Split(List_FiberNo[RL3],"-")
+                                If Temp_List_1[0] = "1" OR Temp_List_1[1] = "1" OR Temp_List_1[0] = "4" OR Temp_List_1[1] = "4" OR Temp_List_1[0] = "7" OR Temp_List_1[1] = "7" OR Temp_List_1[0] = "10" OR Temp_List_1[1] = "10"
+                                    G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID] = List_Path_ID[RL3]
+                                End If
+                            Next
+                        Elseif Temp_Data_1 = 2
+                            For RL3 = 0 to Ubound(List_Path_ID)
+                                Temp_List_1 = []
+                                Temp_List_1 = Split(List_FiberNo[RL3],"-")
+                                If Temp_List_1[0] = "1" OR Temp_List_1[1] = "1" OR Temp_List_1[0] = "3" OR Temp_List_1[1] = "3" OR Temp_List_1[0] = "5" OR Temp_List_1[1] = "5" OR Temp_List_1[0] = "7" OR Temp_List_1[1] = "7" OR
+                                    G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID] = List_Path_ID[RL3]
+                                End If
+                            Next
+                        End If
                     End If
                 Next
             Next
