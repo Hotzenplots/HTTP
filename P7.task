@@ -300,6 +300,13 @@ Function Prepare_Data_P7()
                         End If
                     Next
                 Next
+            // 尾纤光路数据修正
+                For RL1 = 1 to G_OpticalCircuit_Count
+                    If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Name] = G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Name]
+                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_BussType] = 402
+                        G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AppType] = 1006
+                    End If
+                Next
             Jsessionirms_Prepare()
             // G_OpticalCircuit_Info Filling 4.0
                 For RL1 = 1 to G_OpticalCircuit_Count
