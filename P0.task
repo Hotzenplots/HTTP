@@ -567,7 +567,7 @@ Function Prepare_Data_2()
                     domtools.InitDom(Response_Body)
                     Temp_List_1 = domtools.xpath("//@int_id")
 
-                    XML_Info = '<request><query mc="guanglanduan" where="1=1 AND ZH_LABEL LIKE \'%'&G_OC_Info[RL1][G_OC_Info_Index_Support_Seg_Name]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
+                    XML_Info = '<request><query mc="guanglanduan" where="1=1 AND ZH_LABEL LIKE \'%'&G_OC_Info[RL1][G_OC_Info_Index_OC_Name]&'%\'" returnfields="INT_ID,ZH_LABEL"/></request>'
                     XML_Info_Encoded = "pageNum=1&"&"xml="&Replace(encode_decode.str_encode(XML_Info),"/","%2F",true)
                     Content_Lenth = CStr(Len(XML_Info_Encoded))
                     Post_Header = {"Host":"10.209.199.74:8120","Content-Type":"application/x-www-form-urlencoded","Content-Length": Content_Lenth}
