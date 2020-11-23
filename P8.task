@@ -344,6 +344,7 @@ Function Transmission_Design()
             If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Name] = G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Name] // 跳过非尾纤光路
                 Continue
             End If
+            /*
             // Optical_Path_ID
                 URL_Query_Path_ID = "http://10.209.199.72:7112/irms/opticOpenDesignAction!Searchpath4page.ilf?"
                 Query_Detail = "flowId="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID]&"&workorid="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID]&"&aobject="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_ID]&"&zobject="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_ID]&"&aobjectType="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Type_ID]&"&zobjectType="&G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Type_ID]&"&limit=20&start=1"
@@ -371,13 +372,8 @@ Function Transmission_Design()
             Temp_List_1 = []
             Temp_List_1 = domtools.xpath("//@success")
             TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name]&"通路占用"&Temp_List_1[0])
+            */
         // Port_Config
-            If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID] = "" //已配置端口
-                Continue
-            End If
-            If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Path_ID] = "" // 通路为空两种情况,已配置或者尾纤光路后者上一个判断已排除
-                Continue
-            End If
             URL_Config_Port = "http://10.209.199.72:7112/irms/opticOpenDesignAction!updateworkernew.ilf"
             XML_Info_Encoded = "flowId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&workorid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID],0)&"&aobjecttype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Type_ID],0)&"&zobjecttype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Type_ID],0)&"&aobjectid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&zobjectid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&"&aobjectname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Name])&"&zobjectname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Name])&"&aneid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&zneid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&"&anename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"&znename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_Name])&"&aportid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Port_ID],0)&"&zportid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID],0)&"&aportname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"-0-001"&"&zportname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name])&"&isgenerateFiber="&"1"&"&apptype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AppType],0)&"&anetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AEquType],0)&"&znetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZEquType],0)
             Content_Lenth = CStr(Len(XML_Info_Encoded))
@@ -396,11 +392,10 @@ Function Transmission_Design()
     CSV.Save(G_OpticalCircuit_Info,G_Base_Path&G_File_Name&"光路数据.csv")
     G_OpticalCircuit_Info = Unshift(G_OpticalCircuit_Info,"")
     For RL1 = 1 to G_OpticalCircuit_Count
-        // 尾纤光路跳纤
+        // Fiber_Optical_Jumper_Config
             If G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Box_Name] <> G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Box_Name]
                 Continue
             End If
-        /*
             URL_Save_Jumper = "http://10.209.199.74:8120/igisserver_osl/rest/jumperandfiber/saveJumper"
             XML_Info_1 = '<params><param key="pro_task_id" value=""/><param key="status" value="8"/><param key="photo" value="null"/><param key="isvirtual" value="0"/><param key="virtualtype" value=""/></params>'
             XML_Info_2 = '<params><param a_site_type="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Type_ID],0)&'" a_site_id="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&'" a_equ_type="pos" a_equ_id="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&'" a_port_type="pos_port" a_port_id="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID],0)&'" z_site_type="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Type_ID],0)&'" z_site_id="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&'" z_equ_type="pos" z_equ_id="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&'" z_port_type="pos_port" z_port_id="'&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Port_ID],0)&'"/></params>'
@@ -411,7 +406,6 @@ Function Transmission_Design()
             domtools.InitDom(Response_Body)
             Temp_List_1 = domtools.xpath("//@msg")
             TracePrint(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Optical_Circuit_Name]&Temp_List_1[0])
-        */
         // Fiber_Optical_Circuit_Port_Config
             URL_Config_Port = "http://10.209.199.72:7112/irms/opticOpenDesignAction!saveweixianpeizhi.ilf"
             XML_Info_Encoded = "flowId="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ProID],0)&"&workorid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Int_ID],0)&"&aobjecttype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Type_ID],0)&"&zobjecttype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Type_ID],0)&"&aobjectid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_ID],0)&"&zobjectid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_ID],0)&"&aobjectname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Point_Name])&"&zobjectname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Point_Name])&"&aneid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_ID],0)&"&zneid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_ID],0)&"&anename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"&znename="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_FS_Name])&"&aportid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_Port_ID],0)&"&zportid="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_Z_Port_ID],0)&"&aportname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_A_FS_Name])&"-0-001"&"&zportname="&encode_decode.str_encode(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_UL_POS_Port_Name])&"&apptype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AppType],0)&"&anetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_AEquType],0)&"&znetype="&Math.Round(G_OpticalCircuit_Info[RL1][G_OpticalCircuit_Info_Index_ZEquType],0)&"&fibercount="&"1"
